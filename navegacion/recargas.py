@@ -148,9 +148,18 @@ class Recargas:
         try:
             recargas.openEdge(headless=self.visible.get())
             recargas.selectPage(self.link)
-            recargas.insert('loginID', self.entry_user.get(), 'id')
+            recargas.insert('loginID', f'aux{i+1}' if i != 1 else f'aux{6}', 'id')
             recargas.insert('password', self.entry_password.get(), 'id')
             recargas.click('/html/body/form[2]/table[3]/tbody/tr/td/table[2]/tbody/tr[5]/td[2]/input[1]')
+            time.sleep(10)
+            try:
+                recargas.readShort2('login_id', 'id')
+                recargas.insert('login_id', f'aux{i+1}' if i != 1 else f'aux{6}', 'id')
+                recargas.insert('pwd', self.entry_password.get(), 'id')
+                recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
+                time.sleep(30)
+            except:
+                pass
             time.sleep(10)
             recargas.click('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
             if self.paquetes.get():
@@ -192,10 +201,18 @@ class Recargas:
                             recargas = Abrir_pagina1(1)
                             recargas.openEdge(headless=self.visible.get())
                             recargas.selectPage(self.link)
-                            recargas.insert('loginID', self.entry_user.get(), 'id')
+                            recargas.insert('loginID', f'aux{i+1}' if i != 1 else f'aux{6}', 'id')
                             recargas.insert('password', self.entry_password.get(), 'id')
                             recargas.click('/html/body/form[2]/table[3]/tbody/tr/td/table[2]/tbody/tr[5]/td[2]/input[1]')
-                            time.sleep(30)
+                            time.sleep(10)
+                            try:
+                                recargas.readShort2('login_id', 'id')
+                                recargas.insert('login_id', f'aux{i+1}' if i != 1 else f'aux{6}', 'id')
+                                recargas.insert('pwd', self.entry_password.get(), 'id')
+                                recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
+                                time.sleep(10)
+                            except:
+                                pass
                             recargas.click('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
                             if self.paquetes.get():
                                 recargas.click('/html/body/app-root/div/app-layout/section/claro-app-recharge/div/div/div[3]/div/claro-header-recharge/ul/div[2]/li/a')
