@@ -66,11 +66,11 @@ class Poliedro:
     
     def reinicio(self, start = True):
         try:
-            if self.legalizador:
-                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/a/span')
-                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/ul/li[1]/a/span')
+            if self.legalizador:                       
+                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
+                self.browser.click('/html/body/p/table[2]/tbody/tr[2]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td/table/tbody/tr[12]/td[1]/a')
             else:
-                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[11]/a')
+                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a')
                 if self.tropas == False:
                     if self.legalizador:
                         try:
@@ -78,7 +78,10 @@ class Poliedro:
                         except:
                             self.browser.click('/html/body/p/table[2]/tbody/tr[2]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td/table/tbody/tr[12]/td[1]/a')
                     else:
-                        self.browser.click('/html/body/p/table[2]/tbody/tr[2]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td/table/tbody/tr[13]/td[1]/a')
+                        try:
+                            self.browser.click('/html/body/p/table[2]/tbody/tr[2]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td/table/tbody/tr[13]/td[1]/a')
+                        except:
+                            self.browser.click('/html/body/p/table[2]/tbody/tr[2]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td/table/tbody/tr[12]/td[1]/a')
         except: 
             pass
         self.seleccionAcceso(self.opcion, start)

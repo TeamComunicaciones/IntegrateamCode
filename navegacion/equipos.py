@@ -9,7 +9,8 @@ import time
 
 class Equipos:
 
-    def __init__(self,master, on_of):
+    def __init__(self,master, on_of, alertas):
+        self.alertas = alertas
         self.on_of = on_of
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
@@ -68,44 +69,47 @@ class Equipos:
         hilo_equipos.start()
         
     def ejecuccion(self):
-        self.on_of(False)
-        self.ventana_informacion.write('Empezando ejecuccion')
-        self.poliedro.definirBrowser(self.equipos)
-        self.poliedro.seleccionAcceso('194')
-        self.excel.leer_excel('src\equipos\equipos.xlsx','Iccid')
-        self.excel.quitarFormatoCientifico('Iccid')
-        self.excel.quitarFormatoCientifico('Imei')
-        for i in range(int(self.repeticiones)):
-            self.contador = 0
-            self.ciclo = True
-            self.ventana_informacion.write(f'Inicio ciclo {i}')
+        try:
+            self.on_of(False)
+            self.ventana_informacion.write('Empezando ejecuccion')
+            self.poliedro.definirBrowser(self.equipos)
+            self.poliedro.seleccionAcceso('194')
+            self.excel.leer_excel('src\equipos\equipos.xlsx','Iccid')
+            self.excel.quitarFormatoCientifico('Iccid')
+            self.excel.quitarFormatoCientifico('Imei')
+            for i in range(int(self.repeticiones)):
+                self.contador = 0
+                self.ciclo = True
+                self.ventana_informacion.write(f'Inicio ciclo {i}')
 
-            while self.ciclo:
-                if self.contador == self.excel.cantidad:
-                    self.ciclo = False
-                else:
-                    try:
-                        min = str(self.excel.excel['Min'][self.contador])
-                        if str(min) == 'nan' or str(min) == '':
-                            self.mensaje = ''
-                            self.EquiposInd()
-                        else:
-                            self.ventana_informacion.write(f'ya procesada')
-                            self.contador += 1
-                    except:
-                        self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
+                while self.ciclo:
+                    if self.contador == self.excel.cantidad:
+                        self.ciclo = False
+                    else:
                         try:
-                            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/a')
-                            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/ul/li[1]/a')
-                            self.poliedro.seleccionAcceso('194', start=False)
+                            min = str(self.excel.excel['Min'][self.contador])
+                            if str(min) == 'nan' or str(min) == '':
+                                self.mensaje = ''
+                                self.EquiposInd()
+                            else:
+                                self.ventana_informacion.write(f'ya procesada')
+                                self.contador += 1
                         except:
-                            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[11]/a')
-                            self.equipos.selectPage(self.link)
-                            self.poliedro.seleccionAcceso('194', start=False)
-                        self.contador += 1
-            self.ventana_informacion.write(f'ciclo {i} terminado')
-        self.ventana_informacion.write('Proceso terminado')
-        self.on_of(True)
+                            self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
+                            try:
+                                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/a')
+                                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/ul/li[1]/a')
+                                self.poliedro.seleccionAcceso('194', start=False)
+                            except:
+                                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[11]/a')
+                                self.equipos.selectPage(self.link)
+                                self.poliedro.seleccionAcceso('194', start=False)
+                            self.contador += 1
+                self.ventana_informacion.write(f'ciclo {i} terminado')
+            self.ventana_informacion.write('Proceso terminado')
+            self.on_of(True)
+        except:
+            self.alertas('se detiene el programa error')
     
 
     def EquiposInd(self):

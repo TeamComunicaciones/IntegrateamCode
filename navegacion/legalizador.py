@@ -9,7 +9,8 @@ import time
 
 class Legalizador:
 
-    def __init__(self,master, on_of):
+    def __init__(self,master, on_of, alertas):
+        self.alertas = alertas
         self.etapa = 0
         self.on_of = on_of
         self.poliedro = poliedro.Poliedro(legalizador=True)
@@ -77,47 +78,50 @@ class Legalizador:
         hilo_legalizador.start()
         
     def ejecuccion(self):
-        self.on_of(False)
-        self.ventana_informacion.write('Empezando ejecuccion')
-        self.poliedro.definirBrowser(self.legalizador)
-        self.poliedro.seleccionAcceso('362')
-        for i in range(int(self.repeticiones)):
-            self.ciclo = True
-            self.contador = 0
-            self.excel.leer_excel('src\legalizador\legalizador.xlsx','iccid')
-            self.excel.quitarFormatoCientifico('iccid')
-            self.ventana_informacion.write(f'Ciclo {i+1}')
-            while self.ciclo:
-                if self.contador == self.excel.cantidad:
-                    self.ciclo = False
-                else:
-                    try:
-                        self.min = str(self.excel.excel['min'][self.contador])
-                        self.mensaje= str(self.excel.excel['Mensaje'][self.contador])
-                        if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
-                            self.ventana_informacion.write(f'Legalizacion {self.min} ya realizada o con error ya detectado')
-                            self.contador += 1
-                        else:
-                            self.mensaje = ''
-                            self.min = ''
-                            self.legalizadorInd()
-                    except:
-                        self.ventana_informacion.write(f'Siguiente por error en legalizacion de {self.min}')
-                        if f'{len(self.cedula)}' == '9' and self.tipoDoc != 'nit':
-                            self.excel.guardar(self.contador, 'Mensaje', 'error por cedula de 9 digitos')
-                        else:
-                            self.excel.guardar(self.contador, 'Mensaje', 'error')
-                        self.contador += 1
+        try:
+            self.on_of(False)
+            self.ventana_informacion.write('Empezando ejecuccion')
+            self.poliedro.definirBrowser(self.legalizador)
+            self.poliedro.seleccionAcceso('362')
+            for i in range(int(self.repeticiones)):
+                self.ciclo = True
+                self.contador = 0
+                self.excel.leer_excel('src\legalizador\legalizador.xlsx','iccid')
+                self.excel.quitarFormatoCientifico('iccid')
+                self.ventana_informacion.write(f'Ciclo {i+1}')
+                while self.ciclo:
+                    if self.contador == self.excel.cantidad:
+                        self.ciclo = False
+                    else:
                         try:
-                            self.reinicio()
+                            self.min = str(self.excel.excel['min'][self.contador])
+                            self.mensaje= str(self.excel.excel['Mensaje'][self.contador])
+                            if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
+                                self.ventana_informacion.write(f'Legalizacion {self.min} ya realizada o con error ya detectado')
+                                self.contador += 1
+                            else:
+                                self.mensaje = ''
+                                self.min = ''
+                                self.legalizadorInd()
                         except:
+                            self.ventana_informacion.write(f'Siguiente por error en legalizacion de {self.min}')
+                            if f'{len(self.cedula)}' == '9' and self.tipoDoc != 'nit':
+                                self.excel.guardar(self.contador, 'Mensaje', 'error por cedula de 9 digitos')
+                            else:
+                                self.excel.guardar(self.contador, 'Mensaje', 'error')
+                            self.contador += 1
                             try:
-                                self.poliedro.reinicio(start=False)
+                                self.reinicio()
                             except:
-                                self.poliedro.reinicio()
-            self.ventana_informacion.write('Proceso terminado')
-            self.ventana_informacion.write(f'Ciclo {i+1} finalizado')
-        self.on_of(True)
+                                try:
+                                    self.poliedro.reinicio(start=False)
+                                except:
+                                    self.poliedro.reinicio()
+                self.ventana_informacion.write('Proceso terminado')
+                self.ventana_informacion.write(f'Ciclo {i+1} finalizado')
+            self.on_of(True)
+        except:
+            self.alertas('se detiene el programa error')
     
 
     def legalizadorInd(self):

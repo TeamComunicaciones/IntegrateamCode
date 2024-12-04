@@ -9,7 +9,8 @@ import time
 
 class Preactivador:
 
-    def __init__(self,master, on_of):
+    def __init__(self,master, on_of, alertas):
+        self.alertas = alertas
         self.min = ''
         self.mensaje = 's'
         self.on_of = on_of
@@ -106,29 +107,32 @@ class Preactivador:
         hilo_equipos.start()
         
     def ejecuccion(self):
-        self.on_of(False)
-        self.ventana_informacion.write('Empezando ejecuccion')
-        self.poliedro.definirBrowser(self.preactivador)
-        self.poliedro.seleccionAcceso('195')
-        self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
-        self.excel.quitarFormatoCientifico('Iccid')
-        self.ciclo = True
-        self.contador = 0
+        try:
+            self.on_of(False)
+            self.ventana_informacion.write('Empezando ejecuccion')
+            self.poliedro.definirBrowser(self.preactivador)
+            self.poliedro.seleccionAcceso('195')
+            self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
+            self.excel.quitarFormatoCientifico('Iccid')
+            self.ciclo = True
+            self.contador = 0
 
-        while self.ciclo:
-            if self.contador == self.excel.cantidad:
-                self.ciclo = False
-            else:
-                self.min= str(self.excel.excel['Min'][self.contador])
-                if str(self.min) != 'nan':
-                        self.ventana_informacion.write(f'Preactivación ya realizada')
-                        self.contador += 1
+            while self.ciclo:
+                if self.contador == self.excel.cantidad:
+                    self.ciclo = False
                 else:
-                    self.mensaje = ''
-                    self.min = ''
-                    self.EquiposInd()
-        self.ventana_informacion.write('Proceso terminado')
-        self.on_of(True)
+                    self.min= str(self.excel.excel['Min'][self.contador])
+                    if str(self.min) != 'nan':
+                            self.ventana_informacion.write(f'Preactivación ya realizada')
+                            self.contador += 1
+                    else:
+                        self.mensaje = ''
+                        self.min = ''
+                        self.EquiposInd()
+            self.ventana_informacion.write('Proceso terminado')
+            self.on_of(True)
+        except:
+            self.alertas('se detiene el programa error')
     
 
     def EquiposInd(self):

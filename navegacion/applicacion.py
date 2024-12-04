@@ -134,17 +134,17 @@ class App:
 
     def equipos_frame(self):
         self.button_equipos.configure(fg_color=self.colors.team, text_color='white')
-        equipos.Equipos(self.interfas_frame, self.on_of_panel)
+        equipos.Equipos(self.interfas_frame, self.on_of_panel, self.alertas)
         self.screen = 'contabilidad_frame'
 
     def preactivador_frame(self):
         self.button_preactivador.configure(fg_color=self.colors.team, text_color='white')
-        preactivador.Preactivador(self.interfas_frame, self.on_of_panel)
+        preactivador.Preactivador(self.interfas_frame, self.on_of_panel, self.alertas)
         self.screen = 'comisiones_frame'
 
     def legalizador_frame(self):
         self.button_legalizador.configure(fg_color=self.colors.team, text_color='white')
-        legalizador.Legalizador(self.interfas_frame, self.on_of_panel)
+        legalizador.Legalizador(self.interfas_frame, self.on_of_panel, self.alertas)
         self.screen = 'soporte_frame'
 
     def portas_frame(self):
