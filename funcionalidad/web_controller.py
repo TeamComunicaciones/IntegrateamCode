@@ -75,7 +75,7 @@ class Web_Controller:
                     time.sleep(int(float(sleep) + randomTime))
                     return data
                 except Exception as err:
-                    if contador < 15:
+                    if contador < 8:
                         print(f'intento numero {contador} {err}')
                         time.sleep(1)
                         contador +=1
@@ -94,7 +94,7 @@ class Web_Controller:
                     time.sleep(int(sleep))
                     return data
                 except:
-                    if contador < 10:
+                    if contador < 5:
                         print(f'intento numero {contador}')
                         time.sleep(1)
                         contador +=1
@@ -113,7 +113,7 @@ class Web_Controller:
                     time.sleep(int(sleep))
                     return data
                 except:
-                    if contador < 5:
+                    if contador < 3:
                         print(f'intento numero {contador}')
                         time.sleep(1)
                         contador +=1
@@ -289,6 +289,17 @@ class Web_Controller:
     #         pass
     #     else: raise('')
     
+    @validateShort2
+    def waitExist2(self, byStr, by='xpath', write=False):
+        if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+        elif by == "id": find = self.browser.find_element_by_id(byStr)
+        elif by == "name": find = self.browser.find_element_by_name(byStr)
+        if find is not None:
+            if write:
+                find.send_keys('')
+            pass
+        else: raise('')
+
     @validateShort
     def waitExist(self, byStr, by='xpath', write=False):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
