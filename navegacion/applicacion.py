@@ -1,6 +1,6 @@
 from tkinter import Canvas
 from recursos import colors, botones, create_frame, label
-from navegacion import revisar_equipos, compras, equipos, legalizador, portas, preactivador, consulta_seriales,  consulta_seriales2, legalizador_simcard, inventario_postpago, actualizar_precios, recargas, logo
+from navegacion import *
 import customtkinter as ctk
 from PIL import ImageTk, Image
 
@@ -85,6 +85,7 @@ class App:
         self.button_seriales = self.button.create_button(self.menu_frame, "SERIALES", 0.10, 0.56, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.consulta_seriales_frame))
         self.button_legalizador_sims = self.button.create_button(self.menu_frame, "LEG. SIMCARD", 0.10, 0.63, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.legalizador_sims_frame))
         self.button_recargas = self.button.create_button(self.menu_frame, "RECARGAS", 0.10, 0.70, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.recargas_frame))
+        self.button_volantes = self.button.create_button(self.menu_frame, "VOLANTES", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.volantes_frame))
         # self.button_consulta_seriales = self.button.create_button(self.menu_frame, "CONS SERIALES", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.consulta_seriales2_frame))
         # self.button_comercial = self.button.create_button(self.menu_frame, "COMERCIAL", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.comercial_frame))
         self.canvas = Canvas(self.menu_frame, bg=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), bd=0.1, highlightbackground = getattr(self.colors,f'separador_{str(ctk.get_appearance_mode())}'))
@@ -105,6 +106,7 @@ class App:
         self.button_seriales.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         self.button_legalizador_sims.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         self.button_recargas.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
+        self.button_volantes.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         # self.button_consulta_seriales.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         
     
@@ -171,6 +173,11 @@ class App:
     def consulta_seriales2_frame(self):
         self.button_consulta_seriales.configure(fg_color=self.colors.team, text_color='white')
         consulta_seriales2.Consulta_seriales(self.interfas_frame, self.on_of_panel)
+        self.screen = 'consulta_seriales_frame'
+
+    def volantes_frame(self):
+        self.button_volantes.configure(fg_color=self.colors.team, text_color='white')
+        volantes.Volantes(self.interfas_frame, self.on_of_panel)
         self.screen = 'consulta_seriales_frame'
 
     # def comercial_frame(self):

@@ -31,7 +31,8 @@ class Web_Controller:
         global aleatorio
         aleatorio = aleatorio_value
 
-      
+    def script(self, str):
+        self.browser.execute_script(str)
     
     def retornarHtml(self):
         return self.browser.page_source

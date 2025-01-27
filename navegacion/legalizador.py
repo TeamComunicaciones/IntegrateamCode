@@ -132,7 +132,7 @@ class Legalizador:
         self.min = str(self.excel.excel['min'][self.contador])
         self.nombre = str(self.excel.excel['nombre'][self.contador])
         self.apellido = str(self.excel.excel['apellido'][self.contador])
-        self.cedula = str(self.excel.excel['cedula'][self.contador])
+        self.cedula = str(self.excel.excel['cedula'][self.contador]).replace('.0','')
         self.tipoDoc = str(self.excel.excel['tipodoc'][self.contador])
             
 

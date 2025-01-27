@@ -179,22 +179,22 @@ class Preactivador:
     def errorPrincipal(self):
         self.ventana_informacion.write(f'Activacion erronea de equipo {self.iccid}')
         self.reinicio()
-        self.contador += 1
         self.min = ''
         self.mensaje = self.preactivador.readNoValidate('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[4]/ul/li')
         self.guardarData()
+        self.contador += 1
         
 
     def errorValidacion(self):
         self.ventana_informacion.write(f'Activacion erronea de equipo {self.iccid}')
         self.reinicio()
-        self.contador += 1
         # self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
         # self.preactivador.erase('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[3]/div/input')
         # self.preactivador.erase('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[2]/div[2]/div/input')
         self.min = ''
         self.mensaje = 'Error en activacion'
         self.guardarData()
+        self.contador += 1
     
     def terminarActivacion(self):
         self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[3]')

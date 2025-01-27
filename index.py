@@ -14,5 +14,5 @@ def alertas(mensaje):
 if __name__ == '__main__':
     app = applicacion.App
     # ejempo = Web_Controller(0).edgedriver()
-    root = app('1080x720', 'Team Comunicaciones', 'version: 2.0.12', alertas)
+    root = app('1080x720', 'Team Comunicaciones', 'version: 3.1.3', alertas)
     root.start()
