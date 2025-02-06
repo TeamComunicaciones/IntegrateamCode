@@ -2,7 +2,7 @@ import pandas as pd
 
 class Excel_controller:
 
-    def leer_excel(self,file,tituloColumna=None):
+    def leer_excel(self, file, tituloColumna=None):
 
         self.excel = pd.read_excel(file)
         self.cantidad = None

@@ -6,6 +6,7 @@ import threading
 import tkinter as tk
 import customtkinter as ctk
 import time
+import requests
 
 class Legalizador:
 
@@ -35,7 +36,8 @@ class Legalizador:
         self.okBotton.configure(fg_color= color.team, text_color= 'white')
         self.correo = 'acruz@teamcomunicaciones.com'
         self.correoEdit = tk.StringVar()
-        self.correoEdit.set(self.correo) 
+        self.correoEdit.set(self.correo)
+        self.cookie_header = {}
         self.repeticiones = '1'
         self.repeticionesEdit = tk.StringVar()
         self.repeticionesEdit.set(self.repeticiones) 
@@ -76,174 +78,285 @@ class Legalizador:
     def ejecuccionHilo(self):
         hilo_legalizador = threading.Thread(target=self.ejecuccion)
         hilo_legalizador.start()
-        
+    
     def ejecuccion(self):
-        try:
-            self.on_of(False)
-            self.ventana_informacion.write('Empezando ejecuccion')
-            self.poliedro.definirBrowser(self.legalizador)
-            self.poliedro.seleccionAcceso('362')
-            for i in range(int(self.repeticiones)):
-                self.ciclo = True
-                self.contador = 0
-                self.excel.leer_excel('src\legalizador\legalizador.xlsx','iccid')
-                self.excel.quitarFormatoCientifico('iccid')
-                self.ventana_informacion.write(f'Ciclo {i+1}')
-                while self.ciclo:
-                    if self.contador == self.excel.cantidad:
-                        self.ciclo = False
-                    else:
-                        try:
-                            self.min = str(self.excel.excel['min'][self.contador])
-                            self.mensaje= str(self.excel.excel['Mensaje'][self.contador])
-                            if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
-                                self.ventana_informacion.write(f'Legalizacion {self.min} ya realizada o con error ya detectado')
-                                self.contador += 1
-                            else:
-                                self.mensaje = ''
-                                self.min = ''
-                                self.legalizadorInd()
-                        except:
-                            self.ventana_informacion.write(f'Siguiente por error en legalizacion de {self.min}')
-                            if f'{len(self.cedula)}' == '9' and self.tipoDoc != 'nit':
-                                self.excel.guardar(self.contador, 'Mensaje', 'error por cedula de 9 digitos')
-                            else:
-                                self.excel.guardar(self.contador, 'Mensaje', 'error')
+        self.cookie_header['Cookie'] = self.legalizador.getCookies()
+        for i in range(int(self.repeticiones)):
+            self.ciclo = True
+            self.contador = 0
+            self.excel.leer_excel('src\legalizador\legalizador.xlsx','iccid')
+            self.excel.quitarFormatoCientifico('iccid')
+            self.excel.quitarFormatoCientifico('imei')
+            self.ventana_informacion.write(f'Ciclo {i+1}')
+            while self.ciclo:
+                if self.contador == self.excel.cantidad:
+                    self.ciclo = False
+                else:
+                    try:
+                        self.min = str(self.excel.excel['min'][self.contador])
+                        self.mensaje= str(self.excel.excel['Mensaje'][self.contador])
+                        if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
+                            self.ventana_informacion.write(f'Legalizacion {self.min} ya realizada o con error ya detectado')
                             self.contador += 1
-                            try:
-                                self.reinicio()
-                            except:
-                                try:
-                                    self.poliedro.reinicio(start=False)
-                                except:
-                                    self.poliedro.reinicio()
-                self.ventana_informacion.write('Proceso terminado')
-                self.ventana_informacion.write(f'Ciclo {i+1} finalizado')
-            self.on_of(True)
-        except:
-            self.alertas('se detiene el programa error')
+                        else:
+                            self.verificar_urls()
+                    except:
+                        self.contador += 1
+
+            self.ventana_informacion.write('Proceso terminado')
+            self.ventana_informacion.write(f'Ciclo {i+1} finalizado')
+        self.on_of(True)
     
 
-    def legalizadorInd(self):
+    
+    def verificar_urls(self):
         self.ventana_informacion.write(f'legalizando numero {self.contador+1} de {self.excel.cantidad}')
-        self.iccid = str(self.excel.excel['iccid'][self.contador])[-12:] 
-        self.cedulaVendedor = str(self.excel.excel['idvendedor'][self.contador]).replace('.0','')
-        self.imei = str(self.excel.excel['imei'][self.contador])
-        self.min = str(self.excel.excel['min'][self.contador])
+        iccid = str(self.excel.excel['iccid'][self.contador])[-12:] 
+        cedulaVendedor = str(self.excel.excel['idvendedor'][self.contador]).replace('.0','')
+        imei = str(self.excel.excel['imei'][self.contador])
+        min = str(self.excel.excel['min'][self.contador])
         self.nombre = str(self.excel.excel['nombre'][self.contador])
         self.apellido = str(self.excel.excel['apellido'][self.contador])
-        self.cedula = str(self.excel.excel['cedula'][self.contador]).replace('.0','')
+        cedula = str(self.excel.excel['cedula'][self.contador]).replace('.0','')
         self.tipoDoc = str(self.excel.excel['tipodoc'][self.contador])
+        urls = [
+            "https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/ValidarConfigProductPrefijos?productId=362&_=1738762903923",
+            f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/ValidatIccidErrors?imei={imei}&iccid={iccid}&_=1738762903926",
+            f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/GetValPin?phone={min}&docNumber={cedula}&product=362&_=1738762903927"
+        ]
+        
+        headers = {
+            'Cookie': self.cookie_header['Cookie']
+        }
+        
+        for url in urls:
+            response = requests.get(url, headers=headers)
+            if response.status_code != 200:
+                self.excel.guardar(self.contador, 'Mensaje', f"Error en la URL: {url.replace('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/', '')}")
+                raise Exception(f"Error en la URL: {url}")
+
+        # Hacer la petición GET a la URL final
+        response = requests.get("https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation", headers=headers)
+        if response.status_code != 200:
+            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de validación final")
+            raise Exception("Error en la URL de validación final")
+
+        # Hacer la petición POST si todas las peticiones GET fueron exitosas
+        post_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2"
+        post_data = {
+            "ProductShortcutName": "362 - (GLKC) - Legalizacion Kit Contado",
+            "Pospago": False,
+            "TechnologyId": 1,
+            "ObligaFlagImei": "",
+            "NumIOT": "910,919",
+            "productShortcut": 362,
+            "ActivationId": 202,
+            "ModuleId": 6,
+            "ProductTypeId": 1,
+            "PaymentId": 1,
+            "PlanId": 1,
+            "ProductId": 362,
+            "Pospago": False,
+            "IsSpecialUser": False,
+            "ActiveFieldsPortability": True,
+            "DetailProduct.ApplyPreactivedMin": False,
+            "DetailProduct.CausalGsmServiceChange": 0,
+            "DetailProduct.DealerCps": False,
+            "DetailProduct.CodTechImei": "",
+            "DetailProduct.DocumentTypeId": 2,
+            "DetailProduct.DocumentNumber": cedula,
+            "DetailProduct.LastName": "",
+            "DetailProduct.ExpeditionDate": "",
+            "DetailProduct.Imei": imei,
+            "DetailProduct.AuxiliaryImei": "",
+            "DetailProduct.Iccid": iccid,
+            "DetailProduct.AuxiliaryIccid": "",
+            "DetailProduct.DocumentTypeIdRL": "",
+            "DetailProduct.DocumentNumberRL": "",
+            "DetailProduct.ExpeditionDateRL": "",
+            "DetailProduct.SellerId": cedulaVendedor,
+            "DetailProduct.Msisdn": min
+        }
+        post_response = requests.post(post_url, headers=headers, data=post_data)
+        if post_response.status_code == 200:
+            self.ventana_informacion.write(f"{iccid} procesada correctamente")
+        else:
+            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL para legalizar")
+            raise Exception("Error en la URL de validación final")
+
+
+
+
+
+
+        
+    # def ejecuccion_old(self):
+    #     try:
+    #         self.on_of(False)
+    #         self.ventana_informacion.write('Empezando ejecuccion')
+    #         self.poliedro.definirBrowser(self.legalizador)
+    #         self.poliedro.seleccionAcceso('362')
+    #         for i in range(int(self.repeticiones)):
+    #             self.ciclo = True
+    #             self.contador = 0
+    #             self.excel.leer_excel('src\legalizador\legalizador.xlsx','iccid')
+    #             self.excel.quitarFormatoCientifico('iccid')
+    #             self.ventana_informacion.write(f'Ciclo {i+1}')
+    #             while self.ciclo:
+    #                 if self.contador == self.excel.cantidad:
+    #                     self.ciclo = False
+    #                 else:
+    #                     try:
+    #                         self.min = str(self.excel.excel['min'][self.contador])
+    #                         self.mensaje= str(self.excel.excel['Mensaje'][self.contador])
+    #                         if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
+    #                             self.ventana_informacion.write(f'Legalizacion {self.min} ya realizada o con error ya detectado')
+    #                             self.contador += 1
+    #                         else:
+    #                             self.mensaje = ''
+    #                             self.min = ''
+    #                             self.legalizadorInd()
+    #                     except:
+    #                         self.ventana_informacion.write(f'Siguiente por error en legalizacion de {self.min}')
+    #                         if f'{len(self.cedula)}' == '9' and self.tipoDoc != 'nit':
+    #                             self.excel.guardar(self.contador, 'Mensaje', 'error por cedula de 9 digitos')
+    #                         else:
+    #                             self.excel.guardar(self.contador, 'Mensaje', 'error')
+    #                         self.contador += 1
+    #                         try:
+    #                             self.reinicio()
+    #                         except:
+    #                             try:
+    #                                 self.poliedro.reinicio(start=False)
+    #                             except:
+    #                                 self.poliedro.reinicio()
+    #             self.ventana_informacion.write('Proceso terminado')
+    #             self.ventana_informacion.write(f'Ciclo {i+1} finalizado')
+    #         self.on_of(True)
+    #     except:
+    #         self.alertas('se detiene el programa error')
+    
+
+    # def legalizadorInd(self):
+    #     self.ventana_informacion.write(f'legalizando numero {self.contador+1} de {self.excel.cantidad}')
+    #     self.iccid = str(self.excel.excel['iccid'][self.contador])[-12:] 
+    #     self.cedulaVendedor = str(self.excel.excel['idvendedor'][self.contador]).replace('.0','')
+    #     self.imei = str(self.excel.excel['imei'][self.contador])
+    #     self.min = str(self.excel.excel['min'][self.contador])
+    #     self.nombre = str(self.excel.excel['nombre'][self.contador])
+    #     self.apellido = str(self.excel.excel['apellido'][self.contador])
+    #     self.cedula = str(self.excel.excel['cedula'][self.contador]).replace('.0','')
+    #     self.tipoDoc = str(self.excel.excel['tipodoc'][self.contador])
             
 
-        primerFormulario = [
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[2]/div/div[1]/div/input', self.cedulaVendedor],
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[2]/div/div[2]/div/input', self.min],
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[1]/div/input', self.imei],
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[2]/div/input', self.iccid],
-        ]
+    #     primerFormulario = [
+    #         ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[2]/div/div[1]/div/input', self.cedulaVendedor],
+    #         ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[2]/div/div[2]/div/input', self.min],
+    #         ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[1]/div/input', self.imei],
+    #         ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[2]/div/input', self.iccid],
+    #     ]
 
-        if self.excel.excel['tipodoc'][self.contador].lower().replace(" ","") == 'nit':
-            self.poliedro.seleccionNit()
-            primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[2]/div/input', self.cedula[:9]])
-            self.poliedro.rellenoFormulario(5, primerFormulario)
-        else:
-            primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[2]/div/input', self.cedula])
-            primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[3]/div/input', self.apellido])
-            self.poliedro.rellenoFormulario(6, primerFormulario)
-        time.sleep(self.time2)
-        self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
-        self.etapa = 1
-        options = [
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span'],
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div'],
-        ]
-        functionList = [
-            self.validado,
-            self.errorKitRegistrado,
-        ]
-        self.poliedro.detectOption(options, functionList, NoneFunc=self.errorGeneral)
+    #     if self.excel.excel['tipodoc'][self.contador].lower().replace(" ","") == 'nit':
+    #         self.poliedro.seleccionNit()
+    #         primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[2]/div/input', self.cedula[:9]])
+    #         self.poliedro.rellenoFormulario(5, primerFormulario)
+    #     else:
+    #         primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[2]/div/input', self.cedula])
+    #         primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[3]/div/input', self.apellido])
+    #         self.poliedro.rellenoFormulario(6, primerFormulario)
+    #     time.sleep(self.time2)
+    #     self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
+    #     self.etapa = 1
+    #     options = [
+    #         ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span'],
+    #         ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div'],
+    #     ]
+    #     functionList = [
+    #         self.validado,
+    #         self.errorKitRegistrado,
+    #     ]
+    #     self.poliedro.detectOption(options, functionList, NoneFunc=self.errorGeneral)
 
 
-    def validado(self):
-        validado = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
-        if 'Validación Correcta' in validado: pass
-        else: raise('invalido')
-        time.sleep(0.5)
-        time.sleep(self.time2)
-        self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[3]')
-        self.etapa = 2
-        options = [
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/ul/li']
-        ]
-        self.poliedro.detectOption(options,[self.errorConsultaDemografica], NoneFunc=self.terminarValidado)
+    # def validado(self):
+    #     validado = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+    #     if 'Validación Correcta' in validado: pass
+    #     else: raise('invalido')
+    #     time.sleep(0.5)
+    #     time.sleep(self.time2)
+    #     self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[3]')
+    #     self.etapa = 2
+    #     options = [
+    #         ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/ul/li']
+    #     ]
+    #     self.poliedro.detectOption(options,[self.errorConsultaDemografica], NoneFunc=self.terminarValidado)
 
-    def terminarValidado(self):
-        self.poliedro.saludo()
-        if self.excel.excel['tipodoc'][self.contador].lower().replace(" ","") == 'nit':
-            self.poliedro.tipoDoc('nit')
-        else:
-            self.poliedro.tipoDoc('cedula')
-            self.poliedro.rellenoApellido(self.apellido)
-        self.poliedro.rellenoNombre(self.nombre)
-        self.poliedro.rellenoCedula(self.cedula)
-        self.poliedro.correo(self.correo)
-        self.poliedro.rellenoNumero()
-        self.poliedro.rellenoDireccion(legalizador=True)
-        time.sleep(self.time2)
-        self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[5]/input[2]')
-        self.etapa = 3
-        time.sleep(self.time2)
-        self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[2]')
-        self.etapa = 4
-        time.sleep(self.time2)
-        self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
-        self.etapa = 5
-        activado = True
-        while activado:
-            try:
-                mensaje = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p')
-                if 'Solicitud fue enviada satisfactoriamente' in mensaje:
-                    activado = False
-            except:
-                time.sleep(1)
-        #/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p
-        # Su Solicitud fue enviada satisfactoriamente.
-        self.ventana_informacion.write(f'Legalizacion exitosa de {self.min}')
-        self.excel.guardar(self.contador, 'Mensaje', 'legalizada')
-        self.reinicio()
-        self.contador += 1
+    # def terminarValidado(self):
+    #     self.poliedro.saludo()
+    #     if self.excel.excel['tipodoc'][self.contador].lower().replace(" ","") == 'nit':
+    #         self.poliedro.tipoDoc('nit')
+    #     else:
+    #         self.poliedro.tipoDoc('cedula')
+    #         self.poliedro.rellenoApellido(self.apellido)
+    #     self.poliedro.rellenoNombre(self.nombre)
+    #     self.poliedro.rellenoCedula(self.cedula)
+    #     self.poliedro.correo(self.correo)
+    #     self.poliedro.rellenoNumero()
+    #     self.poliedro.rellenoDireccion(legalizador=True)
+    #     time.sleep(self.time2)
+    #     self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[5]/input[2]')
+    #     self.etapa = 3
+    #     time.sleep(self.time2)
+    #     self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[2]')
+    #     self.etapa = 4
+    #     time.sleep(self.time2)
+    #     self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+    #     self.etapa = 5
+    #     activado = True
+    #     while activado:
+    #         try:
+    #             mensaje = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p')
+    #             if 'Solicitud fue enviada satisfactoriamente' in mensaje:
+    #                 activado = False
+    #         except:
+    #             time.sleep(1)
+    #     #/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p
+    #     # Su Solicitud fue enviada satisfactoriamente.
+    #     self.ventana_informacion.write(f'Legalizacion exitosa de {self.min}')
+    #     self.excel.guardar(self.contador, 'Mensaje', 'legalizada')
+    #     self.reinicio()
+    #     self.contador += 1
     
-    def errorConsultaDemografica(self):
-        validado = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/ul/li')
-        self.ventana_informacion.write(f'{self.min} {validado}')
-        self.excel.guardar(self.contador, 'Mensaje', validado)
-        self.reinicio()
-        self.contador += 1
+    # def errorConsultaDemografica(self):
+    #     validado = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/ul/li')
+    #     self.ventana_informacion.write(f'{self.min} {validado}')
+    #     self.excel.guardar(self.contador, 'Mensaje', validado)
+    #     self.reinicio()
+    #     self.contador += 1
     
-    def errorKitRegistrado(self):
-        validado = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
-        self.ventana_informacion.write(f'{self.min} {validado}')
-        self.excel.guardar(self.contador, 'Mensaje', validado)
-        # self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
-        self.reinicio()
-        self.contador += 1
+    # def errorKitRegistrado(self):
+    #     validado = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+    #     self.ventana_informacion.write(f'{self.min} {validado}')
+    #     self.excel.guardar(self.contador, 'Mensaje', validado)
+    #     # self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+    #     self.reinicio()
+    #     self.contador += 1
 
-    def errorGeneral(self):
-        raise('error general')
+    # def errorGeneral(self):
+    #     raise('error general')
     
-    def reinicio(self):
-        if self.etapa == 0:
-            pass
-        if self.etapa == 5:
-            time.sleep(self.time2)
-            self.legalizador.click('btnPrev', 'id')
-            self.poliedro.seleccionAcceso('362', start=False)
-        else:
-            for i in range(self.etapa):
-                time.sleep(self.time2)
-                self.legalizador.click('btnPrev', 'id')
-        self.etapa == 0
+    # def reinicio(self):
+    #     if self.etapa == 0:
+    #         pass
+    #     if self.etapa == 5:
+    #         time.sleep(self.time2)
+    #         self.legalizador.click('btnPrev', 'id')
+    #         self.poliedro.seleccionAcceso('362', start=False)
+    #     else:
+    #         for i in range(self.etapa):
+    #             time.sleep(self.time2)
+    #             self.legalizador.click('btnPrev', 'id')
+    #     self.etapa == 0
 
         
 

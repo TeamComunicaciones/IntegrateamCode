@@ -104,11 +104,7 @@ class Volantes:
         self.volantes.write("idfinalDate", "24/12/2024", "id")
         self.volantes.click("btnConsultar", "id")
         time.sleep(3)
-        cookies = self.volantes.browser.get_cookies()
-        cookie_text = ""
-        for cookie in cookies:
-            cookie_text = f"{cookie_text}{cookie['name']}={cookie['value']};"
-        self.__headers['Cookie'] = cookie_text
+        self.__headers['Cookie'] = self.volantes.getCookies()
         
         response_distr = requests.get(self.__url, headers=self.__headers)
         soup_distr = BeautifulSoup(response_distr.text, 'html.parser')

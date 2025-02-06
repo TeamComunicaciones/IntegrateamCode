@@ -181,9 +181,15 @@ class Web_Controller:
         return list_data
 
     @validate
-    def selectPage(self,link):
+    def selectPage(self, link):
         self.browser.get(link)
-    
+
+    def getCookies(self):
+        cookies = self.browser.get_cookies()
+        if cookies:
+            cookie_text = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
+        return cookie_text
+        
     @validate
     def insert(self, byStr, text, by='xpath', enter =False):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
