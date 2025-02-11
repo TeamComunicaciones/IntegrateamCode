@@ -79,7 +79,8 @@ class Legalizador:
         hilo_legalizador.start()
     
     def ejecuccion(self):
-        self.cookie_header['Cookie'] = self.legalizador.getCookies()
+        self.poliedro.definirBrowser(self.legalizador)
+        self.poliedro.seleccionAcceso('362')
         for i in range(int(self.repeticiones)):
             self.ciclo = True
             self.contador = 0
@@ -98,6 +99,7 @@ class Legalizador:
                             self.ventana_informacion.write(f'Legalizacion {self.min} ya realizada o con error ya detectado')
                             self.contador += 1
                         else:
+                            self.cookie_header['Cookie'] = self.legalizador.getCookies()
                             self.verificar_urls()
                     except:
                         self.contador += 1
@@ -122,8 +124,14 @@ class Legalizador:
         }
         
         # Validar la primera URL
+        imei = imei.replace(' ','')
+        cookies = self.legalizador.browser.get_cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
         url1 = f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/ValidatIccidErrors?imei={imei}&iccid={iccid}&_=1738762903926"
-        response1 = requests.get(url1, headers=headers)
+        response1 = session.get(url1, headers=headers)
+        # response1 = requests.get(url1, headers=headers)
         if response1.status_code == 200:
             json_response1 = response1.json()
             if json_response1.get("InfoShowEsim") == False and json_response1.get("EsimErrorMsj") is None:
@@ -137,7 +145,8 @@ class Legalizador:
 
         # Validar la segunda URL
         url2 = f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/GetValPin?phone={min}&docNumber={cedula}&product=362&_=1738762903927"
-        response2 = requests.get(url2, headers=headers)
+        response2 = session.get(url2)
+        # response2 = requests.get(url2, headers=headers)
         if response2.status_code == 200:
             json_response2 = response2.json()
             if json_response2.get("code") == 0 and json_response2.get("description") is None and json_response2.get("response") is None and json_response2.get("Attempts") is None and json_response2.get("url") is None:
@@ -149,23 +158,7 @@ class Legalizador:
             self.excel.guardar(self.contador, 'Mensaje', f"Error en la URL: {url2}")
             raise Exception(f"Error en la URL: {url2}")
 
-        # Hacer la petición GET a la URL final
-        final_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation"
-        final_response = requests.get(final_url, headers=headers)
-        if final_response.status_code == 200:
-            # Buscar el contenido específico en la respuesta
-            content = final_response.text
-            start_index = content.find("<!-- LeaP Alert A -->")
-            end_index = content.find("<!-- LeaP Alert B -->", start_index)
-            if start_index != -1 and end_index != -1:
-                specific_content = content[start_index:end_index]
-                self.ventana_informacion.write(f"Contenido específico encontrado: {specific_content}")
-            else:
-                self.excel.guardar(self.contador, 'Mensaje', "Error: Contenido específico no encontrado")
-                raise Exception("Error: Contenido específico no encontrado")
-        else:
-            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de validación final")
-            raise Exception("Error en la URL de validación final")
+        
         
         # Si ambas validaciones son exitosas, hacer la petición POST
         post_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2"
@@ -203,10 +196,30 @@ class Legalizador:
             "DetailProduct.SellerId": cedulaVendedor,
             "DetailProduct.Msisdn": min
         }
-        post_response = requests.post(post_url, headers=headers, data=post_data)
+        post_response = session.post(post_url, headers=headers, data=post_data)
         if post_response.status_code == 200:
             self.ventana_informacion.write(f"{iccid} procesada correctamente")
+        
+        # Hacer la petición GET a la URL final
+        final_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation"
+        final_response = session.get(final_url)
+        # final_response = requests.get(final_url, headers=headers)
+        if final_response.status_code == 200:
+            # Buscar el contenido específico en la respuesta
+            content = final_response.text
+            start_index = content.find("<!-- LeaP Alert A -->")
+            end_index = content.find("<!-- LeaP Alert B -->", start_index)
+            if start_index != -1 and end_index != -1:
+                specific_content = content[start_index:end_index]
+                self.ventana_informacion.write(f"Contenido específico encontrado: {specific_content}")
+            else:
+                self.excel.guardar(self.contador, 'Mensaje', "Error: Contenido específico no encontrado")
+                raise Exception("Error: Contenido específico no encontrado")
+        else:
+            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de validación final")
+            raise Exception("Error en la URL de validación final")
             
+        if post_response.status_code == 200:
             # Si la petición POST es exitosa, hacer la petición POST adicional
             demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
             demographic_data = {
@@ -228,38 +241,45 @@ class Legalizador:
                 "PersonalInfo.Address.City": "MEDELLIN",
                 "PersonalInfo.Address.Town": "Central"
             }
-            demographic_response = requests.post(demographic_url, headers=headers, data=demographic_data)
+            self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+            self.legalizador.click('btnNext', 'id')
+            demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
             if demographic_response.status_code == 200:
                 demographic_json = demographic_response.json()
                 if demographic_json.get("rta") == True and not demographic_json.get("errores") and demographic_json.get("url") == "/ProductService":
                     self.ventana_informacion.write("Petición POST a Demographic/Index1 exitosa")
                     
                     # Si la petición POST a Demographic/Index1 es exitosa, hacer la petición POST a ProductService/Index1
-                    product_service_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService/Index1"
-                    product_service_data = {
-                        "EquipmentPlanDataViewModel.SaleDate": "11/02/2025",
-                        "EquipmentPlanDataViewModel.IMEI": "353167580611861",
-                        "EquipmentPlanDataViewModel.ICCID": "89571017023099423508",
-                        "EquipmentPlanDataViewModel.MobileEquipment": "TCL 4041 T311A GRIS",
-                        "EquipmentPlanDataViewModel.Plan": "Plan Kit Prepago GSM",
-                        "EquipmentPlanDataViewModel.InternalCode": "",
-                        "ValorBussinesPlan2": "0",
-                        "EquipmentPlanDataViewModel.ContractType": "2",
-                        "EquipmentPlanDataViewModel_CfmToFirstInvoice": "false",
-                        "IsCesionDifPostPost": "false",
-                        "EquipmentPlanDataViewModel.InvoiceCustomer": ""
-                    }
-                    product_service_response = requests.post(product_service_url, headers=headers, data=product_service_data)
-                    if product_service_response.status_code == 200:
-                        product_service_json = product_service_response.json()
-                        if product_service_json.get("rta") == True and not product_service_json.get("errores") and product_service_json.get("url") == "/ProductService":
-                            self.ventana_informacion.write("Petición POST a ProductService/Index1 exitosa")
-                        else:
-                            self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de ProductService/Index1")
-                            raise Exception("Error en la validación de ProductService/Index1")
-                    else:
-                        self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de ProductService/Index1")
-                        raise Exception("Error en la URL de ProductService/Index1")
+                    # product_service_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService/Index1"
+                    # product_service_data = {
+                    #     "EquipmentPlanDataViewModel.SaleDate": "11/02/2025",
+                    #     "EquipmentPlanDataViewModel.IMEI": "353167580614683",
+                    #     "EquipmentPlanDataViewModel.ICCID": "89571017023099423516",
+                    #     "EquipmentPlanDataViewModel.MobileEquipment": "TCL 4041 T311A GRIS",
+                    #     "EquipmentPlanDataViewModel.Plan": "Plan Kit Prepago GSM",
+                    #     "EquipmentPlanDataViewModel.InternalCode": "",
+                    #     "ValorBussinesPlan2": "0",
+                    #     "EquipmentPlanDataViewModel.ContractType": "2",
+                    #     "EquipmentPlanDataViewModel_CfmToFirstInvoice": "false",
+                    #     "IsCesionDifPostPost": "false",
+                    #     "EquipmentPlanDataViewModel.InvoiceCustomer": ""
+                    # }
+                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+                    self.legalizador.click('btnNext', 'id')
+                    # product_service_response = session.post(product_service_url, headers=headers, data=product_service_data)
+                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Activation')
+                    self.legalizador.click('btnNext', 'id')
+                    self.legalizador.click('btnPrev', 'id')
+                    # if product_service_response.status_code == 200:
+                    #     product_service_json = product_service_response.json()
+                    #     if product_service_json.get("rta") == True and not product_service_json.get("errores") and product_service_json.get("url") == "/ProductService":
+                    #         self.ventana_informacion.write("Petición POST a ProductService/Index1 exitosa")
+                    #     else:
+                    #         self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de ProductService/Index1")
+                    #         raise Exception("Error en la validación de ProductService/Index1")
+                    # else:
+                    #     self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de ProductService/Index1")
+                    #     raise Exception("Error en la URL de ProductService/Index1")
                 else:
                     self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de Demographic/Index1")
                     raise Exception("Error en la validación de Demographic/Index1")
