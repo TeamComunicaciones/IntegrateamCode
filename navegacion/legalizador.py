@@ -134,7 +134,7 @@ class Legalizador:
         if response1.status_code == 200:
             json_response1 = response1.json()
             if json_response1.get("InfoShowEsim") == False and json_response1.get("EsimErrorMsj") is None:
-                self.ventana_informacion.write("Validación de EsimErrors exitosa")
+                pass
             else:
                 self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de EsimErrors")
                 raise Exception("Error en la validación de EsimErrors")
@@ -148,7 +148,7 @@ class Legalizador:
         if response2.status_code == 200:
             json_response2 = response2.json()
             if json_response2.get("code") == 0 and json_response2.get("description") is None and json_response2.get("response") is None and json_response2.get("Attempts") is None and json_response2.get("url") is None:
-                self.ventana_informacion.write("Validación de GetValPin exitosa")
+                pass
             else:
                 self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de GetValPin")
                 raise Exception("Error en la validación de GetValPin")
@@ -204,7 +204,7 @@ class Legalizador:
             end_index = content.find("<!-- LeaP Alert B -->", start_index)
             if start_index != -1 and end_index != -1:
                 specific_content = content[start_index:end_index]
-                self.ventana_informacion.write(f"Contenido específico encontrado: {specific_content}")
+                # self.ventana_informacion.write(f"Contenido específico encontrado: {specific_content}")
             else:
                 self.excel.guardar(self.contador, 'Mensaje', "Error: Contenido específico no encontrado")
                 raise Exception("Error: Contenido específico no encontrado")
@@ -235,12 +235,27 @@ class Legalizador:
                 "PersonalInfo.Address.Town": "Central"
             }
             self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
-            self.legalizador.click('btnNext', 'id')
+            try:
+                self.legalizador.click('btnNext', 'id')
+            except:
+                try:
+                    message = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+                    if message == 'El Kit ya se encuentra registrado':
+                        self.excel.guardar(self.contador, 'Mensaje', message)
+                        self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        self.poliedro.seleccionAcceso('362', start=False)
+                        self.ventana_informacion.write(f"{iccid} El Kit ya se encuentra registrado")
+                except:
+                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    self.poliedro.seleccionAcceso('362', start=False)
+                    self.ventana_informacion.write(f"{iccid} error no identificado")
+                raise('error controlado kit registrado')
+                
             demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
             if demographic_response.status_code == 200:
                 demographic_json = demographic_response.json()
                 if demographic_json.get("rta") == True and not demographic_json.get("errores") and demographic_json.get("url") == "/ProductService":
-                    self.ventana_informacion.write("Petición POST a Demographic/Index1 exitosa")
+                    
                     
                     self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
                     self.legalizador.click('btnNext', 'id')
@@ -249,8 +264,10 @@ class Legalizador:
                     
                     # Buscar el mensaje en la página y guardarlo en el Excel
                     message_element = self.legalizador.browser.find_element(By.CLASS_NAME, 'messageFormItem')
-                    message_text = message_element.find_element(By.TAG_NAME, 'strong').text
-                    self.excel.guardar(self.contador, 'Mensaje', message_text)
+                    self.excel.guardar(self.contador, 'Mensaje', message_element.text)
+                    self.ventana_informacion.write(f"{iccid} {message_element.text}")
+                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    self.poliedro.seleccionAcceso('362', start=False)
                     
                 else:
                     self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de Demographic/Index1")
