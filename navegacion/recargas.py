@@ -32,12 +32,14 @@ class Recargas:
             'Paquetes Salud en Linea':'a0c6d71e0b4f-8',
         }
         servicio = [
-            'TI - 1 Dia - $2,000 - 50 MB W',
-            'Paq WAZE 1 Dia $1,000',
-            'TI - 1 Día - $2,000 - 50 MIN - 100 MB W',
-            'TI - 2 Días - $4,000 - 500 MB  WTF',
-            'TI - 3 Dias - $4,000 - 400 MB WTF',
-            'TI - 6 Dias - $7,000 - 1.4 GB WTF',
+            'VZ - Paq 300 Min - 1 Dia - $2,000',
+            'VZ - Paq 1000 Min - 20 Dias - $16,500',
+            'VZ - Paq 300 Min - 2 Dias - $2,500',
+            'Paq Instagram 1 Dia $3,000',
+            'Paq WAZE 1 dia $1,500',
+            'Paq Youtube 1 hora $3,500',
+            'Chat WhatsApp 15 Dias $9,500',
+            'Chat WhatsApp 30 Dias $18,500',
         ]
 
         self.paquetes = tk.BooleanVar()

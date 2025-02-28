@@ -8,10 +8,11 @@ from datetime import datetime, timedelta
 import time
 import tkinter as tk
 import customtkinter as ctk
+import requests
 
 
 class Portas:
-
+ 
     def __init__(self, master, on_of, alertas):
         self.pagina = ''
         self.alertas = alertas
@@ -29,6 +30,7 @@ class Portas:
         self.time.set('1.5')
         self.master = master
         boton = botones.Buttons()
+        self.cookie_header = {}
         color = colors.Colors()
         self.checkbox = checkbox.Checkbox()
         self.checkbox2 = checkbox.Checkbox()
@@ -147,6 +149,7 @@ class Portas:
         self.idCliente = str(self.excel.excel['CC CLIENTE'][i])
         self.fechaExpedicion = str(self.excel.excel['FECHA EXPEDICION'][i])
         self.apellido = str(self.excel.excel['APELLIDO CLIENTE'][i])
+        self.nombre = str(self.excel.excel['NOMBRE CLIENTE'][i])
         self.idVendedor = str(self.excel.excel['CEDULA VENDEDOR'][i])
         self.min = str(self.excel.excel['NUMERO MOVIL'][i])
         self.iccid = str(self.excel.excel['SERIAL'][i])[-12:]
@@ -262,49 +265,77 @@ class Portas:
             self.captarError('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[2]/div/div/div')
     
     def validado(self):
-        validado = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
-        if 'Validación Correcta' in validado: pass
-        else: raise('invalido')
-        time.sleep(0.5)
-        self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[3]')
-        self.pagina = 3
-        self.poliedro.tipoDoc('sr', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[1]/div[1]/div/span/span[1]/span/span[1]')
-        self.tryInsert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[1]/div[2]/div/input', self.nombre)
-        self.tryInsert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[1]/div[3]/div/input', self.apellido)
-        correo= self.portas.value('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[1]/div[4]/div/input')
-        if correo == '':
-            self.tryInsert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[1]/div[4]/div/input', self.correo)
-        try: self.poliedro.tipoDoc('cedula', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[2]/div[1]/div/span/span[1]/span/span[1]')
-        except: pass
-        try: self.poliedro.rellenoNumero2()
-        except:pass
-        try: self.poliedro.rellenoDireccion2()
-        except:pass
-        try: self.portas.eraseLetter('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[2]/div[2]/div/input', 1, move=True)
-        except: pass
-        self.tryInsert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[1]/div[2]/div[2]/div/input', self.idCliente)
-        if self.tipoLinea.lower() == 'prepago':
-            self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[2]/div[1]/div/div/div[2]/span/span/input')
-        else:
-            self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[2]/div[2]/div[1]/div/div/div[1]/span/span/input')
-        self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[2]')
-        self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
-        self.pagina = 4
-        self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
-        self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
-        self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]')
-        self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
-        self.pagina = 5
-        self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
-        optionsFinal = [
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
-            ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
-        ]
-        functionListFinal = [
-            self.errorTamañoDireccion,
-            self.terminarPorta,
-        ]
-        self.poliedro.detectOption(optionsFinal, functionListFinal, NoneFunc=self.errorGeneral)
+            self.cookie_header['Cookie'] = self.portas.getCookies()
+            
+            headers = {
+                'Cookie': self.cookie_header['Cookie']
+            }
+            cookies = self.portas.browser.get_cookies()
+            session = requests.Session()
+            for cookie in cookies:
+                session.cookies.set(cookie['name'], cookie['value'])
+                
+            demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
+            demographic_data = {               
+                "PersonalInfo.GreetingId": "M",
+                "PersonalInfo.Name": self.nombre,
+                "PersonalInfo.LastName": self.apellido,
+                "PersonalInfo.Email": "master.33@gmail.com",
+                "PersonalInfo.Phone.PhoneId": "526553",
+                "PersonalInfo.Phone.PhoneClass": "",
+                "PersonalInfo.Phone.Prefix": "7",
+                "PersonalInfo.Phone.PhoneNumber": "8883136",
+                "PersonalInfo.EmailInitial": "master.33@gmail.com",
+                "PersonalInfo.DocumentTypeId": "1",
+                "PersonalInfo.Document": self.idCliente,
+                "PersonalInfo.Address.AddressId": "",
+                "PersonalInfo.Address.AddressClassId": "Otras",
+                "PersonalInfo.Address.Address": "central",
+                "PersonalInfo.Address.Department": "ANTIOQUIA",
+                "PersonalInfo.Address.City": "MEDELLIN",
+                "PersonalInfo.Address.Town": "Central",
+                "PersonalInfo.ProductDonorOperator": self.tipoLinea
+            }
+            
+            self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+            try:
+                self.portas.click('btnNext', 'id')
+            except:
+                try:
+                    message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+                    if message == 'Porta ya registrada':
+                        self.excel.guardar(self.contador, 'Mensaje', message)
+                        self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        self.poliedro.seleccionAcceso('290', start=False)
+                        self.ventana_informacion.write(f"{self.idCliente} Porta ya registrada'")
+                except:
+                    self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    self.poliedro.seleccionAcceso('290', start=False)
+                    self.ventana_informacion.write(f"{self.idCliente} error no identificado")
+                raise('error controlado kit registrado')
+            
+            demographic_response = session.post(demographic_url, demographic_data, headers = headers)
+            if demographic_response.status_code == 200:
+                self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+                self.pagina = 4
+                self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
+                self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]')
+                self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+                self.pagina = 5
+                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+                optionsFinal = [
+                    ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
+                    ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
+                ]
+                functionListFinal = [
+                    self.errorTamañoDireccion,
+                    self.terminarPorta,
+                ]
+                self.poliedro.detectOption(optionsFinal, functionListFinal, NoneFunc=self.errorGeneral)
+            else:
+                self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
+                raise Exception("Error en la URL de Demographic/Index1")
     
     def tryInsert(self, path, text):
         try: self.portas.insert(path, text) 

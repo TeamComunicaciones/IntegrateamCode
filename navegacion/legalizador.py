@@ -1,6 +1,6 @@
 from navegacion import sub_menu as sm, ventana_informacion
 from recursos import label, botones, colors
-from funcionalidad import web_controller, poliedro, excel
+from funcionalidad import web_controller, poliedro, excel, scraping
 from subprocess import Popen
 import threading
 import tkinter as tk
@@ -73,6 +73,7 @@ class Legalizador:
         class Abrir_pagina1(web_controller.Web_Controller): pass
         self.legalizador = Abrir_pagina1(int(self.time.get()))
         self.legalizador.openEdge()
+        time.sleep(3)
         self.legalizador.selectPage(self.link)
     
     def ejecuccionHilo(self):
@@ -82,6 +83,7 @@ class Legalizador:
     def ejecuccion(self):
         self.poliedro.definirBrowser(self.legalizador)
         self.poliedro.seleccionAcceso('362')
+        self.position(self.legalizador.retornarHtml(), 'paso1', True)
         for i in range(int(self.repeticiones)):
             self.ciclo = True
             self.contador = 0
@@ -102,7 +104,11 @@ class Legalizador:
                         else:
                             self.cookie_header['Cookie'] = self.legalizador.getCookies()
                             self.verificar_urls()
+                            self.contador += 1
                     except:
+                        self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        self.poliedro.seleccionAcceso('362', start=False)
+                        self.position(self.legalizador.retornarHtml(), 'paso1', True)
                         self.contador += 1
 
             self.ventana_informacion.write('Proceso terminado')
@@ -118,6 +124,7 @@ class Legalizador:
         self.apellido = str(self.excel.excel['apellido'][self.contador])
         cedula = str(self.excel.excel['cedula'][self.contador]).replace('.0','')
         self.tipoDoc = str(self.excel.excel['tipodoc'][self.contador])
+        documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
         
         headers = {
             'Cookie': self.cookie_header['Cookie']
@@ -129,152 +136,239 @@ class Legalizador:
         session = requests.Session()
         for cookie in cookies:
             session.cookies.set(cookie['name'], cookie['value'])
-        url1 = f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/ValidatIccidErrors?imei={imei}&iccid={iccid}&_=1738762903926"
-        response1 = session.get(url1, headers=headers)
-        if response1.status_code == 200:
-            json_response1 = response1.json()
-            if json_response1.get("InfoShowEsim") == False and json_response1.get("EsimErrorMsj") is None:
-                pass
-            else:
-                self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de EsimErrors")
-                raise Exception("Error en la validación de EsimErrors")
-        else:
-            self.excel.guardar(self.contador, 'Mensaje', f"Error en la URL: {url1}")
-            raise Exception(f"Error en la URL: {url1}")
+        # url1 = f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/ValidatIccidErrors?imei={imei}&iccid={iccid}&_=1738762903926"
+        # response1 = session.get(url1, headers=headers)
+        # if response1.status_code == 200:
+        #     json_response1 = response1.json()
+        #     if json_response1.get("InfoShowEsim") == False and json_response1.get("EsimErrorMsj") is None:
+        #         pass
+        #     else:
+        #         self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de EsimErrors")
+        #         raise Exception("Error en la validación de EsimErrors")
+        # else:
+        #     self.excel.guardar(self.contador, 'Mensaje', f"Error en la URL: {url1}")
+        #     raise Exception(f"Error en la URL: {url1}")
 
-        # Validar la segunda URL
-        url2 = f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/GetValPin?phone={min}&docNumber={cedula}&product=362&_=1738762903927"
-        response2 = session.get(url2)
-        if response2.status_code == 200:
-            json_response2 = response2.json()
-            if json_response2.get("code") == 0 and json_response2.get("description") is None and json_response2.get("response") is None and json_response2.get("Attempts") is None and json_response2.get("url") is None:
-                pass
-            else:
-                self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de GetValPin")
-                raise Exception("Error en la validación de GetValPin")
-        else:
-            self.excel.guardar(self.contador, 'Mensaje', f"Error en la URL: {url2}")
-            raise Exception(f"Error en la URL: {url2}")
+        # # Validar la segunda URL
+        # url2 = f"https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/GetValPin?phone={min}&docNumber={cedula}&product=362&_=1738762903927"
+        # response2 = session.get(url2)
+        # if response2.status_code == 200:
+        #     json_response2 = response2.json()
+        #     if json_response2.get("code") == 0 and json_response2.get("description") is None and json_response2.get("response") is None and json_response2.get("Attempts") is None and json_response2.get("url") is None:
+        #         pass
+        #     else:
+        #         self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de GetValPin")
+        #         raise Exception("Error en la validación de GetValPin")
+        # else:
+        #     self.excel.guardar(self.contador, 'Mensaje', f"Error en la URL: {url2}")
+        #     raise Exception(f"Error en la URL: {url2}")
 
         # Si ambas validaciones son exitosas, hacer la petición POST
-        post_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2"
-        post_data = {
-            "ProductShortcutName": "362 - (GLKC) - Legalizacion Kit Contado",
-            "Pospago": False,
-            "TechnologyId": 1,
-            "ObligaFlagImei": "",
-            "NumIOT": "910,919",
-            "productShortcut": 362,
-            "ActivationId": 202,
-            "ModuleId": 6,
-            "ProductTypeId": 1,
-            "PaymentId": 1,
-            "PlanId": 1,
-            "ProductId": 362,
-            "Pospago": False,
-            "IsSpecialUser": False,
-            "ActiveFieldsPortability": True,
-            "DetailProduct.ApplyPreactivedMin": False,
-            "DetailProduct.CausalGsmServiceChange": 0,
-            "DetailProduct.DealerCps": False,
-            "DetailProduct.CodTechImei": "",
-            "DetailProduct.DocumentTypeId": 2,
-            "DetailProduct.DocumentNumber": cedula,
-            "DetailProduct.LastName": self.apellido,
-            "DetailProduct.ExpeditionDate": "",
-            "DetailProduct.Imei": imei,
-            "DetailProduct.AuxiliaryImei": "",
-            "DetailProduct.Iccid": iccid,
-            "DetailProduct.AuxiliaryIccid": "",
-            "DetailProduct.DocumentTypeIdRL": "",
-            "DetailProduct.DocumentNumberRL": "",
-            "DetailProduct.ExpeditionDateRL": "",
-            "DetailProduct.SellerId": cedulaVendedor,
-            "DetailProduct.Msisdn": min
-        }
-        post_response = session.post(post_url, headers=headers, data=post_data)
-        if post_response.status_code == 200:
-            self.ventana_informacion.write(f"{iccid} procesada correctamente")
+        # post_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2"
+        # post_data = {
+        #     "ProductShortcutName": "362 - (GLKC) - Legalizacion Kit Contado",
+        #     "Pospago": False,
+        #     "TechnologyId": 1,
+        #     "ObligaFlagImei": "",
+        #     "NumIOT": "910,919",
+        #     "productShortcut": 362,
+        #     "ActivationId": 202,
+        #     "ModuleId": 6,
+        #     "ProductTypeId": 1,
+        #     "PaymentId": 1,
+        #     "PlanId": 1,
+        #     "ProductId": 362,
+        #     "Pospago": False,
+        #     "IsSpecialUser": False,
+        #     "ActiveFieldsPortability": True,
+        #     "DetailProduct.ApplyPreactivedMin": False,
+        #     "DetailProduct.CausalGsmServiceChange": 0,
+        #     "DetailProduct.DealerCps": False,
+        #     "DetailProduct.CodTechImei": "",
+        #     "DetailProduct.DocumentTypeId": documentType,
+        #     "DetailProduct.DocumentNumber": cedula,
+        #     "DetailProduct.LastName": self.apellido,
+        #     "DetailProduct.ExpeditionDate": "",
+        #     "DetailProduct.Imei": imei,
+        #     "DetailProduct.AuxiliaryImei": "",
+        #     "DetailProduct.Iccid": iccid,
+        #     "DetailProduct.AuxiliaryIccid": "",
+        #     "DetailProduct.DocumentTypeIdRL": "",
+        #     "DetailProduct.DocumentNumberRL": "",
+        #     "DetailProduct.ExpeditionDateRL": "",
+        #     "DetailProduct.SellerId": cedulaVendedor,
+        #     "DetailProduct.Msisdn": min
+        # }
+        # post_response = session.post(post_url, headers=headers, data=post_data)
+        # if post_response.status_code == 200:
+        #     pass
      # Hacer la petición GET a la URL final
-        final_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation"
-        final_response = session.get(final_url)
-        if final_response.status_code == 200:
-            content = final_response.text
-            start_index = content.find("<!-- LeaP Alert A -->")
-            end_index = content.find("<!-- LeaP Alert B -->", start_index)
-            if start_index != -1 and end_index != -1:
-                specific_content = content[start_index:end_index]
-                # self.ventana_informacion.write(f"Contenido específico encontrado: {specific_content}")
-            else:
-                self.excel.guardar(self.contador, 'Mensaje', "Error: Contenido específico no encontrado")
-                raise Exception("Error: Contenido específico no encontrado")
-        else:
-            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de validación final")
-            raise Exception("Error en la URL de validación final")
+        # final_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation"
+        # final_response = session.get(final_url)
+        # if final_response.status_code == 200:
+        #     content = final_response.text
+        #     start_index = content.find("<!-- LeaP Alert A -->")
+        #     end_index = content.find("<!-- LeaP Alert B -->", start_index)
+        #     if start_index != -1 and end_index != -1:
+        #         specific_content = content[start_index:end_index]
+        #         # self.ventana_informacion.write(f"Contenido específico encontrado: {specific_content}")
+        #     else:
+        #         self.excel.guardar(self.contador, 'Mensaje', "Error: Contenido específico no encontrado")
+        #         raise Exception("Error: Contenido específico no encontrado")
+        # else:
+        #     self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de validación final")
+        #     raise Exception("Error en la URL de validación final")
             
-        if post_response.status_code == 200:
+        # if post_response.status_code == 200:
+            #revisar consulta demografica
             # Si la petición POST es exitosa, hacer la petición POST adicional
-            demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
-            demographic_data = {
-                "PersonalInfo.GreetingId": "O",
-                "PersonalInfo.Name": self.nombre,
-                "PersonalInfo.LastName": self.apellido,
-                "PersonalInfo.Email": "acruz@teamcomunicaciones.com",
-                "PersonalInfo.Phone.PhoneId": "",
-                "PersonalInfo.Phone.PhoneClass": "2",
-                "PersonalInfo.Phone.Prefix": "604",
-                "PersonalInfo.Phone.PhoneNumber": "0313123",
-                "PersonalInfo.EmailInitial": "",
-                "PersonalInfo.DocumentTypeId": "2",
-                "PersonalInfo.Document": cedula,
-                "PersonalInfo.Address.AddressId": "",
-                "PersonalInfo.Address.AddressClassId": "Otras",
-                "PersonalInfo.Address.Address": "central",
-                "PersonalInfo.Address.Department": "ANTIOQUIA",
-                "PersonalInfo.Address.City": "MEDELLIN",
-                "PersonalInfo.Address.Town": "Central"
-            }
-            self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        
+
+
+        primerFormulario = [
+            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[2]/div/div[1]/div/input', cedulaVendedor],
+            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[2]/div/div[2]/div/input', min],
+            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[1]/div/input', imei],
+            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[2]/div/input', iccid],
+        ]
+
+        if self.excel.excel['tipodoc'][self.contador].lower().replace(" ","") == 'nit':
+            self.poliedro.seleccionNit()
+            primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[2]/div/input', cedula[:9]])
+            self.poliedro.rellenoFormulario(5, primerFormulario)
+        else:
+            primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[2]/div/input', cedula])
+            primerFormulario.append(['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[3]/div/input', self.apellido])
+            self.poliedro.rellenoFormulario(6, primerFormulario)
+        time.sleep(self.time2)
+        self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
+
+        demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
+        demographic_data = {
+            "PersonalInfo.GreetingId": "O",
+            "PersonalInfo.Name": self.nombre,
+            "PersonalInfo.LastName": self.apellido,
+            "PersonalInfo.Email": "acruz@teamcomunicaciones.com",
+            "PersonalInfo.Phone.PhoneId": "",
+            "PersonalInfo.Phone.PhoneClass": "2",
+            "PersonalInfo.Phone.Prefix": "604",
+            "PersonalInfo.Phone.PhoneNumber": "0313123",
+            "PersonalInfo.EmailInitial": "",
+            "PersonalInfo.DocumentTypeId": "2",
+            "PersonalInfo.Document": cedula,
+            "PersonalInfo.Address.AddressId": "",
+            "PersonalInfo.Address.AddressClassId": "Otras",
+            "PersonalInfo.Address.Address": "central",
+            "PersonalInfo.Address.Department": "ANTIOQUIA",
+            "PersonalInfo.Address.City": "MEDELLIN",
+            "PersonalInfo.Address.Town": "Central"
+        }
+        try:
+            while True:
+                try:
+                    self.legalizador.readShort2('/html/body/div/div[2]/section/div/div[2]/div[1]/div[1]/hgroup/h4')
+                    break
+                except:
+                    print('aun en while')
+            # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+            time.sleep(2)
+            self.legalizador.click('btnNext', 'id')
+            time.sleep(3)
             try:
-                self.legalizador.click('btnNext', 'id')
+                message = self.legalizador.read('errorFormItem', 'class')
             except:
                 try:
-                    message = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
-                    if message == 'El Kit ya se encuentra registrado':
-                        self.excel.guardar(self.contador, 'Mensaje', message)
-                        self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
-                        self.poliedro.seleccionAcceso('362', start=False)
-                        self.ventana_informacion.write(f"{iccid} El Kit ya se encuentra registrado")
+                    message = self.legalizador.read('messageFormItem', 'class')
                 except:
-                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
-                    self.poliedro.seleccionAcceso('362', start=False)
-                    self.ventana_informacion.write(f"{iccid} error no identificado")
-                raise('error controlado kit registrado')
+                    message = ''
+            if message == 'La consulta demograficos no arrojo informacion para este cliente':
+                self.excel.guardar(self.contador, 'Mensaje', message)
+                self.ventana_informacion.write(f"{iccid} {message}")
+                raise(message)
+            if message == 'Señor consultor, se presentó un inconveniente al intentar procesar su solicitud, por favor intente nuevamente':
+                self.ventana_informacion.write(f"{iccid} {message}")
+                raise(message)
+        except:
+            try:
+                message = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+                if message == 'El Kit ya se encuentra registrado':
+                    self.excel.guardar(self.contador, 'Mensaje', message)
+                    self.ventana_informacion.write(f"{iccid} El Kit ya se encuentra registrado")
+            except:
+                pass
+            raise('error')
+            
+        demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
+        if demographic_response.status_code == 200:
+            demographic_json = demographic_response.json()
+            if demographic_json.get("rta") == True and not demographic_json.get("errores") and demographic_json.get("url") == "/ProductService":
                 
-            demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
-            if demographic_response.status_code == 200:
-                demographic_json = demographic_response.json()
-                if demographic_json.get("rta") == True and not demographic_json.get("errores") and demographic_json.get("url") == "/ProductService":
-                    
-                    
-                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
-                    self.legalizador.click('btnNext', 'id')
-                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Activation')
-                    self.legalizador.click('btnNext', 'id')
-                    
-                    # Buscar el mensaje en la página y guardarlo en el Excel
-                    message_element = self.legalizador.browser.find_element(By.CLASS_NAME, 'messageFormItem')
-                    self.excel.guardar(self.contador, 'Mensaje', message_element.text)
-                    self.ventana_informacion.write(f"{iccid} {message_element.text}")
-                    self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
-                    self.poliedro.seleccionAcceso('362', start=False)
-                    
-                else:
-                    self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de Demographic/Index1")
-                    raise Exception("Error en la validación de Demographic/Index1")
+                
+                self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+                self.legalizador.click('btnNext', 'id')
+                self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Activation')
+                self.legalizador.click('btnNext', 'id')
+                
+                # Buscar el mensaje en la página y guardarlo en el Excel
+                try:
+                    self.position(self.legalizador.retornarHtml(), 'pasoFinal', True)
+                    time.sleep(2)
+                    message_element = self.legalizador.readShort2('messageFormItem', 'class')
+                    # message_element = self.legalizador.browser.find_element(By.CLASS_NAME, 'messageFormItem')
+                    self.excel.guardar(self.contador, 'Mensaje', message_element)
+                    self.ventana_informacion.write(f"{iccid} {message_element}")
+                except:pass
+                self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                self.poliedro.seleccionAcceso('362', start=False)
+                self.position(self.legalizador.retornarHtml(), 'paso1', True)
+                
             else:
-                self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
-                raise Exception("Error en la URL de Demographic/Index1")
+                self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de Demographic/Index1")
+                raise Exception("Error en la validación de Demographic/Index1")
         else:
-            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL para legalizar")
-            raise Exception("Error en la URL de validación final")
+            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
+            raise Exception("Error en la URL de Demographic/Index1")
+    # else:
+    #     self.excel.guardar(self.contador, 'Mensaje', "Error en la URL para legalizar")
+    #     raise Exception("Error en la URL de validación final")
+
+    def position(self, html, paso=None, wait=False):
+        self.scrap = scraping.Scraping(html)
+        soup = self.scrap.soup
+
+        while wait:
+            if paso == 'paso1':
+                elementos_requeridos = [
+                    ("h3", "iconoTituloCliente"),
+                    ("h3", "iconoTituloInfoVenta"),
+                    ("h3", "iconoTituloEquipo"),
+                ]
+                if self.validate_position(elementos_requeridos, soup):
+                    return 1
+                else:
+                    self.scrap = scraping.Scraping(self.legalizador.retornarHtml())
+                    soup = self.scrap.soup
+            elif paso == 'pasoFinal':
+                elementos_requeridos = [
+                    ("h3", "iconoTituloActivacionesCliente"),
+                    ("h3", "iconoTituloActivacionesServicios"),
+                    ("h3", "iconoTituloActivacionesProducto"),
+                ]
+                if self.validate_position(elementos_requeridos, soup, 'class'):
+                    return 9
+                else:
+                    self.scrap = scraping.Scraping(self.legalizador.retornarHtml())
+                    soup = self.scrap.soup
+
+    
+    def validate_position(self, elementos_requeridos, soup, type='id'):
+        for tag, id_value in elementos_requeridos:
+            if type == 'id':
+                if not soup.find(tag, id=id_value):
+                    return False
+            elif type == 'class':
+                if not soup.find(tag, class_=id_value):
+                    return False
+            else:
+                return False
+        return True

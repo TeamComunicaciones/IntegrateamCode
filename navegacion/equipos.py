@@ -152,7 +152,21 @@ class Equipos:
         self.vLista = ""
         self.vEquipo = ""
         self.vRegion = ""
-        self.equipos.click('btnNext', 'id')#/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[3]
+        try:
+            self.equipos.click('btnNext', 'id')
+        except:
+                try:
+                    message = self.equipos.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+                    if message == 'Equipo procesado':
+                        self.excel.guardar(self.contador, 'Mensaje', message)
+                        self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        self.poliedro.seleccionAcceso('194', start=False)
+                        self.ventana_informacion.write(f"{self.iccid} Equipo procesado'")
+                except:
+                    self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    self.poliedro.seleccionAcceso('194', start=False)
+                    self.ventana_informacion.write(f"{self.iccid} error no identificado")
+                raise('error controlado kit registrado')
         self.codigo_distribuidor = self.equipos.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div/div[2]/div')
         time.sleep(2)
         self.equipos.click('btnNext', 'id')#/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]
@@ -167,8 +181,10 @@ class Equipos:
         self.ventana_informacion.write(f'Activacion exitosa de equipo {self.imei} {self.min}')
         time.sleep(2)
         self.equipos.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[1]')
+        
         self.poliedro.seleccionAcceso('194', start=False)
-
+        
+        
     def error1(self):
         self.icc = ""
         self.imei = ""

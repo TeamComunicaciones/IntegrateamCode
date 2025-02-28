@@ -248,6 +248,7 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        elif by == "class": find = self.browser.find_element_by_class_name(byStr)
         if find is not None:
             return find.text
         else: return "none"
@@ -266,6 +267,7 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        elif by == "class": find = self.browser.find_element_by_class_name(byStr)
         if find is not None:
             return find.text
         else: return "none"
