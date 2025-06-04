@@ -2,9 +2,9 @@ import pandas as pd
 
 class Excel_controller:
 
-    def leer_excel(self, file, tituloColumna=None):
+    def leer_excel(self, file, tituloColumna=None, dtype=None):
 
-        self.excel = pd.read_excel(file)
+        self.excel = pd.read_excel(file, dtype=dtype)
         self.cantidad = None
         if tituloColumna is not None:
             self.cantidad = len(self.excel[tituloColumna])
@@ -28,6 +28,9 @@ class Excel_controller:
         else:
             raise('No tiene cantidad determinada en la funcion de lectura, por no agregar titulo')
     
-    def export(self, result, file):
-        df = pd.DataFrame(result[1:], columns=result[0])
+    def export(self, result, file, type=True):
+        if type:
+            df = pd.DataFrame(result[1:], columns=result[0])
+        else:
+            df = result
         df.to_excel(file, index=False)

@@ -1,11 +1,14 @@
 from navegacion import sub_menu as sm, ventana_informacion
 from recursos import  label, botones, colors
-from funcionalidad import  web_controller, poliedro, excel
+from funcionalidad import  web_controller, poliedro, excel, scraping
 from subprocess import Popen
 import threading
 import tkinter as tk
 import customtkinter as ctk
 import time
+import requests
+import datetime
+import re
 
 class Equipos:
 
@@ -14,6 +17,7 @@ class Equipos:
         self.on_of = on_of
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
+        self.cookie_header = {}
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         self.titulo = label.Label().create_label(master, 'ACTIVADOR DE EQUIPO', 0.2, 0.0, 0.5,0.2, letterSize= 25)
@@ -62,6 +66,7 @@ class Equipos:
         class Abrir_pagina1(web_controller.Web_Controller):pass
         self.equipos = Abrir_pagina1(int(self.time.get()))
         self.equipos.openEdge()
+        time.sleep(3)
         self.equipos.selectPage(self.link)
     
     def ejecuccionHilo(self):
@@ -74,12 +79,12 @@ class Equipos:
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.equipos)
             self.poliedro.seleccionAcceso('194')
-            self.excel.leer_excel('src\equipos\equipos.xlsx','Iccid')
-            self.excel.quitarFormatoCientifico('Iccid')
-            self.excel.quitarFormatoCientifico('Imei')
             for i in range(int(self.repeticiones)):
                 self.contador = 0
                 self.ciclo = True
+                self.excel.leer_excel('src\equipos\equipos.xlsx','Iccid', dtype={'Iccid': str, 'Imei':str})
+                self.excel.quitarFormatoCientifico('Iccid')
+                self.excel.quitarFormatoCientifico('Imei')
                 self.ventana_informacion.write(f'Inicio ciclo {i}')
 
                 while self.ciclo:
@@ -95,15 +100,12 @@ class Equipos:
                                 self.ventana_informacion.write(f'ya procesada')
                                 self.contador += 1
                         except:
-                            self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
+                            # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
+                            self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                             try:
-                                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/a')
-                                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[1]/ul/li[1]/a')
                                 self.poliedro.seleccionAcceso('194', start=False)
-                            except:
-                                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[11]/a')
-                                self.equipos.selectPage(self.link)
-                                self.poliedro.seleccionAcceso('194', start=False)
+                            except: pass
+                            self.position(self.equipos.retornarHtml(), 'paso1', True)   
                             self.contador += 1
                 self.ventana_informacion.write(f'ciclo {i} terminado')
             self.ventana_informacion.write('Proceso terminado')
@@ -117,32 +119,131 @@ class Equipos:
         self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:] 
         self.imei = str(self.excel.excel['Imei'][self.contador])
         self.cedulaVendedor = str(self.excel.excel['Cedula vendedor'][self.contador]).replace('.0','')
-        
+        self.codigo_distribuidor = self.equipos.read('userDataCodDistribuidor', 'id')
+        self.vTecnologia = ""
+        self.vKit = ""
+        self.vLista = ""
+        self.vEquipo = ""
+        self.vRegion = ""
 
-        primerFormulario = [
-            ['DetailProduct_SellerId', self.cedulaVendedor, 'id'],
-            ['DetailProduct_Imei', self.imei, 'id'],
-            ['DetailProduct_Iccid', self.iccid, 'id'],
-        ]
-        # try:
-        self.poliedro.rellenoFormulario(3, primerFormulario)
+        self.position(self.equipos.retornarHtml(), 'paso1', True)
+        cookies = self.equipos.browser.get_cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+        
+        self.cookie_header['Cookie'] = self.equipos.getCookies()
+        headers = {
+            'Cookie': self.cookie_header['Cookie']
+        }
+
+        #primera
+        url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2'
+        payload = {
+            'ProductShortcutName': '194 - (GAKC) - Activación Kit Contado',
+            'Pospago': False,
+            'TechnologyId': 1,
+            'ObligaFlagImei': '',
+            'NumIOT': '910.919',
+            'DealerCode': self.codigo_distribuidor,
+            'productShortcut': 194,
+            'ActivationId': 27,
+            'ModuleId': 6,
+            'ProductTypeId': 1,
+            'PaymentId': 1,
+            'PlanId': 13,
+            'ProductId': 194,
+            'Pospago': False,
+            'IsSpecialUser': False,
+            'ActiveFieldsPortability': True,
+            'DetailProduct.ApplyPreactivedMin': False,
+            'DetailProduct.CausalGsmServiceChange': 0,
+            'DetailProduct.DealerCps': False,
+            'DetailProduct.CodTechImei': '',
+            'DetailProduct.DocumentTypeId': '',
+            'DetailProduct.RutNumber': '',
+            'DetailProduct.ExpeditionDate': '',
+            'DetailProduct.Imei': self.imei.replace(' ',''),
+            'DetailProduct.AuxiliaryIccid': '',
+            'DetailProduct.Iccid': self.iccid,
+            'DetailProduct.AuxiliaryIccid': '',
+            'DetailProduct.DocumentTypeIdRL': '',
+            'DetailProduct.DocumentNumberRL': '',
+            'DetailProduct.ExpeditionDateRL': '',
+            'DetailProduct.SellerId': self.cedulaVendedor,
+            'DetailProduct.ContractNumber': '',
+            'DetailProduct.PortabilityNumber': '',
+            'DetailProduct.RutCheck': False,
+            'DetailProduct.CheckEsim': False,
+            'DetailProduct.ContractNumberCheck': False,
+        }
+
+        post_response = session.post(url, headers=headers, data=payload)
+        if post_response.status_code == 200:
+            if 'errores' in post_response.json():
+                self.excel.guardar(self.contador, 'Mensaje', post_response.json()['errores'][0], destino='src\equipos\equipos.xlsx')
+                self.excel.guardar(self.contador, 'Min', 'error', destino='src\equipos\equipos.xlsx')
+                self.ventana_informacion.write(post_response.json()['errores'][0])
+                raise('error validacion 1')
+            else:
+                self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        else:
+            raise('error validacion 1')
+
+        self.position(self.equipos.retornarHtml(), 'paso2', True)
+        try:
+            validate = self.equipos.readShort('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+            if validate != 'Validación Correcta':
+                raise('error')
+        except:
+            scrap = scraping.Scraping(self.equipos.retornarHtml())
+            soup = scrap.soup
+            self.min = ""
+            self.mensaje = ""
+            self.iccid2 = self.get_value("ICC_ID - Identificación Tarjeta de Circuito Integrada.", soup)
+            self.imei2 = self.get_value("IMEI - Identificación Internacional del Equipo Móvil.", soup)
+            self.min = "Principal" if "Principal" in self.imei2 else self.min
+            self.min = "En uso" if "En uso" in self.iccid2 else self.min
+            self.vTecnologia = self.get_value("Validación Tecnología", soup)
+            self.vKit = self.get_value("Validación Kit Prepago", soup)
+            self.vLista = self.get_value("Validación en Listas de Imei Robados", soup)
+            self.vEquipo = self.get_value("Validación Equipo Factura", soup)
+            self.vRegion = self.get_value("Validación Region ICCID Distribuidor", soup)
+            self.guardarData()
+            raise('error')
+
         self.equipos.click('btnNext', 'id')
-        # except:
-        #     self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
-        #     self.poliedro.reinicio()
-        #     self.contador += 1
-        optionsList = [
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span'],
-            ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[4]/ul/li'],
-        ]
-        funcionList = [
-            self.validado,
-            self.error1
-        ]
-        self.poliedro.detectOption(optionsList, funcionList, NoneFunc=self.error2, short2=True)
-        self.guardarData()
-        # self.poliedro.reinicio()
-        self.contador += 1
+
+        self.position(self.equipos.retornarHtml(), 'paso3', True)
+        self.equipos.click('btnNext', 'id')
+
+        self.position(self.equipos.retornarHtml(), 'paso4', True)
+        self.equipos.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
+        self.equipos.click('/html/body/span/span/span[2]/ul/li[2]')
+
+        self.equipos.click('btnNext', 'id')
+        self.equipos.click('btnNext', 'id')
+
+        message = self.equipos.read('messageFormItem', 'class')
+        message = message.replace('* Su Solicitud fue enviada satisfactoriamente para el producto 194 y el MSISDN asignado es ', '')
+        message = message[:10]
+        self.excel.guardar(self.contador, 'Min', message, destino='src\equipos\equipos.xlsx')
+        self.ventana_informacion.write(f'Preactivado con min {message}')
+        raise('sin error')
+
+
+        # optionsList = [
+        #     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span'],
+        #     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[4]/ul/li'],
+        # ]
+        # funcionList = [
+        #     self.validado,
+        #     self.error1
+        # ]
+        # self.poliedro.detectOption(optionsList, funcionList, NoneFunc=self.error2, short2=True)
+        # self.guardarData()
+        # # self.poliedro.reinicio()
+        # self.contador += 1
     
     def validado(self):
         self.icc = ""
@@ -159,11 +260,11 @@ class Equipos:
                     message = self.equipos.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Equipo procesado':
                         self.excel.guardar(self.contador, 'Mensaje', message)
-                        self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                         self.poliedro.seleccionAcceso('194', start=False)
                         self.ventana_informacion.write(f"{self.iccid} Equipo procesado'")
                 except:
-                    self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                     self.poliedro.seleccionAcceso('194', start=False)
                     self.ventana_informacion.write(f"{self.iccid} error no identificado")
                 raise('error controlado kit registrado')
@@ -197,7 +298,10 @@ class Equipos:
         self.codigo_distribuidor = ''
         self.mensaje = self.equipos.readNoValidate('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[4]/ul/li')
         self.ventana_informacion.write(f'{self.mensaje}')
-        self.equipos.click('btnPrev', 'id')
+        if '9918INV-021. El IMEI:' in self.mensaje:
+            self.min = 'error 9918INV'
+        else:
+            self.equipos.click('btnPrev', 'id')
 
     def error2(self):
         self.mensaje = 'No deja preactivar por seriales en uso o principal'
@@ -216,11 +320,103 @@ class Equipos:
     def guardarData(self):
         self.excel.guardar(self.contador, 'Min', self.min, 'src\equipos\equipos.xlsx')
         self.excel.guardar(self.contador, 'Mensaje', self.mensaje, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'ICC_ID_Identificacion_Tarjeta_de_Circuito_Integrada', self.icc, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'IMEI_Identificacion_Internacional_del_Equipo_Movil', self.imei, 'src\equipos\equipos.xlsx')
+        self.excel.guardar(self.contador, 'ICC_ID_Identificacion_Tarjeta_de_Circuito_Integrada', self.iccid2, 'src\equipos\equipos.xlsx')
+        self.excel.guardar(self.contador, 'IMEI_Identificacion_Internacional_del_Equipo_Movil', self.imei2, 'src\equipos\equipos.xlsx')
         self.excel.guardar(self.contador, 'Validacion_Tecnologia', self.vTecnologia, 'src\equipos\equipos.xlsx')
         self.excel.guardar(self.contador, 'Validacion_Kit_Prepago', self.vKit, 'src\equipos\equipos.xlsx')
         self.excel.guardar(self.contador, 'Validacion_Region_ICCID_Distribuidor', self.vRegion, 'src\equipos\equipos.xlsx')
         self.excel.guardar(self.contador, 'Validacion_Equipo', self.vEquipo, 'src\equipos\equipos.xlsx')
         self.excel.guardar(self.contador, 'Validacion_Lista', self.vLista, 'src\equipos\equipos.xlsx')
         self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, 'src\equipos\equipos.xlsx')
+
+    def position(self, html, paso=None, wait=False):
+        self.scrap = scraping.Scraping(html)
+        soup = self.scrap.soup
+        count = 0
+        top = 100
+
+        while wait:
+            if paso == 'paso1':
+                elementos_requeridos = [
+                    ("h3", "iconoTituloEquipo"),
+                    ("h3", "iconoTituloInfoVenta"),
+                ]
+                if self.validate_position(elementos_requeridos, soup):
+                    return 1
+                else:
+                    self.scrap = scraping.Scraping(self.equipos.retornarHtml())
+                    soup = self.scrap.soup
+                    count += 1
+                    time.sleep(0.1)
+                    if count == top:
+                        break
+
+            elif paso == 'paso2':
+                elementos_requeridos = [
+                    ("h3", "iconoTituloValidacionesyRestricciones"),
+                    ("h3", "iconoTituloOtrasValidaciones"),
+                ]
+                if self.validate_position(elementos_requeridos, soup):
+                    return 1
+                else:
+                    self.scrap = scraping.Scraping(self.equipos.retornarHtml())
+                    soup = self.scrap.soup
+                    count += 1
+                    time.sleep(0.1)
+                    if count == top:
+                        break
+
+            elif paso == 'paso3':
+                elementos_requeridos = [
+                    ("h3", "iconoTituloDatosDistribuidor")
+                ]
+                if self.validate_position(elementos_requeridos, soup):
+                    return 1
+                else:
+                    self.scrap = scraping.Scraping(self.equipos.retornarHtml())
+                    soup = self.scrap.soup
+                    count += 1
+                    time.sleep(0.1)
+                    if count == top:
+                        break
+
+            elif paso == 'paso4':
+                elementos_requeridos = [
+                    ("h3", "iconoTituloDatosEquipoyPlan")
+                ]
+                if self.validate_position(elementos_requeridos, soup):
+                    return 1
+                else:
+                    self.scrap = scraping.Scraping(self.equipos.retornarHtml())
+                    soup = self.scrap.soup
+                    count += 1
+                    time.sleep(0.1)
+                    try:
+                        find = self.equipos.browser.find_element_by_id('btnNext')
+                        find.click()
+                    except:
+                        pass
+                    if count == top + 200:
+                        break
+        raise('error')
+
+    
+    def validate_position(self, elementos_requeridos, soup, type='id'):
+        for tag, id_value in elementos_requeridos:
+            if type == 'id':
+                if not soup.find(tag, id=id_value):
+                    return False
+            elif type == 'class':
+                if not soup.find(tag, class_=id_value):
+                    return False
+            else:
+                return False
+        return True
+    
+    def get_value(self, label_text, soup):
+        label = soup.find("label", text=re.compile(label_text, re.IGNORECASE))
+        if label:
+            siguiente_div = label.find_next("div")
+            if siguiente_div:
+                return siguiente_div.text.strip()
+        return "No encontrado"

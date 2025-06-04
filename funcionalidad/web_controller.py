@@ -12,7 +12,9 @@ from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import WebDriverException
 import random
+import traceback
 
 
 class Web_Controller:
@@ -22,6 +24,7 @@ class Web_Controller:
         sleep = sleeptime
         global aleatorio
         aleatorio = False
+        self.browser = None
         # self.edgedriver()
         # self.openEdge()
     
@@ -77,11 +80,12 @@ class Web_Controller:
                     return data
                 except Exception as err:
                     if contador < 8:
-                        print(f'intento numero {contador} {err}')
+                        # print(f'intento numero {contador} {err}')
                         time.sleep(1)
                         contador +=1
                     else:
-                        raise('Excedio el numero de intentos')
+                        print(f'Excedio {args}')
+                        raise(f'Excedio {args}')
         return execute
     
     def validateShort(funcion):
@@ -139,6 +143,13 @@ class Web_Controller:
         service = ChromeService('chromedriver')
         options =  webdriver.ChromeOptions()
         self.browser = webdriver.Chrome(chrome_options= options)
+    
+    def isBrowserOpen(self):
+        try:
+            self.browser.title
+            return True
+        except WebDriverException:
+            return False
     
     def openEdge(self, headless = False):
         options = EdgeOptions()
@@ -271,6 +282,16 @@ class Web_Controller:
         if find is not None:
             return find.text
         else: return "none"
+
+    @validate
+    def readMulty(self, byStr, by='xpath'):
+        if by == "xpath": find = self.browser.find_elements_by_xpath(byStr)
+        elif by == "id": find = self.browser.find_elements_by_id(byStr)
+        elif by == "name": find = self.browser.find_elements_by_name(byStr)
+        elif by == "class": find = self.browser.find_elements_by_class_name(byStr)
+        if find is not None:
+            return [i.text for i in find]
+        else: return "none"
     
     @validate
     def value(self, byStr, by='xpath'):
@@ -279,6 +300,15 @@ class Web_Controller:
         elif by == "name": find = self.browser.find_element_by_name(byStr)
         if find is not None:
             return find.get_attribute('value')
+        else: return "none"
+
+    @validate
+    def style(self, byStr, by='xpath'):
+        if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+        elif by == "id": find = self.browser.find_element_by_id(byStr)
+        elif by == "name": find = self.browser.find_element_by_name(byStr)
+        if find is not None:
+            return find.get_attribute('style')
         else: return "none"
 
     def readNoValidate(self, byStr, by='xpath'):

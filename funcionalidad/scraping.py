@@ -7,8 +7,9 @@ class Scraping:
     def __init__(self,html):
         self.soup = BeautifulSoup(html, 'html.parser')
 
-    def extrarDataTablas(self):
-        tabla = self.soup.find('table')
+    def extrarDataTablas(self, tabla =None):
+        if tabla == None:
+            tabla = self.soup.find('table')
 
         if tabla:
             filas = tabla.find_all('tr')
