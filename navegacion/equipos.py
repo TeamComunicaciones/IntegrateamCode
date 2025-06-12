@@ -9,6 +9,9 @@ import time
 import requests
 import datetime
 import re
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class Equipos:
 
@@ -78,6 +81,7 @@ class Equipos:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.equipos)
+            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('194')
             for i in range(int(self.repeticiones)):
                 self.contador = 0

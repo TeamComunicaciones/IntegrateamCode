@@ -10,6 +10,10 @@ import requests
 from selenium.webdriver.common.by import By
 import json
 import traceback
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 class Legalizador:
 
@@ -86,8 +90,29 @@ class Legalizador:
     def ejecuccion(self):
         try:
             self.poliedro.definirBrowser(self.legalizador)
+        except Exception as e:
+            self.log_error("definirBrowser", e)
+            return
+
+        try:
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+        except Exception as e:
+            self.log_error("click en menú", e)
+            return
+
+        try:
             self.poliedro.seleccionAcceso('362')
+        except Exception as e:
+            self.log_error("seleccionAcceso", e)
+            return
+
+        try:
             self.position(self.legalizador.retornarHtml(), 'paso1', True)
+        except Exception as e:
+            self.log_error("position paso1", e)
+            return
+
+        try:
             for i in range(int(self.repeticiones)):
                 self.ciclo = True
                 self.contador = 0
@@ -99,7 +124,7 @@ class Legalizador:
                     if self.contador == self.excel.cantidad:
                         self.ciclo = False
                     else:
-                        # try:
+                        try:
                             self.min = str(self.excel.excel['min'][self.contador])
                             self.mensaje = str(self.excel.excel['Mensaje'][self.contador])
                             if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
@@ -109,24 +134,20 @@ class Legalizador:
                                 self.cookie_header['Cookie'] = self.legalizador.getCookies()
                                 self.verificar_urls()
                                 self.contador += 1
-                                # self.poliedro.seleccionAcceso('362', start=False)
-                        # except:
-                        #     self.position_detect()
-                            # while True:
-                            #     try:
-                            #         self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
-                            #         self.position(self.legalizador.retornarHtml(), 'restart', True)
-                            #         break
-                            #     except: pass
-                            # self.poliedro.seleccionAcceso('362', start=False)
-                            # self.position(self.legalizador.retornarHtml(), 'paso1', True)
-                            # self.contador += 1
-
+                        except Exception as e:
+                            self.log_error("iteración de ciclo", e)
+                            self.contador += 1
                 self.ventana_informacion.write('Proceso terminado')
                 self.ventana_informacion.write(f'Ciclo {i+1} finalizado')
             self.on_of(True)
-        except:
-            self.alertas('se detiene el programa error')
+        except Exception as e:
+            self.log_error("bloque principal", e)
+
+    def log_error(self, contexto, e):
+        with open("error_log.txt", "a", encoding="utf-8") as f:
+            f.write(f"\n[{contexto}] Error: {str(e)}\n")
+            f.write(traceback.format_exc())
+        self.ventana_informacion.write(f"Error en {contexto}: {str(e)}") 
     
     def establecer_datos(self):
         self.ventana_informacion.write(f'legalizando numero {self.contador+1} de {self.excel.cantidad}')
@@ -336,7 +357,7 @@ class Legalizador:
             track = self.position_detect()
             print(track, mode)
             if track in ['login']:
-                raise('session cerrada')
+                raise Exception('session cerrada')
             elif track == 'restart':
                 try:
                     self.poliedro.seleccionAcceso('362', start=False)

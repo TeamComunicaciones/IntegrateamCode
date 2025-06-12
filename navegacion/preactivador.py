@@ -8,7 +8,9 @@ import customtkinter as ctk
 import time
 import requests
 import datetime
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class Preactivador:
 
@@ -118,6 +120,8 @@ class Preactivador:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.preactivador)
+            # Primer clic
+            self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('195')
             self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
             self.excel.quitarFormatoCientifico('Iccid')

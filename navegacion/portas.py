@@ -102,21 +102,29 @@ class Portas:
         try:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
+
             self.poliedro.definirBrowser(self.portas)
+            # Primer clic
+            self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+
+
             self.poliedro.seleccionAcceso('290')
-            self.excel.leer_excel('src\portas\portabilidad.xlsx','CC CLIENTE')
+            self.excel.leer_excel('src\\portas\\portabilidad.xlsx', 'CC CLIENTE')
             self.excel.quitarFormatoCientifico('SERIAL')
+
             for i in range(int(self.repeticiones)):
                 self.ciclo = True
                 self.contador = 0
                 self.iteraciones()
+
             self.ventana_informacion.write('Proceso terminado')
             self.on_of(True)
+            
         except Exception as e:
             self.ventana_informacion.write(f'se detiene el programa error: {e}')
-            
             self.alertas('se detiene el programa error')
-            raise('se detiene el programa')
+            raise Exception('se detiene el programa')
+
         
 
 
@@ -382,18 +390,30 @@ class Portas:
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
             if self.pagina == 4:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[1]')
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
             if self.pagina == 3:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
             if self.pagina == 2:
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
         except:
             self.poliedro.reinicio()
