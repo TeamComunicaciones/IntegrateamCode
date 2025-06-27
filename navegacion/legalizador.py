@@ -6,11 +6,9 @@ import threading
 import tkinter as tk
 import customtkinter as ctk
 import time
-import requests
 from selenium.webdriver.common.by import By
-import json
+from selenium.webdriver.common.keys import Keys
 import traceback
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -160,63 +158,44 @@ class Legalizador:
         self.cedula = str(self.excel.excel['cedula'][self.contador]).replace('.0','')
         self.tipoDoc = str(self.excel.excel['tipodoc'][self.contador])
         self.documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
-        self.url_base = 'https://traffic-md-webapp-prd01.traffic.claro.com.co'
-        self.headers = {
-            'Cookie': self.cookie_header['Cookie']
-        }
+        # ✅ ELIMINAR DEPENDENCIAS DE API - Solo usar datos necesarios para pantalla
         self.imei = self.imei.replace(' ','')
-        self.cookies = self.legalizador.browser.get_cookies()
-        self.session = requests.Session()
-        for cookie in self.cookies:
-            self.session.cookies.set(cookie['name'], cookie['value'])
     
     def captura_datos(self):
         try:
             self.position(self.legalizador.retornarHtml(), 'paso1', True)
-            post_url = f"{self.url_base}/CaptureData/Index2"
-            post_data = {
-                "ProductShortcutName": "362 - (GLKC) - Legalizacion Kit Contado",
-                "Pospago": False,
-                "TechnologyId": 1,
-                "ObligaFlagImei": "",
-                "NumIOT": "910,919",
-                "productShortcut": 362,
-                "ActivationId": 202,
-                "ModuleId": 6,
-                "ProductTypeId": 1,
-                "PaymentId": 1,
-                "PlanId": 1,
-                "ProductId": 362,
-                "Pospago": False,
-                "IsSpecialUser": False,
-                "ActiveFieldsPortability": True,
-                "DetailProduct.ApplyPreactivedMin": False,
-                "DetailProduct.CausalGsmServiceChange": 0,
-                "DetailProduct.DealerCps": False,
-                "DetailProduct.CodTechImei": "",
-                "DetailProduct.DocumentTypeId": self.documentType,
-                "DetailProduct.DocumentNumber": self.cedula,
-                "DetailProduct.LastName": self.apellido,
-                "DetailProduct.ExpeditionDate": "",
-                "DetailProduct.Imei": self.imei,
-                "DetailProduct.AuxiliaryImei": "",
-                "DetailProduct.Iccid": self.iccid,
-                "DetailProduct.AuxiliaryIccid": "",
-                "DetailProduct.DocumentTypeIdRL": "",
-                "DetailProduct.DocumentNumberRL": "",
-                "DetailProduct.ExpeditionDateRL": "",
-                "DetailProduct.SellerId": self.cedulaVendedor,
-                "DetailProduct.Msisdn": self.min
-            }
-            post_response = self.session.post(post_url, headers=self.headers, data=post_data)
-            if post_response.status_code == 200:
-                ruta = json.loads(post_response.text)
-                if ruta['url'] == '/Validation':
-                    self.legalizador.selectPage(f'{self.url_base}{ruta["url"]}')
-                else:
-                    raise('error controlado ruta validation no disponible')
-            else:
-                raise('error controlado respuesta api captura datos')
+            
+            # Click en el campo select2 para abrirlo
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[1]/div/span/span[1]/span/span[1]', 'xpath')
+            # Escribir en el input de búsqueda que aparece dinámicamente
+            if self.documentType == 2:  # NIT
+                self.legalizador.write('/html/body/span/span/span[1]/input', 'nit', 'xpath')
+            else:  # CC
+                self.legalizador.write('/html/body/span/span/span[1]/input', 'cedula', 'xpath')
+            # Presionar Enter para seleccionar la opción encontrada
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+           
+            
+            # Llenar campos del formulario usando métodos existentes
+            self.legalizador.write('DetailProduct_DocumentNumber', self.cedula, 'id')
+            self.legalizador.write('DetailProduct_LastName', self.apellido, 'id')
+            self.legalizador.write('DetailProduct_Imei', self.imei, 'id')
+            self.legalizador.write('DetailProduct_Iccid', self.iccid, 'id')
+            self.legalizador.write('DetailProduct_SellerId', self.cedulaVendedor, 'id')
+            self.legalizador.write('DetailProduct_Msisdn', self.min, 'id')
+            
+            # Hacer clic en siguiente
+            self.legalizador.click('btnNext', 'id')
+            
+            # Esperar a que cargue la siguiente página
+            while True:
+                time.sleep(1)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading captura datos')
+                    
         except Exception as e:
             self.logs.append([e,traceback.format_exc()])
             self.restart_new()
@@ -262,35 +241,122 @@ class Legalizador:
                 self.legalizador.click('btnNext', 'id')
                 self.position(self.legalizador.retornarHtml(), 'demographic', True)
 
-            demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
-            demographic_data = {
-                "PersonalInfo.GreetingId": "O",
-                "PersonalInfo.Name": self.nombre,
-                "PersonalInfo.LastName": self.apellido,
-                "PersonalInfo.Email": "acruz@teamcomunicaciones.com",
-                "PersonalInfo.Phone.PhoneId": "",
-                "PersonalInfo.Phone.PhoneClass": "2",
-                "PersonalInfo.Phone.Prefix": "604",
-                "PersonalInfo.Phone.PhoneNumber": "0313123",
-                "PersonalInfo.EmailInitial": "",
-                "PersonalInfo.DocumentTypeId": "2",
-                "PersonalInfo.Document": self.cedula,
-                "PersonalInfo.Address.AddressId": "",
-                "PersonalInfo.Address.AddressClassId": "Otras",
-                "PersonalInfo.Address.Address": "central",
-                "PersonalInfo.Address.Department": "ANTIOQUIA",
-                "PersonalInfo.Address.City": "MEDELLIN",
-                "PersonalInfo.Address.Town": "Central"
-            }
-            demographic_response = self.session.post(demographic_url, headers=self.headers, data=demographic_data)
-            if demographic_response.status_code == 200:
-                ruta = json.loads(demographic_response.text)
-                if ruta['url'] == '/ProductService':
-                    self.legalizador.selectPage(f'{self.url_base}{ruta["url"]}')
-                else:
-                    raise('error controlado ruta ProductService no disponible')
-            else:
-                raise('error controlado respuesta api demografic')
+            # ✅ USAR PANTALLA con XPath específicos (patrón exitoso click + escribir + enter)
+            
+            # Saludo - Dropdown select2
+            # TODO: Reemplazar con XPath específico del campo Saludo
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[1]/div[1]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', 'sr', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+                
+            self.legalizador.write('PersonalInfo_Name', self.nombre, 'id')
+            self.legalizador.write('PersonalInfo_LastName', self.apellido, 'id')
+            self.legalizador.write('PersonalInfo_Email', self.correo, 'id')
+            
+            # Tipo de teléfono - Dropdown select2
+            # TODO: Reemplazar con XPath específico del campo Tipo de Teléfono
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[1]/div[5]/div[2]/fieldset/div/div[1]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', 'fijo', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+
+             # Esperar dinámicamente a que se carguen las ciudades
+            while True:
+                time.sleep(0.3)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading ciudades')
+            
+            # Prefijo teléfono - Dropdown select2
+            # TODO: Reemplazar con XPath específico del campo Prefijo de Teléfono
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[1]/div[5]/div[2]/fieldset/div/div[2]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', '604', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+            
+            self.legalizador.write('PersonalInfo.Phone.PhoneNumber', '0313123', 'name')
+            
+            # Tipo de documento - Dropdown select2
+            # TODO: Reemplazar con XPath específico del campo Tipo de Documento
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[1]/div/span/span[1]/span/span[1]', 'xpath')
+            if self.documentType == 2:  # NIT
+                self.legalizador.write('/html/body/span/span/span[1]/input', 'nit', 'xpath')
+            else:  # CC
+                self.legalizador.write('/html/body/span/span/span[1]/input', 'cedula', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+                
+            self.legalizador.write('PersonalInfo_Document', self.cedula, 'id')
+            
+            # Tipo de dirección - Dropdown select2
+            # TODO: Reemplazar con XPath específico del campo Tipo de Dirección
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[3]/div[2]/fieldset/div[1]/div[1]/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', 'otras', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+
+             # Esperar dinámicamente a que se carguen las ciudades
+            while True:
+                time.sleep(0.3)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading ciudades')
+                
+            self.legalizador.write('PersonalInfo.Address.Address', 'central', 'name')
+
+             # Esperar dinámicamente a que se carguen las ciudades
+            while True:
+                time.sleep(0.3)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading ciudades')
+            
+            # Departamento - Dropdown select2
+            # TODO: Reemplazar con XPath específico del campo Departamento
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[3]/div[2]/fieldset/div[3]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', 'antio', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+                
+            # Esperar dinámicamente a que se carguen las ciudades
+            while True:
+                time.sleep(0.3)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading ciudades')
+            
+            # Ciudad - Dropdown select2
+            # TODO: Reemplazar con XPath específico del campo Ciudad
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[3]/div[2]/fieldset/div[4]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', 'mede', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+                
+            # Esperar dinámicamente a que se carguen las zonas
+            while True:
+                time.sleep(0.3)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading zonas')
+
+            self.legalizador.write('PersonalInfo.Address.Town', 'central', 'name')
+            
+            # Hacer clic en siguiente
+            self.legalizador.click('btnNext', 'id')
+            
+            # Esperar a que cargue la siguiente página
+            while True:
+                time.sleep(1)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading demografica')
+                    
             self.position(self.legalizador.retornarHtml(), 'equipo plan', True)
         except Exception as e:
             self.logs.append([e,traceback.format_exc()])
@@ -333,16 +399,6 @@ class Legalizador:
         # self.position_detect()
         raise('error')
         
-        
-        
-        
-        
-        
-        
-        
-        
-
-
     def verificar_urls(self):
         lista_ejecucion = {
             'paso1' : self.captura_datos,

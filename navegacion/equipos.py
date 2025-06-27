@@ -95,27 +95,39 @@ class Equipos:
                     if self.contador == self.excel.cantidad:
                         self.ciclo = False
                     else:
-                        try:
-                            min = str(self.excel.excel['Min'][self.contador])
-                            if str(min) == 'nan' or str(min) == '':
-                                self.mensaje = ''
-                                self.EquiposInd()
-                            else:
-                                self.ventana_informacion.write(f'ya procesada')
-                                self.contador += 1
-                        except:
-                            # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
-                            self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                        try:    
                             try:
-                                self.poliedro.seleccionAcceso('194', start=False)
-                            except: pass
-                            self.position(self.equipos.retornarHtml(), 'paso1', True)   
-                            self.contador += 1
+                                min = str(self.excel.excel['Min'][self.contador])
+                                if str(min) == 'nan' or str(min) == '':
+                                    self.mensaje = ''
+                                    self.EquiposInd()
+                                else:
+                                    self.ventana_informacion.write(f'ya procesada')
+                                    self.contador += 1
+                            except:
+                                # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
+                                self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                                try:
+                                    self.poliedro.seleccionAcceso('194', start=False)
+                                except: pass
+                                self.position(self.equipos.retornarHtml(), 'paso1', True)   
+                                self.contador += 1
+                        except Exception as e:
+                            self.ventana_informacion.write(f"Error en la iteración {self.contador}: {e}")
+                            self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            """ self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span/text()')
+                            time.sleep(2)
+                            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
+                            self.ventana_informacion.write("Redirigido para reintentar.")
+                            time.sleep(3) """
+                    continue
+                    
                 self.ventana_informacion.write(f'ciclo {i} terminado')
             self.ventana_informacion.write('Proceso terminado')
             self.on_of(True)
-        except:
-            self.alertas('se detiene el programa error')
+        except Exception as e:
+            print(f"Error ocurrido: {e}")
+            self.alertas('se detiene el programa error')
     
 
     def EquiposInd(self):
