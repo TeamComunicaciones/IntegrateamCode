@@ -123,6 +123,12 @@ class Legalizador:
                         self.ciclo = False
                     else:
                         try:
+                            if self.contador >= 1:
+                                self.legalizador.click('toggleProductBTN', 'id')
+                                self.poliedro.seleccionAcceso('Seleccione...', start=False)
+                                self.poliedro.seleccionAcceso('362', start=False)
+
+
                             self.min = str(self.excel.excel['min'][self.contador])
                             self.mensaje = str(self.excel.excel['Mensaje'][self.contador])
                             if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
@@ -163,6 +169,14 @@ class Legalizador:
     
     def captura_datos(self):
         try:
+            while True:
+                time.sleep(1)
+                loading =self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading')
+            
             self.position(self.legalizador.retornarHtml(), 'paso1', True)
             
             # Click en el campo select2 para abrirlo
@@ -178,7 +192,8 @@ class Legalizador:
             
             # Llenar campos del formulario usando métodos existentes
             self.legalizador.write('DetailProduct_DocumentNumber', self.cedula, 'id')
-            self.legalizador.write('DetailProduct_LastName', self.apellido, 'id')
+            if self.documentType != 2:  # NIT
+                self.legalizador.write('DetailProduct_LastName', self.apellido, 'id')
             self.legalizador.write('DetailProduct_Imei', self.imei, 'id')
             self.legalizador.write('DetailProduct_Iccid', self.iccid, 'id')
             self.legalizador.write('DetailProduct_SellerId', self.cedulaVendedor, 'id')
@@ -241,6 +256,21 @@ class Legalizador:
                 self.legalizador.click('btnNext', 'id')
                 self.position(self.legalizador.retornarHtml(), 'demographic', True)
 
+            while True:
+                time.sleep(0.3)
+                loading = self.legalizador.style('loading', 'id')
+                if "display: none" in loading:
+                    break
+                elif "display: block" in loading:
+                    print('loading formulario demografico')
+            
+            errors = self.legalizador.read('viewErrors', 'id')
+            if errors:
+                self.excel.guardar(self.contador, 'Mensaje', errors)
+                self.excel.guardar(self.contador, 'Min', 'error')
+                self.ventana_informacion.write(f"{self.iccid} {errors}")
+                raise('error controlado en formulario demografico')
+
             # ✅ USAR PANTALLA con XPath específicos (patrón exitoso click + escribir + enter)
             
             # Saludo - Dropdown select2
@@ -259,7 +289,7 @@ class Legalizador:
             self.legalizador.write('/html/body/span/span/span[1]/input', 'fijo', 'xpath')
             self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
 
-             # Esperar dinámicamente a que se carguen las ciudades
+            # Esperar dinámicamente a que se carguen las ciudades
             while True:
                 time.sleep(0.3)
                 loading = self.legalizador.style('loading', 'id')
