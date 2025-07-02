@@ -97,6 +97,9 @@ class Legalizador:
         except Exception as e:
             self.log_error("click en menú", e)
             return
+        
+        if not self.wait_for_loading(legalizador=False):
+            raise Exception("Timeout esperando carga inicial en captura_datos")
 
         try:
             self.poliedro.seleccionAcceso('362')
@@ -123,18 +126,26 @@ class Legalizador:
                         self.ciclo = False
                     else:
                         try:
-                            if self.contador >= 1:
-                                self.legalizador.click('toggleProductBTN', 'id')
-                                self.poliedro.seleccionAcceso('Seleccione...', start=False)
-                                self.poliedro.seleccionAcceso('362', start=False)
-
-
                             self.min = str(self.excel.excel['min'][self.contador])
                             self.mensaje = str(self.excel.excel['Mensaje'][self.contador])
-                            if str(self.mensaje) != 'nan' and str(self.mensaje) != 'error':
+
+                            mensaje_valido = str(self.mensaje) not in ['nan', 'error']
+                            min_invalido = str(self.excel.excel['Min'][self.contador]) in ['error', 'procesado']
+
+                            if mensaje_valido or min_invalido:
                                 self.ventana_informacion.write(f'Legalizacion {self.min} ya realizada o con error ya detectado')
                                 self.contador += 1
                             else:
+                                if self.contador >= 1:
+                                    try:
+                                        self.legalizador.click('toggleProductBTN', 'id')
+                                    except Exception as e:
+                                        self.log_error("click toggleProductBTN", e)
+                                    self.legalizador.seleccionAcceso('Seleccione...', start=False)
+                                    self.legalizador.seleccionAcceso('362', start=False)
+                                    if not self.wait_for_loading():
+                                        raise Exception("Timeout esperando carga inicial en captura_datos")
+
                                 self.cookie_header['Cookie'] = self.legalizador.getCookies()
                                 self.verificar_urls()
                                 self.contador += 1
@@ -143,6 +154,10 @@ class Legalizador:
                             self.contador += 1
                 self.ventana_informacion.write('Proceso terminado')
                 self.ventana_informacion.write(f'Ciclo {i+1} finalizado')
+            try:
+                self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except Exception as e:
+                self.log_error("click en menú", e)
             self.on_of(True)
         except Exception as e:
             self.log_error("bloque principal", e)
@@ -164,56 +179,8 @@ class Legalizador:
         self.cedula = str(self.excel.excel['cedula'][self.contador]).replace('.0','')
         self.tipoDoc = str(self.excel.excel['tipodoc'][self.contador])
         self.documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
-        # ✅ ELIMINAR DEPENDENCIAS DE API - Solo usar datos necesarios para pantalla
+        # ELIMINAR DEPENDENCIAS DE API - Solo usar datos necesarios para pantalla
         self.imei = self.imei.replace(' ','')
-    
-    def captura_datos(self):
-        try:
-            while True:
-                time.sleep(1)
-                loading =self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading')
-            
-            self.position(self.legalizador.retornarHtml(), 'paso1', True)
-            
-            # Click en el campo select2 para abrirlo
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[1]/div/span/span[1]/span/span[1]', 'xpath')
-            # Escribir en el input de búsqueda que aparece dinámicamente
-            if self.documentType == 2:  # NIT
-                self.legalizador.write('/html/body/span/span/span[1]/input', 'nit', 'xpath')
-            else:  # CC
-                self.legalizador.write('/html/body/span/span/span[1]/input', 'cedula', 'xpath')
-            # Presionar Enter para seleccionar la opción encontrada
-            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
-           
-            
-            # Llenar campos del formulario usando métodos existentes
-            self.legalizador.write('DetailProduct_DocumentNumber', self.cedula, 'id')
-            if self.documentType != 2:  # NIT
-                self.legalizador.write('DetailProduct_LastName', self.apellido, 'id')
-            self.legalizador.write('DetailProduct_Imei', self.imei, 'id')
-            self.legalizador.write('DetailProduct_Iccid', self.iccid, 'id')
-            self.legalizador.write('DetailProduct_SellerId', self.cedulaVendedor, 'id')
-            self.legalizador.write('DetailProduct_Msisdn', self.min, 'id')
-            
-            # Hacer clic en siguiente
-            self.legalizador.click('btnNext', 'id')
-            
-            # Esperar a que cargue la siguiente página
-            while True:
-                time.sleep(1)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading captura datos')
-                    
-        except Exception as e:
-            self.logs.append([e,traceback.format_exc()])
-            self.restart_new()
     
     def validate_data(self):
         try:
@@ -247,8 +214,56 @@ class Legalizador:
             self.logs.append([e,traceback.format_exc()])
             self.restart_new()
     
-    def captura_demografica(self):
+    def captura_datos_optimized(self):
+        """
+        Versión optimizada de captura_datos usando wait_for_loading()
+        """
         try:
+            # USAR MÉTODO REUTILIZABLE PARA ESPERA INICIAL
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga inicial en captura_datos")
+            
+            self.position(self.legalizador.retornarHtml(), 'paso1', True)
+            
+            # Click en el campo select2 para abrirlo
+            self.legalizador.click('select2-DetailProduct_DocumentTypeId-container', 'id')
+            # Escribir en el input de búsqueda que aparece dinámicamente
+            if self.documentType == 2:  # NIT
+                self.legalizador.write('/html/body/span/span/span[1]/input', 'nit', 'xpath')
+            else:  # CC
+                self.legalizador.write('/html/body/span/span/span[1]/input', 'cedula', 'xpath')
+            # Presionar Enter para seleccionar la opción encontrada
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+           
+            # Llenar campos del formulario usando métodos existentes
+            self.legalizador.write('DetailProduct_DocumentNumber', self.cedula, 'id')
+            if self.documentType != 2:  # NIT
+                self.legalizador.write('DetailProduct_LastName', self.apellido, 'id')
+            self.legalizador.write('DetailProduct_Imei', self.imei, 'id')
+            self.legalizador.write('DetailProduct_Iccid', self.iccid, 'id')
+            self.legalizador.write('DetailProduct_SellerId', self.cedulaVendedor, 'id')
+            self.legalizador.write('DetailProduct_Msisdn', self.min, 'id')
+            
+            # Hacer clic en siguiente
+            self.legalizador.click('btnNext', 'id')
+            
+            # USAR MÉTODO REUTILIZABLE PARA ESPERA FINAL
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de hacer clic en Siguiente")
+                    
+        except Exception as e:
+            self.logs.append([e,traceback.format_exc()])
+            self.restart_new()
+    
+    def captura_demografica_optimized(self):
+        """
+        Versión optimizada de captura_demografica usando wait_for_loading()
+        """
+        try:
+            # USAR MÉTODO REUTILIZABLE PARA ESPERA INICIAL
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga inicial en captura_demografica")
+                
             try:
                 self.position(self.legalizador.retornarHtml(), 'demographic', True)
             except:
@@ -256,13 +271,9 @@ class Legalizador:
                 self.legalizador.click('btnNext', 'id')
                 self.position(self.legalizador.retornarHtml(), 'demographic', True)
 
-            while True:
-                time.sleep(0.3)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading formulario demografico')
+            # USAR MÉTODO REUTILIZABLE PARA SEGUNDA ESPERA
+            if not self.wait_for_loading(timeout=15, sleep_interval=0.3):
+                raise Exception("Timeout esperando carga del formulario demográfico")
             
             errors = self.legalizador.read('viewErrors', 'id')
             if errors:
@@ -271,121 +282,70 @@ class Legalizador:
                 self.ventana_informacion.write(f"{self.iccid} {errors}")
                 raise('error controlado en formulario demografico')
 
-            # ✅ USAR PANTALLA con XPath específicos (patrón exitoso click + escribir + enter)
-            
             # Saludo - Dropdown select2
-            # TODO: Reemplazar con XPath específico del campo Saludo
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[1]/div[1]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.click('select2-PersonalInfo_GreetingId-container', 'id')
             self.legalizador.write('/html/body/span/span/span[1]/input', 'sr', 'xpath')
             self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
                 
             self.legalizador.write('PersonalInfo_Name', self.nombre, 'id')
-            self.legalizador.write('PersonalInfo_LastName', self.apellido, 'id')
+
+            if self.documentType != 2:
+                self.legalizador.write('PersonalInfo_LastName', self.apellido, 'id')
+
             self.legalizador.write('PersonalInfo_Email', self.correo, 'id')
             
             # Tipo de teléfono - Dropdown select2
-            # TODO: Reemplazar con XPath específico del campo Tipo de Teléfono
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[1]/div[5]/div[2]/fieldset/div/div[1]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.click('select2-PhoneClass-container', 'id')
             self.legalizador.write('/html/body/span/span/span[1]/input', 'fijo', 'xpath')
             self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
 
-            # Esperar dinámicamente a que se carguen las ciudades
-            while True:
-                time.sleep(0.3)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading ciudades')
-            
-            # Prefijo teléfono - Dropdown select2
-            # TODO: Reemplazar con XPath específico del campo Prefijo de Teléfono
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[1]/div[5]/div[2]/fieldset/div/div[2]/div/span/span[1]/span/span[1]', 'xpath')
-            self.legalizador.write('/html/body/span/span/span[1]/input', '604', 'xpath')
-            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+            # ESPERAR DINÁMICAMENTE CON MÉTODO REUTILIZABLE
+            if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
+                raise Exception("Timeout esperando carga después de seleccionar tipo de teléfono")
             
             self.legalizador.write('PersonalInfo.Phone.PhoneNumber', '0313123', 'name')
             
-            # Tipo de documento - Dropdown select2
-            # TODO: Reemplazar con XPath específico del campo Tipo de Documento
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[1]/div/span/span[1]/span/span[1]', 'xpath')
-            if self.documentType == 2:  # NIT
-                self.legalizador.write('/html/body/span/span/span[1]/input', 'nit', 'xpath')
-            else:  # CC
-                self.legalizador.write('/html/body/span/span/span[1]/input', 'cedula', 'xpath')
-            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
-                
-            self.legalizador.write('PersonalInfo_Document', self.cedula, 'id')
-            
             # Tipo de dirección - Dropdown select2
-            # TODO: Reemplazar con XPath específico del campo Tipo de Dirección
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[3]/div[2]/fieldset/div[1]/div[1]/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.click('select2-AddressClassId-container', 'id')
             self.legalizador.write('/html/body/span/span/span[1]/input', 'otras', 'xpath')
             self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
 
-             # Esperar dinámicamente a que se carguen las ciudades
-            while True:
-                time.sleep(0.3)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading ciudades')
+            if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
+                raise Exception("Timeout esperando carga después de seleccionar tipo de dirección")
                 
             self.legalizador.write('PersonalInfo.Address.Address', 'central', 'name')
 
-             # Esperar dinámicamente a que se carguen las ciudades
-            while True:
-                time.sleep(0.3)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading ciudades')
+            if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
+                raise Exception("Timeout esperando carga después de escribir dirección")
             
             # Departamento - Dropdown select2
-            # TODO: Reemplazar con XPath específico del campo Departamento
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[3]/div[2]/fieldset/div[3]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.click('select2-Department-container', 'id')
             self.legalizador.write('/html/body/span/span/span[1]/input', 'antio', 'xpath')
             self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
                 
-            # Esperar dinámicamente a que se carguen las ciudades
-            while True:
-                time.sleep(0.3)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading ciudades')
+            if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
+                raise Exception("Timeout esperando carga después de seleccionar departamento")
             
             # Ciudad - Dropdown select2
-            # TODO: Reemplazar con XPath específico del campo Ciudad
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div[3]/div[2]/fieldset/div[4]/div/span/span[1]/span/span[1]', 'xpath')
+            self.legalizador.click('select2-City-container', 'id')
             self.legalizador.write('/html/body/span/span/span[1]/input', 'mede', 'xpath')
             self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
-                
-            # Esperar dinámicamente a que se carguen las zonas
-            while True:
-                time.sleep(0.3)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading zonas')
+
+            if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
+                raise Exception("Timeout esperando carga después de seleccionar ciudad")
 
             self.legalizador.write('PersonalInfo.Address.Town', 'central', 'name')
+
+            # Prefijo teléfono - Dropdown select2
+            self.legalizador.click('select2-Prefix-container', 'id')
+            self.legalizador.write('/html/body/span/span/span[1]/input', '604', 'xpath')
+            self.legalizador.write('/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
             
             # Hacer clic en siguiente
             self.legalizador.click('btnNext', 'id')
             
-            # Esperar a que cargue la siguiente página
-            while True:
-                time.sleep(1)
-                loading = self.legalizador.style('loading', 'id')
-                if "display: none" in loading:
-                    break
-                elif "display: block" in loading:
-                    print('loading demografica')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de hacer clic en Siguiente en demografica")
                     
             self.position(self.legalizador.retornarHtml(), 'equipo plan', True)
         except Exception as e:
@@ -418,6 +378,7 @@ class Legalizador:
             message_element = self.legalizador.readShort2('messageFormItem', 'class')
             # message_element = self.legalizador.browser.find_element(By.CLASS_NAME, 'messageFormItem')
             self.excel.guardar(self.contador, 'Mensaje', message_element)
+            self.excel.guardar(self.contador, 'Min', 'Procesado')
             self.ventana_informacion.write(f"{self.iccid} {message_element}")
             self.legalizador.click('btnPrev', 'id')
             self.position_detect()
@@ -426,14 +387,13 @@ class Legalizador:
             self.restart_new()
     
     def restart_new(self):
-        # self.position_detect()
         raise('error')
         
     def verificar_urls(self):
         lista_ejecucion = {
-            'paso1' : self.captura_datos,
+            'paso1' : self.captura_datos_optimized,
             'validate' : self.validate_data,
-            'demographic' : self.captura_demografica,
+            'demographic' : self.captura_demografica_optimized,
             'equipo plan' : self.datos_equipo_plan,
             'activacion' : self.activacion,
         }
@@ -463,6 +423,7 @@ class Legalizador:
                         message_element = self.legalizador.readShort2('messageFormItem', 'class')
                         print(f'legalizada {self.contador} {message_element}')
                         self.excel.guardar(self.contador, 'Mensaje', message_element)
+                        self.excel.guardar(self.contador, 'Min', 'Procesado')
                         self.ventana_informacion.write(f"{self.iccid} {message_element}")
                         self.legalizador.click('btnPrev', 'id')
                         # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
@@ -489,89 +450,7 @@ class Legalizador:
                     ejec()
                 except:
                     mode = 'off'
-        # self.captura_datos()
-        # self.validate_data()
-        # self.captura_demografica()
-        # self.datos_equipo_plan()
-        # self.activacion()
-        # self.captar_activacion()
         pass
-    
-        
-        
-        
-    #     self.legalizador.click('btnNext', 'id')
-      
-
-        
-    #     try:
-    #         while True:
-    #             try:
-    #                 self.legalizador.readShort2('/html/body/div/div[2]/section/div/div[2]/div[1]/div[1]/hgroup/h4')
-    #                 break
-    #             except:
-    #                 print('aun en while')
-    #         # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
-    #         time.sleep(2)
-    #         try:
-    #             message = self.legalizador.read('errorFormItem', 'class')
-    #         except:
-    #             try:
-    #                 message = self.legalizador.read('messageFormItem', 'class')
-    #             except:
-    #                 message = ''
-    #         if message == 'La consulta demograficos no arrojo informacion para este cliente':
-    #             self.excel.guardar(self.contador, 'Mensaje', message)
-    #             self.ventana_informacion.write(f"{iccid} {message}")
-    #             raise(message)
-    #         if message == 'Señor consultor, se presentó un inconveniente al intentar procesar su solicitud, por favor intente nuevamente':
-    #             self.ventana_informacion.write(f"{iccid} {message}")
-    #             raise(message)
-    #         # self.legalizador.click('btnNext', 'id')
-    #         # time.sleep(3)
-    #     except:
-    #         try:
-    #             message = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
-    #             if message == 'El Kit ya se encuentra registrado':
-    #                 self.excel.guardar(self.contador, 'Mensaje', message)
-    #                 self.ventana_informacion.write(f"{iccid} El Kit ya se encuentra registrado")
-    #         except:
-    #             pass
-    #         raise('error')
-            
-    #     demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
-    #     if demographic_response.status_code == 200:
-    #         demographic_json = demographic_response.json()
-    #         if demographic_json.get("rta") == True and not demographic_json.get("errores") and demographic_json.get("url") == "/ProductService":
-                
-                
-    #             self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
-    #             self.legalizador.click('btnNext', 'id')
-    #             self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Activation')
-    #             self.legalizador.click('btnNext', 'id')
-                
-    #             # Buscar el mensaje en la página y guardarlo en el Excel
-    #             try:
-    #                 self.position(self.legalizador.retornarHtml(), 'pasoFinal', True)
-    #                 time.sleep(2)
-    #                 message_element = self.legalizador.readShort2('messageFormItem', 'class')
-    #                 # message_element = self.legalizador.browser.find_element(By.CLASS_NAME, 'messageFormItem')
-    #                 self.excel.guardar(self.contador, 'Mensaje', message_element)
-    #                 self.ventana_informacion.write(f"{iccid} {message_element}")
-    #             except:pass
-    #             self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
-    #             self.poliedro.seleccionAcceso('362', start=False)
-    #             self.position(self.legalizador.retornarHtml(), 'paso1', True)
-                
-    #         else:
-    #             self.excel.guardar(self.contador, 'Mensaje', "Error en la validación de Demographic/Index1")
-    #             raise Exception("Error en la validación de Demographic/Index1")
-    #     else:
-    #         self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
-    #         raise Exception("Error en la URL de Demographic/Index1")
-    # # else:
-    # #     self.excel.guardar(self.contador, 'Mensaje', "Error en la URL para legalizar")
-    # #     raise Exception("Error en la URL de validación final")
 
     def position(self, html, paso=None, wait=False, fast= False):
         self.scrap = scraping.Scraping(html)
@@ -690,37 +569,76 @@ class Legalizador:
             'restart': [("h3", "iconoTituloProducto"), ("span", "select2-selection__rendered")],
             'login': [("input", "botonLoginhomePoliedro")]
         }
-        while True:
-            count = 0
+        
+        count = 0
+        max_iterations = 50  # LÍMITE MÁXIMO DE ITERACIONES
+        
+        while count < max_iterations:
             self.scrap = scraping.Scraping(self.legalizador.retornarHtml())
             soup = self.scrap.soup
             pos = None
+            
             for i, j in position.items():
                 if self.validate_position(j, soup, 'class'):
                     pos = i
+                    print(f"Posición detectada: {pos}")
                     return pos
-            print(pos)
-            if pos == 'restart':
-                self.poliedro.seleccionAcceso('362', start=False)
-                break
-            elif pos == 'paso1':
-                break
-            elif pos == 'login':
-                raise('error login')
+            
+            # SI NO ENCUENTRA NINGUNA POSICIÓN, ESPERAR Y REINTENTAR
+            print(f"Posición no detectada. Intento {count + 1}/{max_iterations}")
+            time.sleep(1)  # Esperar antes de reintentar
             count += 1
-            if count == 100:
-                raise('restar controlado')
+        
+        # SI SE AGOTA EL LÍMITE, LANZAR EXCEPCIÓN ESPECÍFICA
+        raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
 
 
     
     def validate_position(self, elementos_requeridos, soup, type='id'):
+        """
+        Valida si los elementos están presentes Y visibles en la página
+        """
         for tag, id_value in elementos_requeridos:
             if type == 'id':
-                if not soup.find(tag, id=id_value):
-                    return False
+                element = soup.find(tag, id=id_value)
             elif type == 'class':
-                if not soup.find(tag, class_=id_value):
-                    return False
+                element = soup.find(tag, class_=id_value)
             else:
                 return False
+            
+            if not element:
+                return False
+                
         return True
+
+    def wait_for_loading(self, timeout=30, sleep_interval=1, legalizador=True):
+        """
+        Método reutilizable para esperar que termine la carga.
+        
+        Args:
+            timeout (int): Tiempo máximo de espera en segundos
+            sleep_interval (float): Intervalo entre verificaciones
+            
+        Returns:
+            bool: True si terminó la carga, False si hubo timeout
+        """
+        start_time = time.time()
+        
+        while time.time() - start_time < timeout:
+            try:
+                if legalizador:
+                    loading_style = self.legalizador.style('loading', 'id')
+                else:
+                    loading_style = self.poliedro.style('loading', 'id')
+                if "display: none" in loading_style:
+                    return True
+                elif "display: block" in loading_style:
+                    print(f'Loading... ({time.time() - start_time:.1f}s)')
+            except Exception:
+                # Si no puede leer el estilo, asumir que terminó la carga
+                return True
+                
+            time.sleep(sleep_interval)
+        
+        print(f"Timeout después de {timeout} segundos esperando que termine la carga")
+        return False  # Timeout

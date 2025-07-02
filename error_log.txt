@@ -33378,3 +33378,265 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 567, in position
     raise('restar controlado')
 TypeError: exceptions must derive from BaseException
+
+[iteración de ciclo] Error: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 139, in ejecuccion
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 451, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 703, in position_detect
+    self.scrap = scraping.Scraping(self.legalizador.retornarHtml())
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 41, in retornarHtml
+    return self.browser.page_source
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 679, in page_source
+    return self.execute(Command.GET_PAGE_SOURCE)['value']
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+
+[iteración de ciclo] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 228, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 127, in ejecuccion
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[iteración de ciclo] Error: session cerrada
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 139, in ejecuccion
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 447, in verificar_urls
+    raise Exception('session cerrada')
+Exception: session cerrada
+
+[iteración de ciclo] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 127, in ejecuccion
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[seleccionAcceso] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 102, in ejecuccion
+    self.poliedro.seleccionAcceso('362')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 26, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[iteración de ciclo] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 127, in ejecuccion
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[seleccionAcceso] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 227, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]"}
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 102, in ejecuccion
+    self.poliedro.seleccionAcceso('362')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 26, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click en menú] Error: 'Poliedro' object has no attribute 'click'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 159, in ejecuccion
+    self.poliedro.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+    ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Poliedro' object has no attribute 'click'
+
+[click en menú] Error: 'Poliedro' object has no attribute 'click'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 159, in ejecuccion
+    self.poliedro.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+    ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Poliedro' object has no attribute 'click'
+
+[iteración de ciclo] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.55)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 135, in ejecuccion
+    self.poliedro.seleccionAcceso('362', start=False)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 27, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]')
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
