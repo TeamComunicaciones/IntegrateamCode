@@ -33640,3 +33640,2068 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
     raise(f'Excedio {args}')
 TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 884, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 884, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 884, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 932, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 932, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[click toggleProductBTN] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 892, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[iteración de lote 23] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 903, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 905, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 24] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 903, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 905, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 25] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 903, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 905, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 943, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[iteración de lote 24] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 25] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 967, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[iteración de lote 47] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 48] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 49] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 50] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 967, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[iteración de lote 53] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 54] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 55] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 56] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 57] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 58] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 59] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 60] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 61] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 62] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 63] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 64] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 65] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 66] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 67] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 967, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[iteración de lote 48] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 49] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 50] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 967, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[iteración de lote 53] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[iteración de lote 55] Error: Legalizador.log_error() missing 1 required positional argument: 'e'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 232, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.65)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 927, in procesar_por_lotes
+    self.legalizador.click('toggleProductBTN', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 929, in procesar_por_lotes
+    self.log_error("")
+    ~~~~~~~~~~~~~~^^^^
+TypeError: Legalizador.log_error() missing 1 required positional argument: 'e'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 971, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 971, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 971, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 971, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 971, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 971, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
+
+[guardar_lote] Error: 'Excel_controller' object has no attribute 'guardar_archivo'
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 971, in procesar_por_lotes
+    self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Excel_controller' object has no attribute 'guardar_archivo'
