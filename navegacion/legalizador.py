@@ -11,6 +11,8 @@ from selenium.webdriver.common.keys import Keys
 import traceback
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import re
+from funcionalidad import poliedro_login_service
 
 
 class Legalizador:
@@ -62,7 +64,33 @@ class Legalizador:
         self.okBotton2.configure(fg_color=color.team, text_color='white')
         self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.79, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color=color.team, text_color='white')
-    
+
+        # Etiquetas
+        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.59, 0.5, 0.04, letterSize=16)
+
+        # Variables
+        self.poliedro_user = ''
+        self.poliedro_pass = ''
+        self.poliedro_user_edit = tk.StringVar()
+        self.poliedro_user_edit.set(self.poliedro_user)
+        self.poliedro_pass_edit = tk.StringVar()
+        self.poliedro_pass_edit.set(self.poliedro_pass)
+
+        # Entradas (más angostas, alineadas a la izquierda)
+        input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
+        input_widget4.place(relx=0.10, rely=0.53, relheight=0.05, relwidth=0.55)
+
+        input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
+        input_widget5.place(relx=0.10, rely=0.63, relheight=0.05, relwidth=0.55)
+
+        # Botones OK a la derecha de cada entrada
+        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.53, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4.configure(fg_color=color.team, text_color='white')
+
+        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5.configure(fg_color=color.team, text_color='white')
+
     def abrir_excel(self):
         self.ventana_informacion.write('excel legalizador abierto recuerde cerrar antes de iniciar')
         p = Popen("src\\legalizador\\openExcel.bat")
@@ -79,6 +107,14 @@ class Legalizador:
     def cambioCorreo(self):
         self.correo = self.correoEdit.get()
         self.ventana_informacion.write(f'Correo actualizado por {self.correo}')
+
+    def cambioPoliedroUser(self):
+        self.poliedro_user = self.poliedro_user_edit.get()
+        self.ventana_informacion.write(f'Poliedro User actualizado por {self.poliedro_user}')
+
+    def cambioPoliedroPass(self):
+        self.poliedro_pass = self.poliedro_pass_edit.get()
+        self.ventana_informacion.write(f'Poliedro Pass actualizado por {self.poliedro_pass}')
     
     def abrir_pagina(self):
         self.ventana_informacion.write('Navegador abierto')
@@ -87,6 +123,9 @@ class Legalizador:
         self.legalizador.openEdge()
         time.sleep(3)
         self.legalizador.selectPage(self.link)
+
+        time.sleep(2)
+        self.legalizador.script("window.open('https://app.mysms.com/#87472', '_blank');")
     
     def ejecuccionHilo(self):
         hilo_legalizador = threading.Thread(target=self.ejecuccion)
@@ -98,6 +137,16 @@ class Legalizador:
         except Exception as e:
             self.log_error("definirBrowser", e)
             return
+        
+        # Solo para pruebas de login
+        # Inicializar el servicio de login
+        """ self.poliedro_login_service = None
+        if not self.login():
+            self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+            self.on_of(True)
+            return
+        time.sleep(2)
+        return """
 
         try:
             self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
@@ -107,12 +156,10 @@ class Legalizador:
         
         if not self.wait_for_loading(legalizador=False):
             raise Exception("Timeout esperando carga inicial en captura_datos")
-
-        try:
-            self.poliedro.seleccionAcceso('362')
-        except Exception as e:
-            self.log_error("seleccionAcceso", e)
-            return
+        
+        self.poliedro.seleccionAcceso('362', start=True)
+        if not self.wait_for_loading(legalizador=False):
+            raise Exception("Timeout esperando carga inicial en captura_datos")
 
         try:
             self.position(self.legalizador.retornarHtml(), 'paso1', True)
@@ -140,7 +187,7 @@ class Legalizador:
                 self.procesar_por_lotes()
                 
                 # ✅ REPORTE FINAL DEL CICLO
-                self.reporte_final_ciclo(i+1)
+                #self.reporte_final_ciclo(i+1)
                 self.ventana_informacion.write('✅ Proceso terminado exitosamente')
                 self.ventana_informacion.write(f'🏁 Ciclo {i+1} finalizado')
             try:
@@ -150,6 +197,47 @@ class Legalizador:
             self.on_of(True)
         except Exception as e:
             self.log_error("bloque principal", e)
+    
+    def inicializar_login_service(self):
+        """
+        Inicializa el servicio de login cuando el navegador esté listo
+        """
+        if self.legalizador and not self.poliedro_login_service:
+            self.poliedro_login_service = poliedro_login_service.LoginService(
+                self.legalizador, 
+                self.ventana_informacion
+            )
+            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            self.poliedro_login_service.configurar_reintentos(
+                max_intentos=4, 
+                intervalo_minutos=2
+            )
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+
+    def login(self):
+        """
+        Método simplificado que usa el servicio de login
+        """
+        try:
+            # Inicializar el servicio si no existe
+            if not self.poliedro_login_service:
+                self.inicializar_login_service()
+            
+            # Configurar credenciales actuales
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+            
+            # Ejecutar login automático
+            return self.poliedro_login_service.login_automatico()
+
+        except Exception as e:
+            self.log_error("login", e)
+            return False
 
     def log_error(self, contexto, e):
         with open("error_log.txt", "a", encoding="utf-8") as f:
@@ -254,6 +342,9 @@ class Legalizador:
                     raise Exception('Error validación: mensaje no detectado')
 
             if validate == 'Validación Correcta':
+                time.sleep(2)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga después de validación")
                 self.legalizador.click('btnNext', 'id')
                 # USAR MÉTODO MEJORADO CON TIMEOUT ADAPTATIVO
                 if not self.wait_for_loading():
@@ -261,6 +352,9 @@ class Legalizador:
                 try:
                     self.position(self.legalizador.retornarHtml(), 'demographic', True)
                 except:
+                    time.sleep(2)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga después de validación")
                     self.legalizador.click('btnNext', 'id')
             else:
                 mensaje_error = f'Validación incorrecta: {validate}' if validate else 'Validación incorrecta: mensaje no detectado'
@@ -290,6 +384,15 @@ class Legalizador:
                 raise Exception("Timeout esperando carga inicial en captura_datos")
             
             self.position(self.legalizador.retornarHtml(), 'paso1', True)
+
+            time.sleep(2)
+            try:
+                self.legalizador.click('toggleProductBTN', 'id')
+            except Exception as e:
+                pass
+            self.poliedro.seleccionAcceso('Seleccione...', start=False)
+            time.sleep(1)
+            self.poliedro.seleccionAcceso('362', start=False)
             
             # Click en el campo select2 para abrirlo
             self.legalizador.click('select2-DetailProduct_DocumentTypeId-container', 'id')
@@ -310,6 +413,9 @@ class Legalizador:
             self.legalizador.write('DetailProduct_SellerId', self.cedulaVendedor, 'id')
             self.legalizador.write('DetailProduct_Msisdn', self.min, 'id')
             
+            time.sleep(2)
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
             # Hacer clic en siguiente
             self.legalizador.click('btnNext', 'id')
             
@@ -334,6 +440,9 @@ class Legalizador:
                 self.position(self.legalizador.retornarHtml(), 'demographic', True)
             except:
                 self.position(self.legalizador.retornarHtml(), 'validate', True)
+                time.sleep(2)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga después de validación")
                 self.legalizador.click('btnNext', 'id')
                 self.position(self.legalizador.retornarHtml(), 'demographic', True)
 
@@ -341,6 +450,7 @@ class Legalizador:
             if not self.wait_for_loading(timeout=15, sleep_interval=0.3):
                 raise Exception("Timeout esperando carga del formulario demográfico")
             
+            time.sleep(2)
             errors = self.legalizador.read('viewErrors', 'id')
             if errors:
                 self.excel.guardar(self.contador, 'Mensaje', errors)
@@ -357,8 +467,10 @@ class Legalizador:
                 except Exception as e:
                     contador += 1
                     self.legalizador.click('btnPrev', 'id')
+                    time.sleep(2)
                     if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
                         raise Exception("Timeout esperando carga después de ingresar correo")
+                    time.sleep(2)
                     self.legalizador.click('btnNext', 'id')
                     if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
                         raise Exception("Timeout esperando carga después de ingresar correo")
@@ -416,6 +528,9 @@ class Legalizador:
             # Prefijo teléfono - Dropdown select2
             self.selectDropDown('Prefix', '604')
 
+            time.sleep(2)
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
             # Hacer clic en siguiente
             self.legalizador.click('btnNext', 'id')
             
@@ -440,6 +555,9 @@ class Legalizador:
         try:
             self.position(self.legalizador.retornarHtml(), 'equipo plan', True)
             # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+            time.sleep(2)
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
             self.legalizador.click('btnNext', 'id')
             self.position(self.legalizador.retornarHtml(), 'activacion', True)
         except Exception as e:
@@ -450,6 +568,9 @@ class Legalizador:
         try:
             self.position(self.legalizador.retornarHtml(), 'activacion', True)
             # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Activation')
+            time.sleep(2)
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
             self.legalizador.click('btnNext', 'id')
         except Exception as e:
             self.logs.append([e,traceback.format_exc()])
@@ -484,7 +605,7 @@ class Legalizador:
             
             # SOLO SOBRESCRIBIR SI NO HAY MENSAJE ESPECÍFICO O ES GENÉRICO
             if not mensaje_actual or mensaje_actual in ['nan', 'None', '', 'Error en procesamiento - transacción saltada']:
-                self.excel.guardar(self.contador, 'Mensaje', 'Error en procesamiento - transacción saltada')
+                #self.excel.guardar(self.contador, 'Mensaje', 'Error en procesamiento - transacción saltada')
                 self.ventana_informacion.write(f"Error genérico en transacción {self.contador+1}/{self.excel.cantidad}, continuando...")
             else:
                 # Preservar el mensaje específico que ya se guardó
@@ -526,6 +647,8 @@ class Legalizador:
             elif track == 'restart':
                 try:
                     self.poliedro.seleccionAcceso('362', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga inicial en reset formulario")
                 except:
                     pass
             elif track == 'paso1' and mode == 'off':
@@ -559,6 +682,9 @@ class Legalizador:
                   
                 else:
                     try:
+                        time.sleep(2)
+                        if not self.wait_for_loading():
+                            raise Exception("Timeout esperando carga después de validación")
                         self.legalizador.click('btnNext', 'id')
                     except:
                         pass
@@ -690,7 +816,7 @@ class Legalizador:
         }
         
         count = 0
-        max_iterations = 50  # LÍMITE MÁXIMO DE ITERACIONES
+        max_iterations = 30  # LÍMITE MÁXIMO DE ITERACIONES
         
         while count < max_iterations:
             self.scrap = scraping.Scraping(self.legalizador.retornarHtml())
@@ -708,6 +834,11 @@ class Legalizador:
             time.sleep(1)  # Esperar antes de reintentar
             count += 1
         
+        # Acá se realiza el reintento login
+        self.poliedro_login_service = None
+        if not self.login():
+            self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+            self.on_of(True)
         # SI SE AGOTA EL LÍMITE, LANZAR EXCEPCIÓN ESPECÍFICA
         raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
 
@@ -882,9 +1013,6 @@ class Legalizador:
         except:
             pass
         
-        self.poliedro.seleccionAcceso('Seleccione...', start=False)
-        self.poliedro.seleccionAcceso('362', start=False)
-        
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga inicial en procesar_por_lotes")
         
@@ -922,19 +1050,6 @@ class Legalizador:
                     
                     # ✅ VALIDAR DATOS ANTES DE PROCESAR
                     self.establecer_datos()  # Primero establecer los datos
-                    
-                    # Reset del formulario para nueva transacción (excepto la primera del lote)
-                    if not self.wait_for_loading():
-                        raise Exception("Timeout esperando carga después de hacer clic en Siguiente en demografica")
-                    if j > inicio_lote:
-                        try:
-                            self.legalizador.click('toggleProductBTN', 'id')
-                        except Exception as e:
-                            pass
-                        self.poliedro.seleccionAcceso('Seleccione...', start=False)
-                        self.poliedro.seleccionAcceso('362', start=False)
-                        if not self.wait_for_loading():
-                            raise Exception("Timeout esperando carga inicial en reset formulario")
 
                     self.cookie_header['Cookie'] = self.legalizador.getCookies()
                     
@@ -968,7 +1083,7 @@ class Legalizador:
             
             # Guardar progreso después de cada lote
             try:
-                self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+                #self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
                 self.ventana_informacion.write(f"💾 Lote {i+1} completado y guardado - Éxitos: {self.transacciones_exitosas}, Fallos: {self.transacciones_fallidas}")
             except Exception as e:
                 self.log_error("guardar_lote", e)
@@ -976,7 +1091,7 @@ class Legalizador:
             # ✅ GENERAR REPORTE PERIÓDICO DETALLADO
             tiempo_actual = time.time()
             if tiempo_actual - self.ultimo_reporte >= self.intervalo_reporte:
-                reporte = self.generar_reporte_estado()
+                #reporte = self.generar_reporte_estado()
                 self.ventana_informacion.write(f"📊 REPORTE PERIÓDICO:")
                 self.ventana_informacion.write(f"   • Tiempo: {reporte['tiempo_transcurrido_min']} min")
                 self.ventana_informacion.write(f"   • Procesadas: {reporte['total_procesadas']}/{reporte['total_transacciones']}")
@@ -1031,10 +1146,8 @@ class Legalizador:
             tasa_fallo = (self.transacciones_fallidas / total_procesadas) * 100
             if tasa_fallo > 15:  # Si más del 15% fallan
                 tamano_base = max(5, int(tamano_base * 0.7))  # Reducir tamaño del lote (mínimo 5)
-                self.ventana_informacion.write(f"⚠️ Alta tasa de fallos ({tasa_fallo:.1f}%), reduciendo lote a {tamano_base}")
             elif tasa_fallo < 5:  # Si menos del 5% fallan
                 tamano_base = min(50, int(tamano_base * 1.2))  # Aumentar tamaño del lote (máximo 50)
-                self.ventana_informacion.write(f"✅ Baja tasa de fallos ({tasa_fallo:.1f}%), aumentando lote a {tamano_base}")
         
         return tamano_base
 
@@ -1058,41 +1171,3 @@ class Legalizador:
         self.ventana_informacion.write(f"   • Timeout base: {self.timeout_base}s")
         self.ventana_informacion.write(f"   • Reportes cada: {self.intervalo_reporte//60} minutos")
         self.ventana_informacion.write(f"   • Máximo reintentos: {self.max_reintentos}")
-
-    def generar_reporte_estado(self):
-        """
-        Genera un reporte detallado del estado actual del proceso.
-        
-        Returns:
-            dict: Diccionario con métricas del proceso
-        """
-        tiempo_actual = time.time()
-        tiempo_transcurrido = tiempo_actual - self.inicio_proceso
-        total_procesadas = self.transacciones_exitosas + self.transacciones_fallidas
-        
-        # Calcular velocidad de procesamiento
-        if tiempo_transcurrido > 0:
-            velocidad = total_procesadas / (tiempo_transcurrido / 60)  # transacciones por minuto
-        else:
-            velocidad = 0
-        
-        # Calcular ETA si hay transacciones pendientes
-        restantes = self.excel.cantidad - total_procesadas
-        eta_minutos = (restantes / velocidad) if velocidad > 0 else 0
-        
-        # Tasa de éxito
-        tasa_exito = (self.transacciones_exitosas / total_procesadas * 100) if total_procesadas > 0 else 0
-        
-        reporte = {
-            'tiempo_transcurrido_min': round(tiempo_transcurrido / 60, 2),
-            'total_procesadas': total_procesadas,
-            'exitosas': self.transacciones_exitosas,
-            'fallidas': self.transacciones_fallidas,
-            'tasa_exito': round(tasa_exito, 2),
-            'velocidad_por_min': round(velocidad, 2),
-            'eta_minutos': round(eta_minutos, 2),
-            'timeouts_recientes': self.recent_timeouts,
-            'total_transacciones': self.excel.cantidad
-        }
-        
-        return reporte

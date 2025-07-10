@@ -155,6 +155,7 @@ class Web_Controller:
         options = EdgeOptions()
         options.use_chromium = True
         options.add_argument("start-maximized")
+        options.add_argument("--disable-blink-features=AutomationControlled")
         if headless:
             options.add_argument("--headless=new")
             options.add_argument('--no-sandbox')
