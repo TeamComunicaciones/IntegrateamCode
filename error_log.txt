@@ -37415,3 +37415,1586 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 842, in position_detect
     raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
 Exception: No se pudo detectar posición después de 30 intentos
+
+[verificar_urls transacción 88] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 95] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 110] Error: No se pudo detectar posición después de 30 intentos
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 643, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 843, in position_detect
+    raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
+Exception: No se pudo detectar posición después de 30 intentos
+
+[verificar_urls transacción 112] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 133] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 135] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 141] Error: No se pudo detectar posición después de 30 intentos
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 643, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 843, in position_detect
+    raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
+Exception: No se pudo detectar posición después de 30 intentos
+
+[verificar_urls transacción 163] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 167] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 169] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 171] Error: No se pudo detectar posición después de 30 intentos
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 643, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 843, in position_detect
+    raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
+Exception: No se pudo detectar posición después de 30 intentos
+
+[verificar_urls transacción 193] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 195] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 198] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 202] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 204] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 642, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 205] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 642, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 207] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 209] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 218] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 222] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 224] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 227] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 232] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 242] Error: No se pudo detectar posición después de 30 intentos
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 643, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 843, in position_detect
+    raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
+Exception: No se pudo detectar posición después de 30 intentos
+
+[verificar_urls transacción 244] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 249] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1058, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 662, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 135] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 169] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 202] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 222] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 252] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 255] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 262] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 228, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 645, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 858, in position_detect
+    self.poliedro.seleccionAcceso('362', start=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 26, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 135] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 169] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 202] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 222] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 252] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 263] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 228, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 645, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 858, in position_detect
+    self.poliedro.seleccionAcceso('362', start=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 25, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 255] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 264] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 255] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 266] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 268] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 281] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 286] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 288] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 233, in click
+    find.click()
+    ~~~~~~~~~~^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 645, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 858, in position_detect
+    self.poliedro.seleccionAcceso('362', start=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 26, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 290] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 268] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 284] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 300, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1077, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 665, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException

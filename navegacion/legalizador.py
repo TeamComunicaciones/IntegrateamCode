@@ -140,13 +140,11 @@ class Legalizador:
         
         # Solo para pruebas de login
         # Inicializar el servicio de login
-        """ self.poliedro_login_service = None
+        self.poliedro_login_service = None
         if not self.login():
             self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
             self.on_of(True)
-            return
         time.sleep(2)
-        return """
 
         try:
             self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
@@ -637,7 +635,11 @@ class Legalizador:
         }
 
         mode = 'on'
-        while True:
+        intentos = 0
+        max_intentos = 30
+        procesado = False
+        while intentos < max_intentos:
+            intentos += 1
             if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
                 raise Exception("Timeout esperando carga después de seleccionar ciudad")
             track = self.position_detect()
@@ -652,6 +654,7 @@ class Legalizador:
                 except:
                     pass
             elif track == 'paso1' and mode == 'off':
+                procesado = True
                 break
             elif mode == 'off':
                 try:                        
@@ -669,6 +672,7 @@ class Legalizador:
                         self.ventana_informacion.write(f"{self.iccid} {message_element}")
                         self.legalizador.click('btnPrev', 'id')
                         # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                        procesado = True
                         break
                     except:
                         try:
@@ -676,6 +680,7 @@ class Legalizador:
                             print(f'legalizada con error {self.contador}')
                             self.legalizador.click('btnPrev', 'id')
                             # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            procesado = True
                             break
                         except:
                             pass
@@ -695,7 +700,17 @@ class Legalizador:
                     ejec()
                 except:
                     mode = 'off'
-        pass
+        if not procesado:
+            # Reintentar login y acceso desde cero
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                self.on_of(True)
+            time.sleep(2)
+            self.poliedro.seleccionAcceso('362', start=True)
+            if not self.wait_for_loading(legalizador=False):
+                raise Exception("Timeout esperando carga inicial en captura_datos")
+            raise Exception(f'No fue posible ejecutar el proceso de verificación de URLs, intentos agotados: {max_intentos}')
 
     def position(self, html, paso=None, wait=False, fast= False):
         self.scrap = scraping.Scraping(html)
@@ -839,6 +854,10 @@ class Legalizador:
         if not self.login():
             self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
             self.on_of(True)
+        time.sleep(2)
+        self.poliedro.seleccionAcceso('362', start=True)
+        if not self.wait_for_loading(legalizador=False):
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         # SI SE AGOTA EL LÍMITE, LANZAR EXCEPCIÓN ESPECÍFICA
         raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
 
@@ -1091,13 +1110,13 @@ class Legalizador:
             # ✅ GENERAR REPORTE PERIÓDICO DETALLADO
             tiempo_actual = time.time()
             if tiempo_actual - self.ultimo_reporte >= self.intervalo_reporte:
-                #reporte = self.generar_reporte_estado()
+                """ reporte = self.generar_reporte_estado()
                 self.ventana_informacion.write(f"📊 REPORTE PERIÓDICO:")
                 self.ventana_informacion.write(f"   • Tiempo: {reporte['tiempo_transcurrido_min']} min")
                 self.ventana_informacion.write(f"   • Procesadas: {reporte['total_procesadas']}/{reporte['total_transacciones']}")
                 self.ventana_informacion.write(f"   • Tasa éxito: {reporte['tasa_exito']}%")
                 self.ventana_informacion.write(f"   • Velocidad: {reporte['velocidad_por_min']} trans/min")
-                self.ventana_informacion.write(f"   • ETA: {reporte['eta_minutos']} min")
+                self.ventana_informacion.write(f"   • ETA: {reporte['eta_minutos']} min") """
                 self.ultimo_reporte = tiempo_actual
             
             # Pausa entre lotes para estabilidad (excepto el último)
