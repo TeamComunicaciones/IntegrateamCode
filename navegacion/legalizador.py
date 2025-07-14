@@ -138,7 +138,6 @@ class Legalizador:
             self.log_error("definirBrowser", e)
             return
         
-        # Solo para pruebas de login
         # Inicializar el servicio de login
         self.poliedro_login_service = None
         if not self.login():

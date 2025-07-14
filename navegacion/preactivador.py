@@ -11,6 +11,7 @@ import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from funcionalidad import poliedro_login_service
 
 class Preactivador:
 
@@ -32,12 +33,12 @@ class Preactivador:
         self.preactivador = ''
         self.time = tk.StringVar()
         self.time.set('0')
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.0, 0.60, 0.5,0.2, letterSize= 16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.1, 0.65, 0.5, 0.2, letterSize=16)
         input_widget = ctk.CTkEntry(self.menu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.5, rely=0.68, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.68, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color= color.team, text_color= 'white')
         # self.correo = 'correo'
         # self.correoEdit = tk.StringVar()
@@ -73,6 +74,34 @@ class Preactivador:
         
         self.tropas = tk.BooleanVar()
         self.checkbox_tropas =  checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Tropas.', self.on_checkbox_change_tropas, self.tropas)
+
+        # Configuraciones para campo de usuario y contrasena poliedro
+        # Etiquetas
+        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.59, 0.5, 0.04, letterSize=16)
+
+        # Variables
+        self.poliedro_user = ''
+        self.poliedro_pass = ''
+        self.poliedro_user_edit = tk.StringVar()
+        self.poliedro_user_edit.set(self.poliedro_user)
+        self.poliedro_pass_edit = tk.StringVar()
+        self.poliedro_pass_edit.set(self.poliedro_pass)
+
+        # Entradas (más angostas, alineadas a la izquierda)
+        input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
+        input_widget4.place(relx=0.10, rely=0.53, relheight=0.05, relwidth=0.55)
+
+        input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
+        input_widget5.place(relx=0.10, rely=0.63, relheight=0.05, relwidth=0.55)
+
+        # Botones OK a la derecha de cada entrada
+        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.53, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4.configure(fg_color=color.team, text_color='white')
+
+        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5.configure(fg_color=color.team, text_color='white')
+
        
     def on_checkbox_change_tropas(self):
         if self.tropas.get():
@@ -110,7 +139,18 @@ class Preactivador:
         self.preactivador.openEdge()
         time.sleep(3)
         self.preactivador.selectPage(self.link)
+
+        time.sleep(2)
+        self.preactivador.script("window.open('https://app.mysms.com/#87472', '_blank');")
     
+    def cambioPoliedroUser(self):
+        self.poliedro_user = self.poliedro_user_edit.get()
+        self.ventana_informacion.write(f'Usuario Poliedro actualizado por {self.poliedro_user}')
+
+    def cambioPoliedroPass(self):
+        self.poliedro_pass = self.poliedro_pass_edit.get()
+        self.ventana_informacion.write(f'Contraseña Poliedro actualizada por {self.poliedro_pass}')
+
     def ejecuccionHilo(self):
         hilo_equipos = threading.Thread(target=self.ejecuccion)
         hilo_equipos.start()
@@ -121,6 +161,19 @@ class Preactivador:
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.preactivador)
             # Primer clic
+
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                self.on_of(True)
+            time.sleep(2)
+
+            try:
+                self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except:
+                pass
+
             self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('195')
             self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
@@ -142,10 +195,26 @@ class Preactivador:
                             self.min = ''
                             self.EquiposInd()
                     except:
-                        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
-                        self.poliedro.seleccionAcceso('195', start=False)
-                        self.position(self.preactivador.retornarHtml(), 'paso1', True)
-                        self.contador += 1
+                        try:
+                            self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            self.poliedro.seleccionAcceso('195', start=False)
+                            self.position(self.preactivador.retornarHtml(), 'paso1', True)
+                            self.contador += 1
+                        except:
+                            self.poliedro_login_service = None
+                            if not self.login():
+                                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                                self.on_of(True)
+                            time.sleep(2)
+                            self.poliedro.seleccionAcceso('195', start=True)
+                            if not self.wait_for_loading(preactivador=False):
+                                raise Exception("Timeout esperando carga inicial en captura_datos")
+                            try:
+                                self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                            except Exception as e:
+                                pass
+                            time.sleep(2)
+                            self.poliedro.seleccionAcceso('195', start=True)
             self.ventana_informacion.write('Proceso terminado')
             self.on_of(True)
         except:
@@ -527,7 +596,7 @@ class Preactivador:
     def position(self, html, paso=None, wait=False):
         self.scrap = scraping.Scraping(html)
         soup = self.scrap.soup
-
+        
         while wait:
             if paso == 'paso1':
                 elementos_requeridos = [
@@ -582,3 +651,85 @@ class Preactivador:
             else:
                 return False
         return True
+
+    def login(self):
+        """
+        Método simplificado que usa el servicio de login
+        """
+        try:
+            # Inicializar el servicio si no existe
+            if not self.poliedro_login_service:
+                self.inicializar_login_service()
+            
+            # Configurar credenciales actuales
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+            
+            # Ejecutar login automático
+            return self.poliedro_login_service.login_automatico()
+
+        except Exception as e:
+            self.log_error("login", e)
+            return False
+    
+    def inicializar_login_service(self):
+        """
+        Inicializa el servicio de login cuando el navegador esté listo
+        """
+        if self.preactivador and not self.poliedro_login_service:
+            self.poliedro_login_service = poliedro_login_service.LoginService(
+                self.preactivador, 
+                self.ventana_informacion
+            )
+            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            self.poliedro_login_service.configurar_reintentos(
+                max_intentos=4, 
+                intervalo_minutos=2
+            )
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+    
+    def wait_for_loading(self, timeout=30, sleep_interval=1, preactivador=True):
+        """
+        Método reutilizable para esperar que termine la carga con timeout adaptativo.
+        
+        Args:
+            timeout (int): Tiempo máximo de espera en segundos
+            sleep_interval (float): Intervalo entre verificaciones
+            preactivador (bool): True para usar self.preactivador, False para self.poliedro
+
+        Returns:
+            bool: True si terminó la carga, False si hubo timeout
+        """
+        # ✅ APLICAR TIMEOUT ADAPTATIVO
+        adaptive_timeout = self.get_adaptive_timeout(timeout)
+        start_time = time.time()
+        
+        while time.time() - start_time < adaptive_timeout:
+            try:
+                if preactivador:
+                    try:
+                        loading_style = self.preactivador.style('loading', 'id')
+                    except Exception:
+                        loading_style = self.poliedro.style('loading', 'id')
+                else:
+                    loading_style = self.poliedro.style('loading', 'id')
+                if "display: none" in loading_style:
+                    return True
+                elif "display: block" in loading_style:
+                    print(f'Loading... ({time.time() - start_time:.1f}s)')
+            except Exception:
+                # Si no puede leer el estilo, asumir que terminó la carga
+                return True
+                
+            time.sleep(sleep_interval)
+        
+        # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
+        self.recent_timeouts += 1
+        print(f"Timeout después de {adaptive_timeout} segundos esperando que termine la carga")
+        self.ventana_informacion.write(f"⚠️ Timeout detectado ({adaptive_timeout}s) - Total recientes: {self.recent_timeouts}")
+        return False  # Timeout
