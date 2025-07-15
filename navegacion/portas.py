@@ -114,7 +114,7 @@ class Portas:
         self.portas = Abrir_pagina1(float(self.time.get()))
         self.portas.openEdge()
         self.portas.selectPage(self.link)
-        self.titulo = label.Label().create_label(self.submenu.submenu, 'Intervalos', 0.0, 0.65, 0.5,0.2, letterSize= 16)
+        self.titulo = label.Label().create_label(self.submenu.submenu, 'Intervalos', 0.0, 0.73, 0.5,0.05, letterSize= 16)
         input_widget = ctk.CTkEntry(self.submenu.submenu, textvariable=self.time)
         input_widget.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
@@ -143,10 +143,20 @@ class Portas:
             self.ventana_informacion.write('Empezando ejecuccion')
 
             self.poliedro.definirBrowser(self.portas)
-            # Primer clic
+            
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                self.on_of(True)
+            time.sleep(2)
+
+            try:
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except:
+                pass
+
             self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
-
-
             self.poliedro.seleccionAcceso('290')
             self.excel.leer_excel('src\\portas\\portabilidad.xlsx', 'CC CLIENTE')
             self.excel.quitarFormatoCientifico('SERIAL')
@@ -214,6 +224,8 @@ class Portas:
 
     def rellenoPrimerFormulario(self):
         self.pagina = 1
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         if len(self.idCliente) == 9:
             self.captarError('','No se admite cedula de 9 digitos')
         else:
@@ -279,6 +291,8 @@ class Portas:
                         pass
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 try: self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
                 except: pass
                 self.pagina = 2
@@ -345,32 +359,50 @@ class Portas:
             }
             
             self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga inicial en captura_datos")
             try:
                 self.portas.click('btnNext', 'id')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             except:
                 try:
                     message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Porta ya registrada':
                         self.excel.guardar(self.contador, 'Mensaje', message)
                         self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        if not self.wait_for_loading():
+                            raise Exception("Timeout esperando carga inicial en captura_datos")
                         self.poliedro.seleccionAcceso('290', start=False)
+                        if not self.wait_for_loading():
+                            raise Exception("Timeout esperando carga inicial en captura_datos")
                         self.ventana_informacion.write(f"{self.idCliente} Porta ya registrada'")
                 except:
                     self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga inicial en captura_datos")
                     self.poliedro.seleccionAcceso('290', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga inicial en captura_datos")
                     self.ventana_informacion.write(f"{self.idCliente} error no identificado")
                 raise('error controlado kit registrado')
             
             demographic_response = session.post(demographic_url, demographic_data, headers = headers)
             if demographic_response.status_code == 200:
                 self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.pagina = 4
                 self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
                 self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
                 self.pagina = 5
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 optionsFinal = [
                     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
                     ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
@@ -393,7 +425,13 @@ class Portas:
     
     def terminarPorta(self):
         self.pagina = 6
+        time.sleep(4)
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         self.portas.click('/html/body/div/strong/strong/div[3]/div[1]/div/button[2]')
+        time.sleep(1)
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         self.msisdn = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/div/fieldset[3]/div/div/strong')
         print(self.msisdn)
         self.excel.guardar(self.contador,'MSISDN',self.msisdn, destino='src\portas\portabilidad.xlsx')
@@ -421,7 +459,11 @@ class Portas:
             if self.pagina == 6:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[1]')
                 time.sleep(2)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[1]/div/div/ul/li[1]/span/input')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 5:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[1]')
                 time.sleep(2)
@@ -429,33 +471,67 @@ class Portas:
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 4:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[1]')
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 3:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 2:
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                 self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
         except:
-            self.poliedro.reinicio()
+            try:
+                self.poliedro.reinicio()
+            except:
+                try:
+                    texto_pantalla = self.portas.read('titlesHeaderMainContent', 'id')
+                    if 'Si va a dejar de utilizar el Módulo' not in texto_pantalla:
+                        raise Exception('Error al reiniciar, no se pudo leer el texto de la pantalla')
+                except:
+                    self.poliedro_login_service = None
+                    if not self.login():
+                        self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                        self.on_of(True)
+                    time.sleep(2)
+                    try:
+                        self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                        time.sleep(1)
+                        self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                        time.sleep(1)
+                        self.poliedro.seleccionAcceso('290')
+                    except Exception as e:
+                        return
 
     def login(self):
         """
@@ -498,9 +574,9 @@ class Portas:
                 self.poliedro_pass
             )
     
-    def wait_for_loading(self, timeout=30, sleep_interval=1, portas=True):
+    def wait_for_loading(self, timeout=60, sleep_interval=1, portas=True):
         """
-        Método reutilizable para esperar que termine la carga con timeout adaptativo.
+        Método reutilizable para esperar que termine la carga.
         
         Args:
             timeout (int): Tiempo máximo de espera en segundos
@@ -510,11 +586,9 @@ class Portas:
         Returns:
             bool: True si terminó la carga, False si hubo timeout
         """
-        # ✅ APLICAR TIMEOUT ADAPTATIVO
-        adaptive_timeout = self.get_adaptive_timeout(timeout)
         start_time = time.time()
-        
-        while time.time() - start_time < adaptive_timeout:
+
+        while time.time() - start_time < timeout:
             try:
                 if portas:
                     try:
@@ -535,6 +609,4 @@ class Portas:
         
         # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
         self.recent_timeouts += 1
-        print(f"Timeout después de {adaptive_timeout} segundos esperando que termine la carga")
-        self.ventana_informacion.write(f"⚠️ Timeout detectado ({adaptive_timeout}s) - Total recientes: {self.recent_timeouts}")
         return False  # Timeout

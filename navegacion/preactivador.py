@@ -695,7 +695,7 @@ class Preactivador:
     
     def wait_for_loading(self, timeout=30, sleep_interval=1, preactivador=True):
         """
-        Método reutilizable para esperar que termine la carga con timeout adaptativo.
+        Método reutilizable para esperar que termine la carga.
         
         Args:
             timeout (int): Tiempo máximo de espera en segundos
@@ -706,10 +706,9 @@ class Preactivador:
             bool: True si terminó la carga, False si hubo timeout
         """
         # ✅ APLICAR TIMEOUT ADAPTATIVO
-        adaptive_timeout = self.get_adaptive_timeout(timeout)
         start_time = time.time()
-        
-        while time.time() - start_time < adaptive_timeout:
+
+        while time.time() - start_time < timeout:
             try:
                 if preactivador:
                     try:
@@ -730,6 +729,4 @@ class Preactivador:
         
         # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
         self.recent_timeouts += 1
-        print(f"Timeout después de {adaptive_timeout} segundos esperando que termine la carga")
-        self.ventana_informacion.write(f"⚠️ Timeout detectado ({adaptive_timeout}s) - Total recientes: {self.recent_timeouts}")
         return False  # Timeout

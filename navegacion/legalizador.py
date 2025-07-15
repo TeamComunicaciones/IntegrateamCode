@@ -979,7 +979,6 @@ class Legalizador:
         # Si han habido muchos timeouts recientes, incrementar timeout
         if self.recent_timeouts > 3:
             adjusted_timeout = int(base_timeout * 1.5)
-            self.ventana_informacion.write(f"⚠️ Timeouts detectados, ajustando a {adjusted_timeout}s")
             return adjusted_timeout
         
         # Si hay muchas transacciones fallidas, ser más conservador
@@ -988,7 +987,6 @@ class Legalizador:
             tasa_fallo = (self.transacciones_fallidas / total_procesadas) * 100
             if tasa_fallo > 20:  # Si más del 20% fallan
                 adjusted_timeout = int(base_timeout * 1.3)
-                self.ventana_informacion.write(f"⚠️ Alta tasa de fallos ({tasa_fallo:.1f}%), ajustando timeout a {adjusted_timeout}s")
                 return adjusted_timeout
         
         return base_timeout

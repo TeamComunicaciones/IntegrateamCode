@@ -120,6 +120,19 @@ class Equipos:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.equipos)
+
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                self.on_of(True)
+            time.sleep(2)
+
+            try:
+                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except:
+                pass
+
             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('194')
             for i in range(int(self.repeticiones)):
@@ -519,7 +532,7 @@ class Equipos:
     
     def wait_for_loading(self, timeout=30, sleep_interval=1, equipos=True):
         """
-        Método reutilizable para esperar que termine la carga con timeout adaptativo.
+        Método reutilizable para esperar que termine la carga.
         
         Args:
             timeout (int): Tiempo máximo de espera en segundos
@@ -529,11 +542,9 @@ class Equipos:
         Returns:
             bool: True si terminó la carga, False si hubo timeout
         """
-        # ✅ APLICAR TIMEOUT ADAPTATIVO
-        adaptive_timeout = self.get_adaptive_timeout(timeout)
         start_time = time.time()
         
-        while time.time() - start_time < adaptive_timeout:
+        while time.time() - start_time < timeout:
             try:
                 if equipos:
                     try:
@@ -554,6 +565,4 @@ class Equipos:
         
         # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
         self.recent_timeouts += 1
-        print(f"Timeout después de {adaptive_timeout} segundos esperando que termine la carga")
-        self.ventana_informacion.write(f"⚠️ Timeout detectado ({adaptive_timeout}s) - Total recientes: {self.recent_timeouts}")
         return False  # Timeout

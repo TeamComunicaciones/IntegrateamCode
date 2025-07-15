@@ -137,7 +137,7 @@ class LoginService:
             self.web_controller.click('btnIngresarUsuarioContraseña', 'id')
             
             # Esperar a que aparezca el formulario de OTP
-            time.sleep(15)
+            time.sleep(7)
             
             return True
             
@@ -159,7 +159,7 @@ class LoginService:
             self.web_controller.cambiar_pestaña()
             
             # Esperar a que llegue el SMS
-            time.sleep(5)
+            time.sleep(3)
             
             # Intentar obtener el código OTP
             for intento in range(self.max_otp_attempts):
