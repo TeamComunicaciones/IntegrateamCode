@@ -10,6 +10,7 @@ import tkinter as tk
 import customtkinter as ctk
 import requests
 from funcionalidad import poliedro_login_service
+import random
 
 
 class Portas:
@@ -184,6 +185,11 @@ class Portas:
                 self.ciclo = False
             else:
                 try:
+                    # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
+                    tiempo_pausa = random.randint(15, 40)
+                    self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                    time.sleep(tiempo_pausa)
+
                     self.ventana_informacion.write(f'Portando numero {self.contador+1} de {self.excel.cantidad}')
                     self.crearVariablesExcel(self.contador)
                     if str(self.msisdn) != 'nan':
@@ -525,7 +531,11 @@ class Portas:
                         self.on_of(True)
                     time.sleep(2)
                     try:
-                        self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                        try:
+                            if not self.tropas.get():
+                                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                        except:
+                            pass
                         time.sleep(1)
                         self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
                         time.sleep(1)
@@ -574,7 +584,7 @@ class Portas:
                 self.poliedro_pass
             )
     
-    def wait_for_loading(self, timeout=60, sleep_interval=1, portas=True):
+    def wait_for_loading(self, timeout=120, sleep_interval=1, portas=True):
         """
         Método reutilizable para esperar que termine la carga.
         

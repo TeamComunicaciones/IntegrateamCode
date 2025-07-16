@@ -13,6 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from funcionalidad import poliedro_login_service
+import random
 
 
 class Legalizador:
@@ -603,7 +604,8 @@ class Legalizador:
             # SOLO SOBRESCRIBIR SI NO HAY MENSAJE ESPECÍFICO O ES GENÉRICO
             if not mensaje_actual or mensaje_actual in ['nan', 'None', '', 'Error en procesamiento - transacción saltada']:
                 #self.excel.guardar(self.contador, 'Mensaje', 'Error en procesamiento - transacción saltada')
-                self.ventana_informacion.write(f"Error genérico en transacción {self.contador+1}/{self.excel.cantidad}, continuando...")
+                #self.ventana_informacion.write(f"Error genérico en transacción {self.contador+1}/{self.excel.cantidad}, continuando...")
+                print(f"Error genérico en transacción {self.contador+1}/{self.excel.cantidad}, continuando...")
             else:
                 # Preservar el mensaje específico que ya se guardó
                 self.ventana_informacion.write(f"Error específico en transacción {self.contador+1}/{self.excel.cantidad}: {mensaje_actual[:100]}")
@@ -854,6 +856,13 @@ class Legalizador:
             self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
             self.on_of(True)
         time.sleep(2)
+        try:
+            self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+        except Exception as e:
+            self.log_error("click en menú", e)
+            return
+        if not self.wait_for_loading(legalizador=False):
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         self.poliedro.seleccionAcceso('362', start=True)
         if not self.wait_for_loading(legalizador=False):
             raise Exception("Timeout esperando carga inicial en captura_datos")
@@ -879,7 +888,7 @@ class Legalizador:
                 
         return True
 
-    def wait_for_loading(self, timeout=30, sleep_interval=1, legalizador=True):
+    def wait_for_loading(self, timeout=120, sleep_interval=1, legalizador=True):
         """
         Método reutilizable para esperar que termine la carga con timeout adaptativo.
         
@@ -1000,26 +1009,26 @@ class Legalizador:
         """
         total_transacciones = self.excel.cantidad
         
-        # ✅ VALIDACIÓN PARA ARCHIVOS PEQUEÑOS
+        # VALIDACIÓN PARA ARCHIVOS PEQUEÑOS
         if total_transacciones == 0:
-            self.ventana_informacion.write("⚠️ No hay transacciones para procesar en el archivo Excel")
+            self.ventana_informacion.write("No hay transacciones para procesar en el archivo Excel")
             return
         elif total_transacciones <= 5:
-            self.ventana_informacion.write(f"📁 Archivo pequeño detectado ({total_transacciones} transacciones) - Procesamiento directo sin lotes")
+            self.ventana_informacion.write(f"Archivo pequeño detectado ({total_transacciones} transacciones) - Procesamiento directo sin lotes")
             # Para archivos muy pequeños, procesar todo en un solo lote
             tamano_lote = total_transacciones
         else:
-            # ✅ CALCULAR TAMAÑO DE LOTE ÓPTIMO SI NO SE ESPECIFICA
+            # CALCULAR TAMAÑO DE LOTE ÓPTIMO SI NO SE ESPECIFICA
             if tamano_lote is None:
                 tamano_lote = self.calcular_tamano_lote_optimo(total_transacciones)
         
         lotes = list(range(0, total_transacciones, tamano_lote))
         
-        # ✅ MENSAJE INFORMATIVO SEGÚN TIPO DE PROCESAMIENTO
+        # MENSAJE INFORMATIVO SEGÚN TIPO DE PROCESAMIENTO
         if total_transacciones <= 5:
-            self.ventana_informacion.write(f"🚀 Procesando {total_transacciones} transacciones en modo directo (sin lotes)")
+            self.ventana_informacion.write(f"Procesando {total_transacciones} transacciones en modo directo (sin lotes)")
         else:
-            self.ventana_informacion.write(f"📦 Procesando {total_transacciones} transacciones en {len(lotes)} lotes de max {tamano_lote}")
+            self.ventana_informacion.write(f"Procesando {total_transacciones} transacciones en {len(lotes)} lotes de max {tamano_lote}")
         
         # Inicializar setup una sola vez
         if not self.wait_for_loading():
@@ -1036,12 +1045,12 @@ class Legalizador:
         
         for i, inicio_lote in enumerate(lotes):
             if not self.ciclo:  # Si el usuario detuvo el proceso
-                self.ventana_informacion.write('🛑 Proceso interrumpido por el usuario')
+                self.ventana_informacion.write('Proceso interrumpido por el usuario')
                 break
                 
             fin_lote = min(inicio_lote + tamano_lote, total_transacciones)
             
-            self.ventana_informacion.write(f"🔄 LOTE {i+1}/{len(lotes)}: Procesando transacciones {inicio_lote+1} a {fin_lote}")
+            self.ventana_informacion.write(f"LOTE {i+1}/{len(lotes)}: Procesando transacciones {inicio_lote+1} a {fin_lote}")
             
             # Procesar transacciones en este lote
             errores_consecutivos = 0
@@ -1064,12 +1073,12 @@ class Legalizador:
                         self.ventana_informacion.write(f'✓ Legalizacion {self.min} ya realizada o con error ya detectado')
                         continue
                     
-                    # ✅ VALIDAR DATOS ANTES DE PROCESAR
+                    # VALIDAR DATOS ANTES DE PROCESAR
                     self.establecer_datos()  # Primero establecer los datos
 
                     self.cookie_header['Cookie'] = self.legalizador.getCookies()
                     
-                    # ✅ PROCESAR TRANSACCIÓN CON MÉTRICAS
+                    # PROCESAR TRANSACCIÓN CON MÉTRICAS
                     try:
                         self.verificar_urls()
                         self.transacciones_exitosas += 1
@@ -1087,7 +1096,13 @@ class Legalizador:
                             time.sleep(10)
                             errores_consecutivos = 0
                     
-                    # ✅ ACTUALIZAR MÉTRICAS CADA 5 TRANSACCIONES (más frecuente en lotes)
+                    # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
+                    if j < fin_lote - 1:  # No pausar después de la última transacción del lote
+                        tiempo_pausa = random.randint(15, 40)
+                        self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                        time.sleep(tiempo_pausa)
+
+                    # ACTUALIZAR MÉTRICAS CADA 5 TRANSACCIONES (más frecuente en lotes)
                     if (j + 1) % 5 == 0:
                         self.actualizar_metricas()
                         
@@ -1095,20 +1110,20 @@ class Legalizador:
                     self.log_error(f"iteración de lote {j+1}", e)
                     self.transacciones_fallidas += 1
                     errores_consecutivos += 1
-                    self.ventana_informacion.write(f'❌ Error crítico en transacción {j+1}: {str(e)[:100]}')
+                    self.ventana_informacion.write(f'Error crítico en transacción {j+1}: {str(e)[:100]}')
             
             # Guardar progreso después de cada lote
             try:
                 #self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
-                self.ventana_informacion.write(f"💾 Lote {i+1} completado y guardado - Éxitos: {self.transacciones_exitosas}, Fallos: {self.transacciones_fallidas}")
+                self.ventana_informacion.write(f"Lote {i+1} completado y guardado - Éxitos: {self.transacciones_exitosas}, Fallos: {self.transacciones_fallidas}")
             except Exception as e:
                 self.log_error("guardar_lote", e)
             
-            # ✅ GENERAR REPORTE PERIÓDICO DETALLADO
+            # GENERAR REPORTE PERIÓDICO DETALLADO
             tiempo_actual = time.time()
             if tiempo_actual - self.ultimo_reporte >= self.intervalo_reporte:
                 """ reporte = self.generar_reporte_estado()
-                self.ventana_informacion.write(f"📊 REPORTE PERIÓDICO:")
+                self.ventana_informacion.write(f"REPORTE PERIÓDICO:")
                 self.ventana_informacion.write(f"   • Tiempo: {reporte['tiempo_transcurrido_min']} min")
                 self.ventana_informacion.write(f"   • Procesadas: {reporte['total_procesadas']}/{reporte['total_transacciones']}")
                 self.ventana_informacion.write(f"   • Tasa éxito: {reporte['tasa_exito']}%")
@@ -1119,13 +1134,13 @@ class Legalizador:
             # Pausa entre lotes para estabilidad (excepto el último)
             if i < len(lotes) - 1 and self.ciclo:
                 tiempo_pausa = 3
-                self.ventana_informacion.write(f"⏸️ Pausa de {tiempo_pausa}s entre lotes para estabilidad...")
+                self.ventana_informacion.write(f"Pausa de {tiempo_pausa}s entre lotes para estabilidad...")
                 time.sleep(tiempo_pausa)
                 
                 # Reset de métricas de timeouts para el nuevo lote
                 self.recent_timeouts = max(0, self.recent_timeouts - 1)
         
-        self.ventana_informacion.write(f"✅ Procesamiento por lotes completado - Total éxitos: {self.transacciones_exitosas}, Total fallos: {self.transacciones_fallidas}")
+        self.ventana_informacion.write(f"Procesamiento por lotes completado - Total éxitos: {self.transacciones_exitosas}, Total fallos: {self.transacciones_fallidas}")
     
     def calcular_tamano_lote_optimo(self, total_transacciones):
         """
@@ -1137,16 +1152,16 @@ class Legalizador:
         Returns:
             int: Tamaño de lote recomendado
         """
-        # ✅ MANEJO ESPECIAL PARA ARCHIVOS MUY PEQUEÑOS
+        # MANEJO ESPECIAL PARA ARCHIVOS MUY PEQUEÑOS
         if total_transacciones <= 5:
-            self.ventana_informacion.write(f"📁 Archivo pequeño ({total_transacciones} transacciones) - Un solo lote")
+            self.ventana_informacion.write(f"Archivo pequeño ({total_transacciones} transacciones) - Un solo lote")
             return total_transacciones
         elif total_transacciones <= 10:
             tamano_base = 5  # Lotes de 5 para 6-10 registros (más consistente)
-            self.ventana_informacion.write(f"📁 Archivo chico ({total_transacciones} transacciones) - Lotes de {tamano_base}")
+            self.ventana_informacion.write(f"Archivo chico ({total_transacciones} transacciones) - Lotes de {tamano_base}")
         elif total_transacciones <= 15:
             tamano_base = 5  # Lotes de 5 para 11-15 registros
-            self.ventana_informacion.write(f"📁 Archivo chico ({total_transacciones} transacciones) - Lotes de {tamano_base}")
+            self.ventana_informacion.write(f"Archivo chico ({total_transacciones} transacciones) - Lotes de {tamano_base}")
         elif total_transacciones <= 50:
             tamano_base = 10
         elif total_transacciones <= 200:
@@ -1183,7 +1198,7 @@ class Legalizador:
         # Configuración de logs más detallada
         self.log_detallado = True
         
-        self.ventana_informacion.write("🏭 Modo producción activado - Configuración optimizada para alto volumen")
+        self.ventana_informacion.write(" Modo producción activado - Configuración optimizada para alto volumen")
         self.ventana_informacion.write(f"   • Timeout base: {self.timeout_base}s")
         self.ventana_informacion.write(f"   • Reportes cada: {self.intervalo_reporte//60} minutos")
         self.ventana_informacion.write(f"   • Máximo reintentos: {self.max_reintentos}")

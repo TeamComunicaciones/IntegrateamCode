@@ -23,7 +23,7 @@ class LoginService:
         self.max_otp_attempts = 3
         self.otp_timeout = 60  # segundos para esperar OTP
         
-        # ✅ CONFIGURACIÓN DE REINTENTOS
+        # CONFIGURACIÓN DE REINTENTOS
         self.max_login_attempts = 4  # Número máximo de intentos de login
         self.retry_interval = 120  # Intervalo entre reintentos (2 minutos)
         
@@ -45,30 +45,30 @@ class LoginService:
         Returns:
             bool: True si el login fue exitoso, False en caso contrario
         """
-        # ✅ SISTEMA DE REINTENTOS
+        # SISTEMA DE REINTENTOS
         for intento in range(self.max_login_attempts):
             try:
                 self._log_message(f"🔄 Intento de login {intento + 1}/{self.max_login_attempts}")
                 
                 # Validar que se hayan configurado las credenciales
                 if not self.usuario or not self.password:
-                    self._log_message("❌ Error: Credenciales no configuradas", is_error=True)
+                    self._log_message("Error: Credenciales no configuradas", is_error=True)
                     return False
                     
                 # Asegurarse de estar en la pantalla de login
                 if not self._asegurar_pantalla_login():
-                    self._log_message(f"❌ Error asegurando pantalla de login en intento {intento + 1}")
+                    self._log_message(f"Error asegurando pantalla de login en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
                         self._esperar_antes_reintentar()
                         continue
                     return False
                 
-                # ✅ LIMPIAR ESTADO DEL FORMULARIO
+                # LIMPIAR ESTADO DEL FORMULARIO
                 self._limpiar_estado_login()
                 
                 # Paso 1: Ingresar credenciales
                 if not self._ingresar_credenciales():
-                    self._log_message(f"❌ Error ingresando credenciales en intento {intento + 1}")
+                    self._log_message(f"Error ingresando credenciales en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
                         self._esperar_antes_reintentar()
                         continue
@@ -77,7 +77,7 @@ class LoginService:
                 # Paso 2: Obtener código OTP
                 codigo_otp = self._obtener_codigo_otp()
                 if not codigo_otp:
-                    self._log_message(f"❌ Error obteniendo código OTP en intento {intento + 1}")
+                    self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
                         self._esperar_antes_reintentar()
                         continue
@@ -85,7 +85,7 @@ class LoginService:
                     
                 # Paso 3: Ingresar código OTP
                 if not self._ingresar_codigo_otp(codigo_otp):
-                    self._log_message(f"❌ Error ingresando código OTP en intento {intento + 1}")
+                    self._log_message(f"Error ingresando código OTP en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
                         self._esperar_antes_reintentar()
                         continue
@@ -93,14 +93,14 @@ class LoginService:
                     
                 # Paso 4: Validar login exitoso
                 if self._detectar_login_invalido():
-                    self._log_message(f"❌ Login inválido en intento {intento + 1}")
+                    self._log_message(f"Login inválido en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
                         self._esperar_antes_reintentar()
                         continue
                     return False
                     
-                # ✅ LOGIN EXITOSO
-                self._log_message(f"✅ Login exitoso en intento {intento + 1}")
+                # LOGIN EXITOSO
+                self._log_message(f"Login exitoso en intento {intento + 1}")
                 return True
                 
             except Exception as e:
@@ -110,8 +110,8 @@ class LoginService:
                     self._esperar_antes_reintentar()
                     continue
                 
-        # ❌ TODOS LOS INTENTOS FALLARON
-        self._log_message(f"❌ Login falló después de {self.max_login_attempts} intentos", is_error=True)
+        # TODOS LOS INTENTOS FALLARON
+        self._log_message(f"Login falló después de {self.max_login_attempts} intentos", is_error=True)
         return False
     
     def _ingresar_credenciales(self):
@@ -122,7 +122,7 @@ class LoginService:
             bool: True si fue exitoso, False en caso contrario
         """
         try:
-            self._log_message("🔐 Ingresando credenciales...")
+            self._log_message("Ingresando credenciales...")
             
             # Ingresar usuario
             self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
@@ -159,7 +159,7 @@ class LoginService:
             self.web_controller.cambiar_pestaña()
             
             # Esperar a que llegue el SMS
-            time.sleep(3)
+            time.sleep(5)
             
             # Intentar obtener el código OTP
             for intento in range(self.max_otp_attempts):
@@ -174,15 +174,15 @@ class LoginService:
                     match = re.search(r"\b\d{6,10}\b", sms_content)
                     if match:
                         codigo = match.group()
-                        self._log_message(f"✅ Código OTP obtenido: {codigo}")
+                        self._log_message(f"Código OTP obtenido: {codigo}")
                         return codigo
                         
                 except Exception as e:
-                    self._log_message(f"⚠️ Intento OTP {intento + 1}/{self.max_otp_attempts} fallido, reintentando...")
+                    self._log_message(f"Intento OTP {intento + 1}/{self.max_otp_attempts} fallido, reintentando...")
                     if intento < self.max_otp_attempts - 1:
                         time.sleep(10)  # Esperar antes de reintentar
                     
-            self._log_message("❌ No se pudo obtener el código OTP después de varios intentos", is_error=True)
+            self._log_message("No se pudo obtener el código OTP después de varios intentos", is_error=True)
             return None
             
         except Exception as e:
@@ -200,7 +200,7 @@ class LoginService:
             bool: True si fue exitoso, False en caso contrario
         """
         try:
-            self._log_message(f"🔑 Ingresando código OTP: {codigo_otp}")
+            self._log_message(f"Ingresando código OTP: {codigo_otp}")
             
             # Volver a la pestaña principal
             self.web_controller.volver_pestaña()
@@ -228,8 +228,14 @@ class LoginService:
             bool: True si el login es inválido, False en caso contrario
         """
         try:
+            time.sleep(2)
             error_element = ''
-            
+            error_indicators = [
+                'invalid_user_response',
+                'Las credenciales no corresponden',
+                'Actualmente existe un usuario en el sistema. Por favor verifique',
+                'Token inválido'
+            ]
             # Intentar leer el mensaje de error
             try:
                 error_element = self.web_controller.read('ctl00_ContentPlaceHolder1_lbMensaje', 'id')
@@ -242,18 +248,22 @@ class LoginService:
                 except:
                     pass
             
-            # Si hay un error de usuario inválido
-            if error_element and "invalid_user_response" in error_element:
-                self._log_message(f"❌ Error en login: {error_element}", is_error=True)
-                
-                # Hacer clic en el botón de regresar
-                try:
-                    self.web_controller.click('ctl00_ContentPlaceHolder1_BtnRegresarMensaje', 'id')
-                except:
-                    pass
-                    
-                return True
-                
+            # Verificar si hay algún indicador de error
+            if error_element:
+                for indicator in error_indicators:
+                    if indicator in error_element:
+                        self._log_message(f"Error detectado: {error_element}", is_error=True)
+                        
+                        # Hacer clic en el botón de regresar si existe
+                        try:
+                            self.web_controller.click('ctl00_ContentPlaceHolder1_BtnRegresarMensaje', 'id')
+                            time.sleep(2)
+                        except:
+                            pass
+                            
+                        return True
+
+            # Si no se encontró ningún error, el login fue exitoso   
             return False
             
         except Exception as e:
@@ -357,14 +367,7 @@ class LoginService:
             bool: True si está en la pantalla de login, False en caso contrario
         """
         try:
-            self._log_message("🔍 Verificando pantalla de login...")
-            
-            # Verificar si ya estamos en la pantalla de login
-            if self._detectar_pantalla_login():
-                self._log_message("✅ Ya estoy en la pantalla de login")
-                return True
-            
-            # Si no estamos en login, navegar a la página principal
+            # Navegar a la página principal
             self._log_message("🔄 Navegando a la página de login...")
             
             # Navegar a la URL de login
@@ -374,10 +377,10 @@ class LoginService:
             
             # Verificar que llegamos a la pantalla de login
             if self._detectar_pantalla_login():
-                self._log_message("✅ Navegación exitosa a la pantalla de login")
+                self._log_message("Navegación exitosa a la pantalla de login")
                 return True
             else:
-                self._log_message("❌ No se pudo navegar a la pantalla de login", is_error=True)
+                self._log_message("No se pudo navegar a la pantalla de login", is_error=True)
                 return False
                 
         except Exception as e:

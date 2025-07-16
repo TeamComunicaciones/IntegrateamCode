@@ -120,19 +120,6 @@ class Equipos:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.equipos)
-
-            # Inicializar el servicio de login
-            self.poliedro_login_service = None
-            if not self.login():
-                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
-                self.on_of(True)
-            time.sleep(2)
-
-            try:
-                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
-            except:
-                pass
-
             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('194')
             for i in range(int(self.repeticiones)):
@@ -530,7 +517,7 @@ class Equipos:
                 self.poliedro_pass
             )
     
-    def wait_for_loading(self, timeout=30, sleep_interval=1, equipos=True):
+    def wait_for_loading(self, timeout=120, sleep_interval=1, equipos=True):
         """
         Método reutilizable para esperar que termine la carga.
         

@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
+import random
 
 class Preactivador:
 
@@ -176,6 +177,8 @@ class Preactivador:
 
             self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('195')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
             self.excel.quitarFormatoCientifico('Iccid')
             self.ciclo = True
@@ -186,6 +189,11 @@ class Preactivador:
                     self.ciclo = False
                 else:
                     try:
+                        # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
+                        tiempo_pausa = random.randint(15, 40)
+                        self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                        time.sleep(tiempo_pausa)
+
                         self.min= str(self.excel.excel['Min'][self.contador])
                         if str(self.min) != 'nan':
                                 self.ventana_informacion.write(f'Preactivación ya realizada o con error')
@@ -197,7 +205,11 @@ class Preactivador:
                     except:
                         try:
                             self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            if not self.wait_for_loading():
+                                raise Exception("Timeout esperando que la página cargue")
                             self.poliedro.seleccionAcceso('195', start=False)
+                            if not self.wait_for_loading():
+                                raise Exception("Timeout esperando que la página cargue")
                             self.position(self.preactivador.retornarHtml(), 'paso1', True)
                             self.contador += 1
                         except:
@@ -206,15 +218,16 @@ class Preactivador:
                                 self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
                                 self.on_of(True)
                             time.sleep(2)
-                            self.poliedro.seleccionAcceso('195', start=True)
-                            if not self.wait_for_loading(preactivador=False):
-                                raise Exception("Timeout esperando carga inicial en captura_datos")
                             try:
                                 self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                                if not self.wait_for_loading():
+                                    raise Exception("Timeout esperando que la página cargue")
                             except Exception as e:
                                 pass
                             time.sleep(2)
                             self.poliedro.seleccionAcceso('195', start=True)
+                            if not self.wait_for_loading():
+                                raise Exception("Timeout esperando que la página cargue")
             self.ventana_informacion.write('Proceso terminado')
             self.on_of(True)
         except:
@@ -428,6 +441,8 @@ class Preactivador:
         }
         
         self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        if not self.wait_for_loading(preactivador=False):
+            raise Exception("Timeout esperando que la página cargue")
         try:
             self.preactivador.click('btnNext', 'id')
         except:
@@ -437,16 +452,22 @@ class Preactivador:
                     self.excel.guardar(self.contador, 'Mensaje', message)
                     self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                     self.poliedro.seleccionAcceso('195', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando que la página cargue")
                     self.ventana_informacion.write(f"{self.cedula} Porta ya registrada'")
             except:
                 self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                 self.poliedro.seleccionAcceso('195', start=False)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando que la página cargue")
                 self.ventana_informacion.write(f"{self.cedula} error no identificado")
             raise('error controlado kit registrado')
         
         demographic_response = session.post(demographic_url, demographic_data, headers = headers)
         if demographic_response.status_code == 200:
             self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             self.pagina = 4
             self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
             self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
@@ -454,6 +475,8 @@ class Preactivador:
             self.preactivador.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
             self.pagina = 5
             self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             optionsFinal = [
                 ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
                 ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
@@ -518,10 +541,14 @@ class Preactivador:
                     self.excel.guardar(self.contador, 'Mensaje', message)
                     self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
                     self.poliedro.seleccionAcceso('195', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando que la página cargue")
                     self.ventana_informacion.write(f"{self.iccid} Sim ya registrada'")
             except:
                 self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
                 self.poliedro.seleccionAcceso('195', start=False)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando que la página cargue")
                 self.ventana_informacion.write(f"{self.iccid} error no identificado")
             raise('error controlado preactivador')
         self.etapa = 2
@@ -586,11 +613,17 @@ class Preactivador:
         if self.etapa == 5:
             time.sleep(self.time2)
             self.preactivador.click('btnPrev', 'id')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             self.poliedro.seleccionAcceso('195', start=False)
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
         else:
             for i in range(self.etapa):
                 time.sleep(self.time2)
                 self.preactivador.click('btnPrev', 'id')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando que la página cargue")
         self.etapa == 0
     
     def position(self, html, paso=None, wait=False):
@@ -693,7 +726,7 @@ class Preactivador:
                 self.poliedro_pass
             )
     
-    def wait_for_loading(self, timeout=30, sleep_interval=1, preactivador=True):
+    def wait_for_loading(self, timeout=120, sleep_interval=1, preactivador=True):
         """
         Método reutilizable para esperar que termine la carga.
         

@@ -38998,3 +38998,14 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
     raise(f'Excedio {args}')
 TypeError: exceptions must derive from BaseException
+
+[verificar_urls transacción 62] Error: No se pudo detectar posición después de 30 intentos
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 1081, in procesar_por_lotes
+    self.verificar_urls()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 644, in verificar_urls
+    track = self.position_detect()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 868, in position_detect
+    raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
+Exception: No se pudo detectar posición después de 30 intentos
