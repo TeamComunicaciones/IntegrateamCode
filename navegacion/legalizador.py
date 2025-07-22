@@ -28,6 +28,12 @@ class Legalizador:
         self.link = 'https://poliedrodist.comcel.com.co/'
         self.link2 = 'https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         
+        # ESTADO CRÍTICO PARA MANEJO CONSISTENTE DE SESIÓN
+        self.error_critico_sesion = False
+        self.ultimo_error_sesion = None
+        self.intentos_recuperacion = 0
+        self.max_intentos_recuperacion = 3
+
         # ✅ NUEVAS MÉTRICAS PARA MONITOREO
         self.inicio_proceso = None
         self.transacciones_exitosas = 0
@@ -142,8 +148,11 @@ class Legalizador:
         # Inicializar el servicio de login
         self.poliedro_login_service = None
         if not self.login():
-            self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+            self.ventana_informacion.write('Error en login, verifique sus credenciales')
             self.on_of(True)
+            self.alertas('se detiene el programa error en login')
+            # Lanzar excepción para salir del bloque try y entrar al except final
+            raise Exception("Error crítico: Fallo en login de Poliedro")
         time.sleep(2)
 
         try:
@@ -153,11 +162,11 @@ class Legalizador:
             return
         
         if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga inicial en captura_datos")
+            raise Exception("Timeout esperando carga")
         
         self.poliedro.seleccionAcceso('362', start=True)
         if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga inicial en captura_datos")
+            raise Exception("Timeout esperando carga")
 
         try:
             self.position(self.legalizador.retornarHtml(), 'paso1', True)
@@ -169,11 +178,11 @@ class Legalizador:
             for i in range(int(self.repeticiones)):
                 self.ciclo = True
                 self.contador = 0
-                self.inicio_proceso = time.time()  # ✅ INICIALIZAR MÉTRICAS
+                self.inicio_proceso = time.time()  # INICIALIZAR MÉTRICAS
                 self.transacciones_exitosas = 0
                 self.transacciones_fallidas = 0
                 
-                # ✅ CONFIGURAR MODO PRODUCCIÓN PARA ALTO VOLUMEN
+                # CONFIGURAR MODO PRODUCCIÓN PARA ALTO VOLUMEN
                 self.configurar_modo_produccion()
                 
                 self.excel.leer_excel('src\\legalizador\\legalizador.xlsx', 'iccid')
@@ -181,10 +190,10 @@ class Legalizador:
                 self.excel.quitarFormatoCientifico('imei')
                 self.ventana_informacion.write(f'🚀 Iniciando Ciclo {i+1} con {self.excel.cantidad} transacciones')
                 
-                # ✅ PROCESAMIENTO POR LOTES PARA MEJOR GESTIÓN DE MEMORIA
+                # PROCESAMIENTO POR LOTES PARA MEJOR GESTIÓN DE MEMORIA
                 self.procesar_por_lotes()
                 
-                # ✅ REPORTE FINAL DEL CICLO
+                # REPORTE FINAL DEL CICLO
                 #self.reporte_final_ciclo(i+1)
                 self.ventana_informacion.write('✅ Proceso terminado exitosamente')
                 self.ventana_informacion.write(f'🏁 Ciclo {i+1} finalizado')
@@ -195,6 +204,7 @@ class Legalizador:
             self.on_of(True)
         except Exception as e:
             self.log_error("bloque principal", e)
+            self.alertas('se detiene el programa error')
     
     def inicializar_login_service(self):
         """
@@ -379,21 +389,49 @@ class Legalizador:
         try:
             # USAR MÉTODO REUTILIZABLE PARA ESPERA INICIAL
             if not self.wait_for_loading():
-                raise Exception("Timeout esperando carga inicial en captura_datos")
+                raise Exception("Timeout esperando carga")
             
             self.position(self.legalizador.retornarHtml(), 'paso1', True)
 
             time.sleep(2)
-            try:
-                self.legalizador.click('toggleProductBTN', 'id')
-            except Exception as e:
-                pass
-            self.poliedro.seleccionAcceso('Seleccione...', start=False)
-            time.sleep(1)
-            self.poliedro.seleccionAcceso('362', start=False)
+
+            intentos = 0
+            while intentos < 5:
+                try:
+                    self.legalizador.click('DetailProduct_Imei', 'id')
+                    cedula_pantalla = self.legalizador.read('DetailProduct_DocumentNumber', 'id')
+
+                    if cedula_pantalla and cedula_pantalla.strip() and cedula_pantalla != self.cedula:
+                        raise Exception(f'Error al escribir cédula/nit: {cedula_pantalla}')
+                    break
+                except Exception as e:
+                    intentos += 1
+                    try:
+                        self.legalizador.click('toggleProductBTN', 'id')
+                        if not self.wait_for_loading():
+                            raise Exception("Timeout esperando carga")
+                    except Exception as e:
+                        pass
+                    self.poliedro.seleccionAcceso('Seleccione...', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga")
+                    time.sleep(1)
+                    self.poliedro.seleccionAcceso('362', start=False)
             
+            if intentos == 4:
+                self.excel.guardar(self.contador, 'Mensaje', 'No se pudo acceder al formulario 362')
+                self.excel.guardar(self.contador, 'Min', 'error')
+                self.ventana_informacion.write(f"{self.iccid} No se pudo acceder al formulario 362")
+                raise('error controlado en formulario demografico')
+
+            # USAR MÉTODO REUTILIZABLE PARA ESPERA INICIAL
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga")
+            
+            time.sleep(1)
             # Click en el campo select2 para abrirlo
             self.legalizador.click('select2-DetailProduct_DocumentTypeId-container', 'id')
+            time.sleep(1)
             # Escribir en el input de búsqueda que aparece dinámicamente
             if self.documentType == 2:  # NIT
                 self.legalizador.write('/html/body/span/span/span[1]/input', 'nit', 'xpath')
@@ -586,6 +624,8 @@ class Legalizador:
             self.legalizador.click('btnPrev', 'id')
             self.position_detect()
         except Exception as e:
+            if "Error crítico: Fallo en login de Poliedro" in str(e):
+                raise Exception("Error crítico: Fallo en login de Poliedro")
             self.logs.append([e,traceback.format_exc()])
             self.restart_new()
     
@@ -649,9 +689,11 @@ class Legalizador:
                 raise Exception('session cerrada')
             elif track == 'restart':
                 try:
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga inicial")
                     self.poliedro.seleccionAcceso('362', start=False)
                     if not self.wait_for_loading():
-                        raise Exception("Timeout esperando carga inicial en reset formulario")
+                        raise Exception("Timeout esperando carga inicial")
                 except:
                     pass
             elif track == 'paso1' and mode == 'off':
@@ -707,10 +749,19 @@ class Legalizador:
             if not self.login():
                 self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
                 self.on_of(True)
+                # Lanzar excepción para salir del bloque try y entrar al except final
+                raise Exception("Error crítico: Fallo en login de Poliedro")
             time.sleep(2)
+            try:
+                self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except Exception as e:
+                self.log_error("click en menú", e)
+                return
+            if not self.wait_for_loading(legalizador=False):
+                raise Exception("Timeout esperando carga")
             self.poliedro.seleccionAcceso('362', start=True)
             if not self.wait_for_loading(legalizador=False):
-                raise Exception("Timeout esperando carga inicial en captura_datos")
+                raise Exception("Timeout esperando carga")
             raise Exception(f'No fue posible ejecutar el proceso de verificación de URLs, intentos agotados: {max_intentos}')
 
     def position(self, html, paso=None, wait=False, fast= False):
@@ -855,6 +906,8 @@ class Legalizador:
         if not self.login():
             self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
             self.on_of(True)
+            # Lanzar excepción para salir del bloque try y entrar al except final
+            raise Exception("Error crítico: Fallo en login de Poliedro")
         time.sleep(2)
         try:
             self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
@@ -862,10 +915,10 @@ class Legalizador:
             self.log_error("click en menú", e)
             return
         if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga inicial en captura_datos")
+            raise Exception("Timeout esperando carga")
         self.poliedro.seleccionAcceso('362', start=True)
         if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga inicial en captura_datos")
+            raise Exception("Timeout esperando carga")
         # SI SE AGOTA EL LÍMITE, LANZAR EXCEPCIÓN ESPECÍFICA
         raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
 
@@ -948,7 +1001,7 @@ class Legalizador:
             
             mensaje = f"📊 MÉTRICAS: {self.contador}/{self.excel.cantidad} | "
             mensaje += f"✅ {self.transacciones_exitosas} | ❌ {self.transacciones_fallidas} | "
-            mensaje += f"🎯 {tasa_exito:.1f}% éxito | ⚡ {velocidad:.1f}/min | ⏱️ ETA: {eta_minutos:.1f}min"
+            mensaje += f"🎯 {tasa_exito:.1f}% éxito"
             
             self.ventana_informacion.write(mensaje)
     
@@ -1047,6 +1100,12 @@ class Legalizador:
             if not self.ciclo:  # Si el usuario detuvo el proceso
                 self.ventana_informacion.write('Proceso interrumpido por el usuario')
                 break
+            
+            # ✅ VERIFICAR SESIÓN AL INICIO DE CADA LOTE
+            if not self.verificar_sesion_activa():
+                self.ventana_informacion.write(f"❌ Error crítico: No se pudo restaurar la sesión para el lote {i+1}")
+                self.on_of(True)  # Detener el proceso
+                raise Exception("Error crítico: Fallo en login de Poliedro")
                 
             fin_lote = min(inicio_lote + tamano_lote, total_transacciones)
             
@@ -1085,6 +1144,8 @@ class Legalizador:
                         errores_consecutivos = 0  # Reset contador de errores
                         self.ventana_informacion.write(f'✅ Transacción {j+1} completada exitosamente')
                     except Exception as e:
+                        if "Error crítico: Fallo en login de Poliedro" in str(e):
+                            raise Exception("Error crítico: Fallo en login de Poliedro")
                         self.transacciones_fallidas += 1
                         errores_consecutivos += 1
                         self.log_error(f"verificar_urls transacción {j+1}", e)
@@ -1107,6 +1168,8 @@ class Legalizador:
                         self.actualizar_metricas()
                         
                 except Exception as e:
+                    if "Error crítico: Fallo en login de Poliedro" in str(e):
+                        raise Exception("Error crítico: Fallo en login de Poliedro")
                     self.log_error(f"iteración de lote {j+1}", e)
                     self.transacciones_fallidas += 1
                     errores_consecutivos += 1
@@ -1197,8 +1260,61 @@ class Legalizador:
         
         # Configuración de logs más detallada
         self.log_detallado = True
+    
+    def verificar_sesion_activa(self):
+        """
+        Verifica si la sesión está activa y la renueva si es necesario
         
-        self.ventana_informacion.write(" Modo producción activado - Configuración optimizada para alto volumen")
-        self.ventana_informacion.write(f"   • Timeout base: {self.timeout_base}s")
-        self.ventana_informacion.write(f"   • Reportes cada: {self.intervalo_reporte//60} minutos")
-        self.ventana_informacion.write(f"   • Máximo reintentos: {self.max_reintentos}")
+        Returns:
+            bool: True si la sesión está activa o se renovó exitosamente, False en caso contrario
+        """
+        try:
+            # Si ya estamos en estado crítico, no intentar más
+            if self.error_critico_sesion:
+                self.ventana_informacion.write("Se presenta un error crítico para iniciar sesión en Poliedro")
+                return False
+                
+            # Inicializar el servicio si no existe
+            if not self.poliedro_login_service:
+                self.inicializar_login_service()
+                
+            # Verificar si la sesión está activa
+            if not self.poliedro_login_service.validar_sesion_activa():
+                self.ventana_informacion.write("Sesión expirada, reintentando login...")
+                self.intentos_recuperacion += 1
+                
+                if not self.login():
+                    self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                    self.on_of(True)
+                    # Lanzar excepción para salir del bloque try y entrar al except final
+                    raise Exception("Error crítico: Fallo en login de Poliedro")
+                else:
+                    # Sesión recuperada exitosamente
+                    self.intentos_recuperacion = 0  # Reset contador
+                    self.ventana_informacion.write("Sesión renovada exitosamente")
+                    
+                    # Navegar al formulario principal después de renovar sesión
+                    try:
+                        self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                        if not self.wait_for_loading(legalizador=False):
+                            return False
+                        self.poliedro.seleccionAcceso('362', start=True)
+                        if not self.wait_for_loading(legalizador=False):
+                            return False
+                    except Exception as e:
+                        self.log_error("restaurar_navegacion", e)
+                        self.intentos_recuperacion += 1
+                        return False
+            return True
+        except Exception as e:
+            if "Error crítico: Fallo en login de Poliedro" in str(e):
+                raise Exception("Error crítico: Fallo en login de Poliedro")
+            self.log_error("verificar_sesion_activa", e)
+            self.intentos_recuperacion += 1
+            
+            # Si alcanzamos el máximo de intentos con excepciones, marcar error crítico
+            if self.intentos_recuperacion >= self.max_intentos_recuperacion:
+                self.error_critico_sesion = True
+                self.ventana_informacion.write("ERROR CRÍTICO: Múltiples fallos al verificar sesión")
+                
+            return False

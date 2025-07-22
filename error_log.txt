@@ -39009,3 +39009,25 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\navegacion\legalizador.py", line 868, in position_detect
     raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
 Exception: No se pudo detectar posición después de 30 intentos
+
+[verificar_urls transacción 29] Error: Error crítico: Fallo en login de Poliedro
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1135, in procesar_por_lotes
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 679, in verificar_urls
+    mode = 'on'
+                
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 903, in position_detect
+    count += 1
+Exception: Error crítico: Fallo en login de Poliedro
+
+[verificar_urls transacción 30] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1135, in procesar_por_lotes
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 678, in verificar_urls
+Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 31] Error: Timeout esperando carga después de seleccionar ciudad
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1135, in procesar_por_lotes
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 678, in verificar_urls
+Exception: Timeout esperando carga después de seleccionar ciudad

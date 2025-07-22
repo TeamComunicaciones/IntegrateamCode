@@ -152,10 +152,11 @@ class Portas:
                 self.on_of(True)
             time.sleep(2)
 
-            try:
-                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
-            except:
-                pass
+            if not self.tropas.get():
+                try:
+                    self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                except:
+                    pass
 
             self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('290')
@@ -574,7 +575,7 @@ class Portas:
                 self.portas, 
                 self.ventana_informacion
             )
-            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            # CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
             self.poliedro_login_service.configurar_reintentos(
                 max_intentos=4, 
                 intervalo_minutos=2
@@ -617,6 +618,6 @@ class Portas:
                 
             time.sleep(sleep_interval)
         
-        # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
+        # REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
         self.recent_timeouts += 1
         return False  # Timeout

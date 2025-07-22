@@ -20,11 +20,11 @@ class LoginService:
         self.ventana_informacion = ventana_informacion
         self.usuario = ""
         self.password = ""
-        self.max_otp_attempts = 3
+        self.max_otp_attempts = 2  # Número máximo de intentos para obtener el OTP
         self.otp_timeout = 60  # segundos para esperar OTP
         
         # CONFIGURACIÓN DE REINTENTOS
-        self.max_login_attempts = 4  # Número máximo de intentos de login
+        self.max_login_attempts = 2  # Número máximo de intentos de login
         self.retry_interval = 120  # Intervalo entre reintentos (2 minutos)
         
     def configurar_credenciales(self, usuario, password):
@@ -347,7 +347,7 @@ class LoginService:
                 self._log_message(f"⏳ Reintentando en {i//60}:{i%60:02d} minutos...")
                 time.sleep(30)
     
-    def configurar_reintentos(self, max_intentos=4, intervalo_minutos=2):
+    def configurar_reintentos(self, max_intentos=2, intervalo_minutos=2):
         """
         Configura los parámetros de reintentos
         
