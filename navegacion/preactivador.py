@@ -718,7 +718,7 @@ class Preactivador:
             )
             # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
             self.poliedro_login_service.configurar_reintentos(
-                max_intentos=4, 
+                max_intentos=2, 
                 intervalo_minutos=2
             )
             self.poliedro_login_service.configurar_credenciales(

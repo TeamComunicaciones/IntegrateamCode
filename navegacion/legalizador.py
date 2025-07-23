@@ -217,7 +217,7 @@ class Legalizador:
             )
             # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
             self.poliedro_login_service.configurar_reintentos(
-                max_intentos=4, 
+                max_intentos=2, 
                 intervalo_minutos=2
             )
             self.poliedro_login_service.configurar_credenciales(
@@ -399,9 +399,9 @@ class Legalizador:
             while intentos < 5:
                 try:
                     self.legalizador.click('DetailProduct_Imei', 'id')
-                    cedula_pantalla = self.legalizador.read('DetailProduct_DocumentNumber', 'id')
+                    cedula_pantalla = self.legalizador.value('DetailProduct_DocumentNumber', 'id')
 
-                    if cedula_pantalla and cedula_pantalla.strip() and cedula_pantalla != self.cedula:
+                    if cedula_pantalla and cedula_pantalla.strip():
                         raise Exception(f'Error al escribir cédula/nit: {cedula_pantalla}')
                     break
                 except Exception as e:
@@ -883,7 +883,7 @@ class Legalizador:
         }
         
         count = 0
-        max_iterations = 30  # LÍMITE MÁXIMO DE ITERACIONES
+        max_iterations = 20  # LÍMITE MÁXIMO DE ITERACIONES
         
         while count < max_iterations:
             self.scrap = scraping.Scraping(self.legalizador.retornarHtml())

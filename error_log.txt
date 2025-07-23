@@ -39031,3 +39031,14 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1135, in procesar_por_lotes
   File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 678, in verificar_urls
 Exception: Timeout esperando carga después de seleccionar ciudad
+
+[verificar_urls transacción 59] Error: No se pudo detectar posición después de 30 intentos
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1142, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 686, in verificar_urls
+    track = self.position_detect()
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 923, in position_detect
+    raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
+Exception: No se pudo detectar posición después de 30 intentos
