@@ -161,9 +161,7 @@ class Legalizador:
             self.log_error("click en menú", e)
             return
         
-        if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga")
-        
+        time.sleep(3)
         self.poliedro.seleccionAcceso('362', start=True)
         if not self.wait_for_loading(legalizador=False):
             raise Exception("Timeout esperando carga")
@@ -757,8 +755,7 @@ class Legalizador:
             except Exception as e:
                 self.log_error("click en menú", e)
                 return
-            if not self.wait_for_loading(legalizador=False):
-                raise Exception("Timeout esperando carga")
+            time.sleep(2)
             self.poliedro.seleccionAcceso('362', start=True)
             if not self.wait_for_loading(legalizador=False):
                 raise Exception("Timeout esperando carga")
@@ -914,8 +911,7 @@ class Legalizador:
         except Exception as e:
             self.log_error("click en menú", e)
             return
-        if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga")
+        time.sleep(2)
         self.poliedro.seleccionAcceso('362', start=True)
         if not self.wait_for_loading(legalizador=False):
             raise Exception("Timeout esperando carga")
@@ -1296,8 +1292,7 @@ class Legalizador:
                     # Navegar al formulario principal después de renovar sesión
                     try:
                         self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
-                        if not self.wait_for_loading(legalizador=False):
-                            return False
+                        time.sleep(3)
                         self.poliedro.seleccionAcceso('362', start=True)
                         if not self.wait_for_loading(legalizador=False):
                             return False

@@ -172,8 +172,13 @@ class Portas:
             self.on_of(True)
             
         except Exception as e:
-            self.ventana_informacion.write(f'se detiene el programa error: {e}')
-            self.alertas('se detiene el programa error')
+            if "Error crítico: Fallo en login de Poliedro" in str(e):
+                self.ventana_informacion.write(f'se detiene el programa error en login: {e}')
+                self.alertas('se detiene el programa error en login')
+            else: 
+                self.ventana_informacion.write(f'se detiene el programa error: {e}')
+                self.alertas('se detiene el programa error')
+            
             raise Exception('se detiene el programa')
 
         
@@ -530,6 +535,8 @@ class Portas:
                     if not self.login():
                         self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
                         self.on_of(True)
+                        raise Exception("Error crítico: Fallo en login de Poliedro")
+                    
                     time.sleep(2)
                     try:
                         try:

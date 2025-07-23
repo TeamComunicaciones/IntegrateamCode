@@ -176,6 +176,7 @@ class Preactivador:
                 pass
 
             self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+            time.sleep(3)
             self.poliedro.seleccionAcceso('195')
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
@@ -217,11 +218,11 @@ class Preactivador:
                             if not self.login():
                                 self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
                                 self.on_of(True)
+                                raise Exception("Error crítico: Fallo en login de Poliedro")
+                            
                             time.sleep(2)
                             try:
                                 self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
-                                if not self.wait_for_loading():
-                                    raise Exception("Timeout esperando que la página cargue")
                             except Exception as e:
                                 pass
                             time.sleep(2)

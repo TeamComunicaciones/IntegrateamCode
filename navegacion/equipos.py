@@ -120,8 +120,29 @@ class Equipos:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.equipos)
+
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('Error en login, verifique sus credenciales')
+                self.on_of(True)
+                self.alertas('se detiene el programa error en login')
+                # Lanzar excepción para salir del bloque try y entrar al except final
+                raise Exception("Error crítico: Fallo en login de Poliedro")
+            time.sleep(2)
+
+            try:
+                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except Exception as e:
+                self.ventana_informacion.write('Error en click de menú "Regresar a poliedro"')
+                return
+
             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+            time.sleep(3)
             self.poliedro.seleccionAcceso('194')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que cargue la página")
+            
             for i in range(int(self.repeticiones)):
                 self.contador = 0
                 self.ciclo = True
@@ -148,10 +169,35 @@ class Equipos:
                                 self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                                 try:
                                     self.poliedro.seleccionAcceso('194', start=False)
-                                except: pass
+                                except: 
+                                    # Reintentar login si falla
+                                    self.poliedro_login_service = None
+                                    if not self.login():
+                                        self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                                        self.on_of(True)
+                                        raise Exception("Error crítico: Fallo en login de Poliedro")
+                                    
+                                    time.sleep(2)
+                                    try:
+                                        try:
+                                            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                                        except:
+                                            pass
+                                        time.sleep(1)
+                                        self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                                        time.sleep(2)
+                                        self.poliedro.seleccionAcceso('194')
+                                        time.sleep(1)
+                                        if not self.wait_for_loading():
+                                            raise Exception("Timeout esperando que cargue la página")
+                                    except Exception as e:
+                                        return
+                                    
                                 self.position(self.equipos.retornarHtml(), 'paso1', True)   
                                 self.contador += 1
                         except Exception as e:
+                            if "Error crítico: Fallo en login de Poliedro" in str(e):
+                                raise Exception("Error crítico: Fallo en login de Poliedro")
                             self.ventana_informacion.write(f"Error en la iteración {self.contador}: {e}")
                             self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                             """ self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span/text()')
