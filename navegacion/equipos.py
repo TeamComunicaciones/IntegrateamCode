@@ -1,5 +1,5 @@
 from navegacion import sub_menu as sm, ventana_informacion
-from recursos import  label, botones, colors
+from recursos import  label, botones, colors, checkbox
 from funcionalidad import  web_controller, poliedro, excel, scraping
 from subprocess import Popen
 import threading
@@ -24,6 +24,9 @@ class Equipos:
         self.cookie_header = {}
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link_google_messages = 'https://messages.google.com/web/conversations'
+        self.link_mysms = 'https://app.mysms.com/#87472'
+
         self.titulo = label.Label().create_label(master, 'ACTIVADOR DE EQUIPO', 0.2, 0.0, 0.5,0.2, letterSize= 25)
         self.ventana_informacion =  ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master,3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
@@ -72,8 +75,16 @@ class Equipos:
 
         self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
         self.okBotton5.configure(fg_color=color.team, text_color='white')
+
+        # Elegir si se usa MySMS o Google Messages para obtener el OTP
+        self.checkbox_mysms = checkbox.Checkbox()
+        self.mysms = tk.BooleanVar()
+        self.checkbox_mysms = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'MySMS', self.on_checkbox_change_mysms, self.mysms)
+
+        self.checkbox_google_messages = checkbox.Checkbox()
+        self.google_messages = tk.BooleanVar()
+        self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
        
-        
     
     def abrir_excel(self):
         self.ventana_informacion.write('excel equipos abierto recuerde cerrar antes de iniciar')
@@ -93,6 +104,10 @@ class Equipos:
         self.ventana_informacion.write(f'Numero de repeticiones configurado en {self.repeticiones}')
     
     def abrir_pagina(self):
+        if not self.mysms.get() and not self.google_messages.get():
+            self.ventana_informacion.write('Seleccione un método para recibir el OTP')
+            return
+
         self.ventana_informacion.write('Navegador abierto')
         class Abrir_pagina1(web_controller.Web_Controller):pass
         self.equipos = Abrir_pagina1(int(self.time.get()))
@@ -101,8 +116,11 @@ class Equipos:
         self.equipos.selectPage(self.link)
 
         time.sleep(2)
-        self.equipos.script("window.open('https://app.mysms.com/#87472', '_blank');")
-    
+        if self.mysms.get():
+            self.equipos.script(f"window.open('{self.link_mysms}', '_blank');")
+        elif self.google_messages.get():
+            self.equipos.script(f"window.open('{self.link_google_messages}', '_blank');")
+
     def cambioPoliedroUser(self):
         self.poliedro_user = self.poliedro_user_edit.get()
         self.ventana_informacion.write(f'Usuario Poliedro actualizado por {self.poliedro_user}')
@@ -110,7 +128,19 @@ class Equipos:
     def cambioPoliedroPass(self):
         self.poliedro_pass = self.poliedro_pass_edit.get()
         self.ventana_informacion.write(f'Contraseña Poliedro actualizada por {self.poliedro_pass}')
+
+    def on_checkbox_change_mysms(self):
+        if self.mysms.get():
+            self.ventana_informacion.write('Cambiando modalidad a MySMS')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
     
+    def on_checkbox_change_google_messages(self):
+        if self.google_messages.get():
+            self.ventana_informacion.write('Cambiando modalidad a Google Messages')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
+
     def ejecuccionHilo(self):
         hilo_equipos = threading.Thread(target=self.ejecuccion)
         hilo_equipos.start()
@@ -561,6 +591,10 @@ class Equipos:
             self.poliedro_login_service.configurar_credenciales(
                 self.poliedro_user, 
                 self.poliedro_pass
+            )
+            self.poliedro_login_service.configurar_portales_otp(
+                mysms=self.mysms.get(),
+                google_messages=self.google_messages.get(),
             )
     
     def wait_for_loading(self, timeout=120, sleep_interval=1, equipos=True):

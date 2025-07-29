@@ -26,7 +26,11 @@ class LoginService:
         # CONFIGURACIÓN DE REINTENTOS
         self.max_login_attempts = 2  # Número máximo de intentos de login
         self.retry_interval = 120  # Intervalo entre reintentos (2 minutos)
-        
+
+        # Configuracion del portal para extraer la OPT
+        self.mysms_portal = False  # Si se usa MySMS para obtener el OTP
+        self.google_messages_portal = False  # Si se usa Google Messages para obtener el OTP
+
     def configurar_credenciales(self, usuario, password):
         """
         Configura las credenciales de login
@@ -75,7 +79,16 @@ class LoginService:
                     return False
                     
                 # Paso 2: Obtener código OTP
-                codigo_otp = self._obtener_codigo_otp()
+                codigo_otp = None
+
+                if self.mysms_portal:
+                    codigo_otp = self._obtener_codigo_otp()
+                elif self.google_messages_portal:
+                    codigo_otp = self._obtener_codigo_otp_google()
+                else:
+                    self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
+                    return False
+                
                 if not codigo_otp:
                     self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
@@ -234,6 +247,7 @@ class LoginService:
                 'invalid_user_response',
                 'Las credenciales no corresponden',
                 'Actualmente existe un usuario en el sistema. Por favor verifique',
+                'El usuario se encuentra actualmente en el sistema.',
                 'Token inválido'
             ]
             # Intentar leer el mensaje de error
@@ -358,7 +372,28 @@ class LoginService:
         self.max_login_attempts = max_intentos
         self.retry_interval = intervalo_minutos * 60
         self._log_message(f"🔧 Configurados {max_intentos} intentos con intervalo de {intervalo_minutos} minutos")
-    
+
+    def configurar_portales_otp(self, mysms=False, google_messages=False):
+        """
+        Configura los portales para obtener el código OTP
+        
+        Args:
+            mysms (bool): Si se usa MySMS para obtener el OTP
+            google_messages (bool): Si se usa Google Messages para obtener el OTP
+        """
+        if not mysms and not google_messages:
+            self._log_message("⚠️ Advertencia: No se ha configurado ningún portal OTP. El login podría fallar.", is_error=True)
+            return
+        if mysms and google_messages:
+            self._log_message("⚠️ Advertencia: Ambos portales OTP están habilitados. Se utilizará el primero disponible.")
+            self.mysms_portal = True
+            self.google_messages_portal = False
+        else:
+            self.mysms_portal = mysms
+            self.google_messages_portal = google_messages
+
+        self._log_message(f"Configurados portales OTP: MySMS={self.mysms_portal}, Google Messages={self.google_messages_portal}")
+
     def _asegurar_pantalla_login(self):
         """
         Asegura que el navegador esté en la pantalla de login antes de intentar autenticar
@@ -441,3 +476,47 @@ class LoginService:
             
         except Exception as e:
             self._log_error("_limpiar_estado_login", e)
+
+    def _obtener_codigo_otp_google(self):
+        """
+        Obtiene el código OTP de la pestaña de messages de Google
+        
+        Returns:
+            str: Código OTP o None si no se pudo obtener
+        """
+        try:
+            self._log_message("📱 Obteniendo código OTP...")
+            
+            # Cambiar a la pestaña de MySMS
+            self.web_controller.cambiar_pestaña()
+            
+            # Esperar a que llegue el SMS
+            time.sleep(5)
+            
+            # Intentar obtener el código OTP
+            for intento in range(self.max_otp_attempts):
+                try:
+                    # Leer el contenido del SMS
+                    sms_content = self.web_controller.read(
+                        '(//mws-message-wrapper[.//div[contains(text(),"Su codigo OTP")]])[last()]//div[contains(text(),"Su codigo OTP")]', 
+                        'xpath'
+                    )
+                    
+                    # Extraer el código usando regex
+                    match = re.search(r"\b\d{6,10}\b", sms_content)
+                    if match:
+                        codigo = match.group()
+                        self._log_message(f"Código OTP obtenido: {codigo}")
+                        return codigo
+                        
+                except Exception as e:
+                    self._log_message(f"Intento OTP {intento + 1}/{self.max_otp_attempts} fallido, reintentando...")
+                    if intento < self.max_otp_attempts - 1:
+                        time.sleep(10)  # Esperar antes de reintentar
+                    
+            self._log_message("No se pudo obtener el código OTP después de varios intentos", is_error=True)
+            return None
+            
+        except Exception as e:
+            self._log_error("_obtener_codigo_otp", e)
+            return None

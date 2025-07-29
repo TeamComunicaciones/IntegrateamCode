@@ -7,7 +7,7 @@ class Ventana_informacion:
 
     def __init__(self, master) -> None:
         self.create_frame = create_frame.Frames().create_frame
-        self.ventana = self.create_frame(master, height=0.7, width=0.7, x=0.05, y=0.15)
+        self.ventana = self.create_frame(master, height=0.74, width=0.7, x=0.05, y=0.17)
         # Crear el widget de texto
         self.text_widget = scrolledtext.ScrolledText(self.ventana, wrap=tk.WORD)
         self.text_widget.pack(fill=tk.BOTH, expand=True)

@@ -1,5 +1,5 @@
 from navegacion import sub_menu as sm, ventana_informacion
-from recursos import label, botones, colors
+from recursos import label, botones, colors, checkbox
 from funcionalidad import web_controller, poliedro, excel, scraping
 from subprocess import Popen
 import threading
@@ -27,6 +27,8 @@ class Legalizador:
         self.excel = excel.Excel_controller()
         self.link = 'https://poliedrodist.comcel.com.co/'
         self.link2 = 'https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link_google_messages = 'https://messages.google.com/web/conversations'
+        self.link_mysms = 'https://app.mysms.com/#87472'
         
         # ESTADO CRÍTICO PARA MANEJO CONSISTENTE DE SESIÓN
         self.error_critico_sesion = False
@@ -47,14 +49,14 @@ class Legalizador:
         self.time = tk.StringVar()
         self.time2 = 3
         self.time.set('0')
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.0, 0.65, 0.5, 0.2, letterSize=16)
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Ciclos', 0.0, 0.78, 0.5, 0.05, letterSize=16)
-        self.titulo2 = label.Label().create_label(self.menu.submenu, 'Correo', 0.25, 0.83, 0.5, 0.05, letterSize=16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.0, 0.60, 0.5, 0.2, letterSize=16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Ciclos', 0.0, 0.73, 0.5, 0.05, letterSize=16)
+        self.titulo2 = label.Label().create_label(self.menu.submenu, 'Correo', 0.25, 0.77, 0.5, 0.05, letterSize=16)
         input_widget = ctk.CTkEntry(self.menu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.5, rely=0.67, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.67, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color=color.team, text_color='white')
         self.correo = 'acruz@teamcomunicaciones.com'
         self.correoEdit = tk.StringVar()
@@ -64,17 +66,17 @@ class Legalizador:
         self.repeticionesEdit = tk.StringVar()
         self.repeticionesEdit.set(self.repeticiones)
         input_widget2 = ctk.CTkEntry(self.menu.submenu, textvariable=self.correoEdit)
-        input_widget2.place(relx=0.15, rely=0.89, relheight=0.05, relwidth=0.7)
+        input_widget2.place(relx=0.15, rely=0.82, relheight=0.05, relwidth=0.7)
         input_widget3 = ctk.CTkEntry(self.menu.submenu, textvariable=self.repeticionesEdit)
-        input_widget3.place(relx=0.5, rely=0.79, relheight=0.05, relwidth=0.2)
-        self.okBotton2 = boton.create_button(self.menu.submenu, 'confirmar', 0.3, 0.95, 0.40, 0.05, self.cambioCorreo)
+        input_widget3.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
+        self.okBotton2 = boton.create_button(self.menu.submenu, 'confirmar', 0.3, 0.87, 0.40, 0.04, self.cambioCorreo)
         self.okBotton2.configure(fg_color=color.team, text_color='white')
-        self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.79, 0.15, 0.05, self.cambioCiclos)
+        self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color=color.team, text_color='white')
 
         # Etiquetas
-        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
-        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.59, 0.5, 0.04, letterSize=16)
+        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.47, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.57, 0.5, 0.04, letterSize=16)
 
         # Variables
         self.poliedro_user = ''
@@ -86,17 +88,27 @@ class Legalizador:
 
         # Entradas (más angostas, alineadas a la izquierda)
         input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
-        input_widget4.place(relx=0.10, rely=0.53, relheight=0.05, relwidth=0.55)
+        input_widget4.place(relx=0.10, rely=0.51, relheight=0.05, relwidth=0.55)
 
         input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
-        input_widget5.place(relx=0.10, rely=0.63, relheight=0.05, relwidth=0.55)
+        input_widget5.place(relx=0.10, rely=0.61, relheight=0.05, relwidth=0.55)
 
         # Botones OK a la derecha de cada entrada
-        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.53, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.51, 0.15, 0.05, self.cambioPoliedroUser)
         self.okBotton4.configure(fg_color=color.team, text_color='white')
 
-        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.59, 0.15, 0.05, self.cambioPoliedroPass)
         self.okBotton5.configure(fg_color=color.team, text_color='white')
+
+        # Elegir si se usa MySMS o Google Messages para obtener el OTP
+        self.checkbox_mysms = checkbox.Checkbox()
+        self.mysms = tk.BooleanVar()
+        self.checkbox_mysms = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'MySMS', self.on_checkbox_change_mysms, self.mysms)
+
+        self.checkbox_google_messages = checkbox.Checkbox()
+        self.google_messages = tk.BooleanVar()
+        self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
+       
 
     def abrir_excel(self):
         self.ventana_informacion.write('excel legalizador abierto recuerde cerrar antes de iniciar')
@@ -122,8 +134,24 @@ class Legalizador:
     def cambioPoliedroPass(self):
         self.poliedro_pass = self.poliedro_pass_edit.get()
         self.ventana_informacion.write(f'Poliedro Pass actualizado por {self.poliedro_pass}')
+
+    def on_checkbox_change_mysms(self):
+        if self.mysms.get():
+            self.ventana_informacion.write('Cambiando modalidad a MySMS')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
+    
+    def on_checkbox_change_google_messages(self):
+        if self.google_messages.get():
+            self.ventana_informacion.write('Cambiando modalidad a Google Messages')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
     
     def abrir_pagina(self):
+        if not self.mysms.get() and not self.google_messages.get():
+            self.ventana_informacion.write('Seleccione un método para recibir el OTP')
+            return
+
         self.ventana_informacion.write('Navegador abierto')
         class Abrir_pagina1(web_controller.Web_Controller): pass
         self.legalizador = Abrir_pagina1(int(self.time.get()))
@@ -132,7 +160,10 @@ class Legalizador:
         self.legalizador.selectPage(self.link)
 
         time.sleep(2)
-        self.legalizador.script("window.open('https://app.mysms.com/#87472', '_blank');")
+        if self.mysms.get():
+            self.legalizador.script(f"window.open('{self.link_mysms}', '_blank');")
+        elif self.google_messages.get():
+            self.legalizador.script(f"window.open('{self.link_google_messages}', '_blank');")
     
     def ejecuccionHilo(self):
         hilo_legalizador = threading.Thread(target=self.ejecuccion)
@@ -221,6 +252,10 @@ class Legalizador:
             self.poliedro_login_service.configurar_credenciales(
                 self.poliedro_user, 
                 self.poliedro_pass
+            )
+            self.poliedro_login_service.configurar_portales_otp(
+                mysms=self.mysms.get(),
+                google_messages=self.google_messages.get(),
             )
 
     def login(self):
