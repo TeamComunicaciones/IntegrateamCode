@@ -168,7 +168,7 @@ class Equipos:
                 self.ventana_informacion.write('Error en click de menú "Regresar a poliedro"')
                 return
 
-            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+            # self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             time.sleep(3)
             self.poliedro.seleccionAcceso('194')
             if not self.wait_for_loading():

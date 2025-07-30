@@ -190,8 +190,10 @@ class Portas:
                 except:
                     pass
 
-            self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+            # self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('290')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             self.excel.leer_excel('src\\portas\\portabilidad.xlsx', 'CC CLIENTE')
             self.excel.quitarFormatoCientifico('SERIAL')
 

@@ -206,8 +206,7 @@ class Preactivador:
             except:
                 pass
 
-            self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
-            time.sleep(3)
+            # self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('195')
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
