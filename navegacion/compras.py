@@ -10,7 +10,25 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 import os
+import unicodedata
+import re
+from difflib import get_close_matches
 
+
+def limpiar_referencia(ref):
+    ref = unicodedata.normalize('NFKD', ref)
+    ref = ref.encode('ascii', 'ignore').decode('ascii')
+    ref = re.sub(r'\s+', ' ', ref)
+    ref = ref.strip().upper()
+    return ref
+
+
+def get_factura_ref(ref, posibles_refs, threshold=0.85):
+    """Devuelve la referencia más cercana de una lista de referencias posibles"""
+    if ref in posibles_refs:
+        return ref
+    similitudes = get_close_matches(ref, posibles_refs, n=1, cutoff=threshold)
+    return similitudes[0] if similitudes else None
 
 class Compras:
 
@@ -74,6 +92,7 @@ class Compras:
         return False
 
     
+    
     def abrirPagina(self):
         if not self.compras.browser or not self.compras.isBrowserOpen():
             self.compras.openEdge(headless=False)
@@ -119,6 +138,8 @@ class Compras:
         self.compras.insert('FecFin', self.entry_last_Date.get(), 'id')
         self.compras.click('/html/body/form/table/tbody/tr/td/table/tbody/tr[3]/td[1]/table/tbody/tr/td[4]/input')
         data=self.compras.wait('/html/body/form/table/tbody/tr/td/table/tbody/tr[7]/td/table/tbody/tr/td/div/table/tbody/tr/td', 'Informe los campos del filtro para hacer la seleccion')
+    
+    
 
     def getFacturasScraping(self):
         self.ventana_informacion.write('Obteniendo Facturas')
@@ -131,98 +152,96 @@ class Compras:
             tables = []
             for div in divs:
                 tables.extend(div.find_all('table'))
-            tables_detail = [{'detail':soup.extrarDataTablas(tabla=tables[(i*3)-2]), 'title':soup.extrarDataTablas(tabla=tables[(i*3)-3])} for i in range(1, int(len(tables)/3)+1)]
+            tables_detail = [{'detail': soup.extrarDataTablas(tabla=tables[(i*3)-2]), 'title': soup.extrarDataTablas(tabla=tables[(i*3)-3])} for i in range(1, int(len(tables)/3)+1)]
             if len(tables_detail) == int(self.cantidadFacturas):
                 break
-        
+
         procesadas = {}
         for table in tables_detail:
             for i in range(1, len(table['detail'])):
-                factura = table['title'][1][0]
-                ref = table['detail'][i][1]
-                codigo = table['detail'][i][0].lstrip("0")
-                titulo = table['detail'][i][7]
-                value =  table['detail'][i][8].replace('.','').replace(',','.').replace('.00','')
+                try:
+                    factura = table['title'][1][0]
+                    raw_ref = table['detail'][i][1]
+                    ref = limpiar_referencia(raw_ref)
+                    codigo = table['detail'][i][0].lstrip("0")
+                    titulo = table['detail'][i][7]
+                    value = table['detail'][i][8].replace('.', '').replace(',', '.').replace('.00', '')
 
-                if factura not in procesadas.keys():
-                    procesadas[factura] = {}
-                if ref not in procesadas[factura].keys():
-                    procesadas[factura][ref] = {}
-                # if codigo not in procesadas[factura][ref].keys():
-                #     procesadas[factura][ref][codigo] = {}
-                procesadas[factura][ref]['CODIGO'] = table['detail'][i][0].lstrip("0")
-                procesadas[factura][ref]['REFERENCIA'] = table['detail'][i][1]
-                procesadas[factura][ref]['FECHA'] = table['title'][1][1]
-                procesadas[factura][ref]['FACTURA'] = factura
-                procesadas[factura][ref]['Vencimiento'] = datetime.strptime(table['title'][1][1], "%d/%m/%Y") - datetime.strptime(table['title'][1][5], "%d/%m/%Y")
-                if titulo == 'Precio SIMCARD':
-                    procesadas[factura][ref]['KIT/SIM'] = 'SIM'
-                    procesadas[factura][ref]['Prec sin IVA sin SIM'] = 0
-                elif titulo == 'Prec sin IVA sin SIM':
-                    procesadas[factura][ref]['Precio SIMCARD'] = 0
-                    procesadas[factura][ref]['KIT/SIM'] = 'EQUIPO'
-                procesadas[factura][ref][titulo] = int(value) / int(table['detail'][i][2])
+                    if factura not in procesadas:
+                        procesadas[factura] = {}
+                    if ref not in procesadas[factura]:
+                        procesadas[factura][ref] = {}
 
+                    procesadas[factura][ref]['CODIGO'] = codigo
+                    procesadas[factura][ref]['REFERENCIA'] = ref
+                    procesadas[factura][ref]['FECHA'] = table['title'][1][1]
+                    procesadas[factura][ref]['FACTURA'] = factura
+                    procesadas[factura][ref]['Vencimiento'] = datetime.strptime(table['title'][1][1], "%d/%m/%Y") - datetime.strptime(table['title'][1][5], "%d/%m/%Y")
+
+                    if titulo == 'Precio SIMCARD':
+                        procesadas[factura][ref]['KIT/SIM'] = 'SIM'
+                        procesadas[factura][ref]['Prec sin IVA sin SIM'] = 0
+                    elif titulo == 'Prec sin IVA sin SIM':
+                        procesadas[factura][ref]['Precio SIMCARD'] = 0
+                        procesadas[factura][ref]['KIT/SIM'] = 'EQUIPO'
+
+                    procesadas[factura][ref][titulo] = int(float(value)) / int(table['detail'][i][2])
+                except Exception as e:
+                    print(f"[ERROR] Procesando fila: {table['detail'][i]} - {e}")
 
         self.compras.selectPage(self.link3)
-        count = 0
-        invoices = []
         seriales = []
+        invoices = []
         for index, factura_serial in enumerate(procesadas.keys()):
             self.ventana_informacion.write(f'integracion {index+1} de {len(procesadas.keys())}')
             self.compras.insert('text_Factura', factura_serial, 'id')
             self.compras.click('/html/body/form/table/tbody/tr/td/table/tbody/tr[2]/td[2]/input')
             countWhile = 0
-            while True:  
+            while True:
                 try:
-
-                    tables2_2 = []
-                    html = ''
-                    divs = []
-
-
                     html = self.compras.retornarHtml()
                     soup = scraping.Scraping(html)
                     divs = soup.soup.find_all('div', class_='DivLista3')
-                    
                     tables2 = []
-                    serials = {}
-                    
                     for div in divs:
                         tables2.extend(div.find_all('table'))
-                    if len(tables2) > 1:
-                        pass
+                    if not tables2:
+                        raise Exception("No se encontraron tablas en DivLista3")
                     tables2_2 = soup.extrarDataTablas(tabla=tables2[0])
                     cantidadFacturas = self.compras.read('/html/body/form/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table[2]/tbody/tr/td[1]')
                     cantidadFacturas = cantidadFacturas.replace('Total registros: ', '')
+
                     if int(cantidadFacturas) == len(tables2_2):
                         check3 = True
                         for row in tables2_2:
                             if row[2] != '':
-                                ref = row[1]
-                                if ref not in procesadas[factura_serial] or row[2] in seriales:
+                                raw_ref = row[1]
+                                ref = limpiar_referencia(raw_ref)
+                                posible_ref = get_factura_ref(ref, procesadas[factura_serial].keys(), threshold=0.85)
+                                if posible_ref is None:
+                                    print(f"[WARN] Referencia '{raw_ref}' no encontrada en factura '{factura_serial}'")
+                                    print(f"[DEBUG] Claves posibles para factura {factura_serial}:")
+                                    for k in procesadas[factura_serial].keys():
+                                        print(f"- '{k}' (len={len(k)})")
+                                    check3 = False
+                                elif row[2] in seriales:
+                                    print(f"[WARN] Serial duplicado: {row[2]}")
                                     check3 = False
                         if check3:
                             break
-                        else:
-                            countWhile +=1
-                            print(countWhile)
-                            if countWhile > 100000:
-                                raise('error controlado')
+                    countWhile += 1
+                    print(f"[INFO] Reintentando ({countWhile}) para factura {factura_serial}")
+                    if countWhile > 100:
+                        raise Exception(f"[ERROR] Superado el límite de intentos para la factura {factura_serial}")
 
                 except:
                     countLast = 0
                     while True:
-                        # try:
-                        #     self.compras.cerrar()
-                        # except:
-                        #     pass
                         try:
                             self.abrirPagina()
                             self.compras.selectPage(self.link3)
                             self.compras.insert('text_Factura', factura_serial, 'id')
                             self.compras.click('/html/body/form/table/tbody/tr/td/table/tbody/tr[2]/td[2]/input')
-                            countLast = 0
                             break
                         except:
                             countLast += 1
@@ -232,14 +251,16 @@ class Compras:
             for row in tables2_2:
                 if row[2] != '':
                     seriales.append(row[2])
-                    ref = row[1]
-                    if ref not in procesadas[factura_serial]:
-                        pass
-                    data_row = procesadas[factura_serial][ref]
+                    raw_ref = row[1]
+                    ref = limpiar_referencia(raw_ref)
+                    posible_ref = get_factura_ref(ref, procesadas[factura_serial].keys(), threshold=0.85)
+                    if posible_ref is None:
+                        continue
+                    data_row = procesadas[factura_serial][posible_ref]
                     d1 = data_row['IVA repercutido']
-                    d2 = data_row['Dcto Comercial'] if 'Dcto Comercial' in data_row.keys() else 0
-                    d3 = data_row['Precio SIMCARD']
-                    d4 = data_row['Prec sin IVA sin SIM']
+                    d2 = data_row.get('Dcto Comercial', 0)
+                    d3 = data_row.get('Precio SIMCARD', 0)
+                    d4 = data_row.get('Prec sin IVA sin SIM', 0)
                     invoices.append({
                         'SERIAL': row[2].lstrip("0"),
                         'COSTO': d2 + d3 + d4,
@@ -249,56 +270,37 @@ class Compras:
                         'FACTURA': data_row['FACTURA'],
                         'KIT/SIM': data_row['KIT/SIM'],
                         'Vencimiento': data_row['Vencimiento'],
-                        'IVA': data_row['IVA repercutido'],
+                        'IVA': d1,
                         'TOTAL CON IVA': d1 + d2 + d3 + d4,
                     })
 
         self.facturas_df = pd.DataFrame(invoices)
+        archivo_excel = 'src\\compras\\archivo_excel.xlsx'
 
-        archivo_excel = 'src\compras\\archivo_excel.xlsx'
-        if os.path.exists(archivo_excel):
-            # Cargar el libro existente
-            with pd.ExcelWriter(archivo_excel, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                self.facturas_df.to_excel(writer, sheet_name='seriales', index=False)
-        else:
-            # Crear un nuevo archivo Excel con la hoja
-            with pd.ExcelWriter(archivo_excel, engine='openpyxl') as writer:
-                self.facturas_df.to_excel(writer, sheet_name='seriales', index=False)
+        with pd.ExcelWriter(archivo_excel, engine='openpyxl', mode='a' if os.path.exists(archivo_excel) else 'w', if_sheet_exists='replace') as writer:
+            self.facturas_df.to_excel(writer, sheet_name='seriales', index=False)
 
-        resumen = []
-        for table in tables_detail:  
-            resumen.append({table['title'][0][i]:table['title'][1][i] for i in range(len(table['title'][0]))})
-        self.facturas_resumen = pd.DataFrame(resumen)
-        self.facturas_resumen = self.facturas_resumen[['Numero', 'Fecha Factura', 'Fecha Venc.', 'Total' ]]
+        resumen = [{table['title'][0][i]: table['title'][1][i] for i in range(len(table['title'][0]))} for table in tables_detail]
+        self.facturas_resumen = pd.DataFrame(resumen)[['Numero', 'Fecha Factura', 'Fecha Venc.', 'Total']]
         factura_dates = pd.to_datetime(self.facturas_resumen['Fecha Factura'], format='%d/%m/%Y')
         venc_dates = pd.to_datetime(self.facturas_resumen['Fecha Venc.'], format='%d/%m/%Y')
         self.facturas_resumen['Fecha Venc.'] = (venc_dates - factura_dates).dt.days
-        if os.path.exists(archivo_excel):
-            # Cargar el libro existente
-            with pd.ExcelWriter(archivo_excel, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                self.facturas_resumen.to_excel(writer, sheet_name='resumen', index=False)
-        else:
-            # Crear un nuevo archivo Excel con la hoja
-            with pd.ExcelWriter(archivo_excel, engine='openpyxl') as writer:
-                self.facturas_resumen.to_excel(writer, sheet_name='resumen', index=False)
-        
+
+        with pd.ExcelWriter(archivo_excel, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+            self.facturas_resumen.to_excel(writer, sheet_name='resumen', index=False)
+
         detalles = []
         for table in tables_detail:
             for n in range(1, len(table['detail'])):
-                detalles.append({table['detail'][0][i]:table['detail'][n][i] for i in range(len(table['detail'][0]))} | {'Factura': table['title'][1][0]})
+                detalles.append({table['detail'][0][i]: table['detail'][n][i] for i in range(len(table['detail'][0]))} | {'Factura': table['title'][1][0]})
 
         self.facturas_detalles = pd.DataFrame(detalles)
-
-        if os.path.exists(archivo_excel):
-            # Cargar el libro existente
-            with pd.ExcelWriter(archivo_excel, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                self.facturas_detalles.to_excel(writer, sheet_name='detalles', index=False)
-        else:
-            # Crear un nuevo archivo Excel con la hoja
-            with pd.ExcelWriter(archivo_excel, engine='openpyxl') as writer:
-                self.facturas_detalles.to_excel(writer, sheet_name='detalles', index=False)
+        with pd.ExcelWriter(archivo_excel, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+            self.facturas_detalles.to_excel(writer, sheet_name='detalles', index=False)
 
         self.abrir_excel()
+
+
 
         # invoices = []
         # summary = []

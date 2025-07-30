@@ -3,3 +3,5 @@ dist/
 venvAutomatizaciones/
 venv/
 index.spec
+__pycache__/
+*.pyc

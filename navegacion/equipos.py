@@ -9,6 +9,10 @@ import time
 import requests
 import datetime
 import re
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from funcionalidad import poliedro_login_service
 
 class Equipos:
 
@@ -41,6 +45,33 @@ class Equipos:
         input_widget3.place(relx=0.5, rely=0.79, relheight=0.05, relwidth=0.2)
         self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.79, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color= color.team, text_color= 'white')
+
+        # Configuraciones para campo de usuario y contrasena poliedro
+        # Etiquetas
+        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.59, 0.5, 0.04, letterSize=16)
+
+        # Variables
+        self.poliedro_user = ''
+        self.poliedro_pass = ''
+        self.poliedro_user_edit = tk.StringVar()
+        self.poliedro_user_edit.set(self.poliedro_user)
+        self.poliedro_pass_edit = tk.StringVar()
+        self.poliedro_pass_edit.set(self.poliedro_pass)
+
+        # Entradas (más angostas, alineadas a la izquierda)
+        input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
+        input_widget4.place(relx=0.10, rely=0.53, relheight=0.05, relwidth=0.55)
+
+        input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
+        input_widget5.place(relx=0.10, rely=0.63, relheight=0.05, relwidth=0.55)
+
+        # Botones OK a la derecha de cada entrada
+        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.53, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4.configure(fg_color=color.team, text_color='white')
+
+        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5.configure(fg_color=color.team, text_color='white')
        
         
     
@@ -68,6 +99,17 @@ class Equipos:
         self.equipos.openEdge()
         time.sleep(3)
         self.equipos.selectPage(self.link)
+
+        time.sleep(2)
+        self.equipos.script("window.open('https://app.mysms.com/#87472', '_blank');")
+    
+    def cambioPoliedroUser(self):
+        self.poliedro_user = self.poliedro_user_edit.get()
+        self.ventana_informacion.write(f'Usuario Poliedro actualizado por {self.poliedro_user}')
+
+    def cambioPoliedroPass(self):
+        self.poliedro_pass = self.poliedro_pass_edit.get()
+        self.ventana_informacion.write(f'Contraseña Poliedro actualizada por {self.poliedro_pass}')
     
     def ejecuccionHilo(self):
         hilo_equipos = threading.Thread(target=self.ejecuccion)
@@ -78,7 +120,29 @@ class Equipos:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.equipos)
+
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('Error en login, verifique sus credenciales')
+                self.on_of(True)
+                self.alertas('se detiene el programa error en login')
+                # Lanzar excepción para salir del bloque try y entrar al except final
+                raise Exception("Error crítico: Fallo en login de Poliedro")
+            time.sleep(2)
+
+            try:
+                self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except Exception as e:
+                self.ventana_informacion.write('Error en click de menú "Regresar a poliedro"')
+                return
+
+            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+            time.sleep(3)
             self.poliedro.seleccionAcceso('194')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que cargue la página")
+            
             for i in range(int(self.repeticiones)):
                 self.contador = 0
                 self.ciclo = True
@@ -91,27 +155,64 @@ class Equipos:
                     if self.contador == self.excel.cantidad:
                         self.ciclo = False
                     else:
-                        try:
-                            min = str(self.excel.excel['Min'][self.contador])
-                            if str(min) == 'nan' or str(min) == '':
-                                self.mensaje = ''
-                                self.EquiposInd()
-                            else:
-                                self.ventana_informacion.write(f'ya procesada')
-                                self.contador += 1
-                        except:
-                            # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
-                            self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                        try:    
                             try:
-                                self.poliedro.seleccionAcceso('194', start=False)
-                            except: pass
-                            self.position(self.equipos.retornarHtml(), 'paso1', True)   
-                            self.contador += 1
+                                min = str(self.excel.excel['Min'][self.contador])
+                                if str(min) == 'nan' or str(min) == '':
+                                    self.mensaje = ''
+                                    self.EquiposInd()
+                                else:
+                                    self.ventana_informacion.write(f'ya procesada')
+                                    self.contador += 1
+                            except:
+                                # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
+                                self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                                try:
+                                    self.poliedro.seleccionAcceso('194', start=False)
+                                except: 
+                                    # Reintentar login si falla
+                                    self.poliedro_login_service = None
+                                    if not self.login():
+                                        self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                                        self.on_of(True)
+                                        raise Exception("Error crítico: Fallo en login de Poliedro")
+                                    
+                                    time.sleep(2)
+                                    try:
+                                        try:
+                                            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                                        except:
+                                            pass
+                                        time.sleep(1)
+                                        self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                                        time.sleep(2)
+                                        self.poliedro.seleccionAcceso('194')
+                                        time.sleep(1)
+                                        if not self.wait_for_loading():
+                                            raise Exception("Timeout esperando que cargue la página")
+                                    except Exception as e:
+                                        return
+                                    
+                                self.position(self.equipos.retornarHtml(), 'paso1', True)   
+                                self.contador += 1
+                        except Exception as e:
+                            if "Error crítico: Fallo en login de Poliedro" in str(e):
+                                raise Exception("Error crítico: Fallo en login de Poliedro")
+                            self.ventana_informacion.write(f"Error en la iteración {self.contador}: {e}")
+                            self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            """ self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span/text()')
+                            time.sleep(2)
+                            self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
+                            self.ventana_informacion.write("Redirigido para reintentar.")
+                            time.sleep(3) """
+                    continue
+                    
                 self.ventana_informacion.write(f'ciclo {i} terminado')
             self.ventana_informacion.write('Proceso terminado')
             self.on_of(True)
-        except:
-            self.alertas('se detiene el programa error')
+        except Exception as e:
+            print(f"Error ocurrido: {e}")
+            self.alertas('se detiene el programa error')
     
 
     def EquiposInd(self):
@@ -420,3 +521,81 @@ class Equipos:
             if siguiente_div:
                 return siguiente_div.text.strip()
         return "No encontrado"
+    
+    def login(self):
+        """
+        Método simplificado que usa el servicio de login
+        """
+        try:
+            # Inicializar el servicio si no existe
+            if not self.poliedro_login_service:
+                self.inicializar_login_service()
+            
+            # Configurar credenciales actuales
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+            
+            # Ejecutar login automático
+            return self.poliedro_login_service.login_automatico()
+
+        except Exception as e:
+            self.log_error("login", e)
+            return False
+    
+    def inicializar_login_service(self):
+        """
+        Inicializa el servicio de login cuando el navegador esté listo
+        """
+        if self.equipos and not self.poliedro_login_service:
+            self.poliedro_login_service = poliedro_login_service.LoginService(
+                self.equipos, 
+                self.ventana_informacion
+            )
+            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            self.poliedro_login_service.configurar_reintentos(
+                max_intentos=2, 
+                intervalo_minutos=2
+            )
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+    
+    def wait_for_loading(self, timeout=120, sleep_interval=1, equipos=True):
+        """
+        Método reutilizable para esperar que termine la carga.
+        
+        Args:
+            timeout (int): Tiempo máximo de espera en segundos
+            sleep_interval (float): Intervalo entre verificaciones
+            equipos (bool): True para usar self.equipos, False para self.poliedro
+
+        Returns:
+            bool: True si terminó la carga, False si hubo timeout
+        """
+        start_time = time.time()
+        
+        while time.time() - start_time < timeout:
+            try:
+                if equipos:
+                    try:
+                        loading_style = self.equipos.style('loading', 'id')
+                    except Exception:
+                        loading_style = self.poliedro.style('loading', 'id')
+                else:
+                    loading_style = self.poliedro.style('loading', 'id')
+                if "display: none" in loading_style:
+                    return True
+                elif "display: block" in loading_style:
+                    print(f'Loading... ({time.time() - start_time:.1f}s)')
+            except Exception:
+                # Si no puede leer el estilo, asumir que terminó la carga
+                return True
+                
+            time.sleep(sleep_interval)
+        
+        # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
+        self.recent_timeouts += 1
+        return False  # Timeout

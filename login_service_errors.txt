@@ -1,0 +1,432 @@
+
+[_ingresar_codigo_otp] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 229, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        'using': by,
+        ^^^^^^^^^^^^
+        'value': value})['value']
+        ^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="ctl00_ContentPlaceHolder1_BtnLoginTokenEntrust"]"}
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 214, in _ingresar_codigo_otp
+    self.web_controller.click('ctl00_ContentPlaceHolder1_BtnLoginTokenEntrust', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_codigo_otp] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 210, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_codigo_otp] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 210, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_credenciales] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 128, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_codigo_otp] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 210, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_codigo_otp] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.77)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 210, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_codigo_otp] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.83)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 210, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_limpiar_estado_login] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.83)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 428, in _limpiar_estado_login
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', '', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_credenciales] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.83)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 128, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_codigo_otp] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.83)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 210, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_limpiar_estado_login] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.83)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 428, in _limpiar_estado_login
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', '', 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
+
+[_ingresar_credenciales] Error: exceptions must derive from BaseException
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 73, in execute
+    data = funcion(self,*args, **kwargs)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 392, in write
+    find.send_keys(keys)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  {'text': "".join(keys_to_typing(value)),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   'value': keys_to_typing(value)})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=138.0.3351.83)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 128, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 88, in execute
+    raise(f'Excedio {args}')
+TypeError: exceptions must derive from BaseException
