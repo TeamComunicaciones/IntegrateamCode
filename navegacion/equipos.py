@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
+import random
 
 class Equipos:
 
@@ -187,6 +188,9 @@ class Equipos:
                     else:
                         try:    
                             try:
+                                tiempo_pausa = random.randint(15, 30)
+                                self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                time.sleep(tiempo_pausa)
                                 min = str(self.excel.excel['Min'][self.contador])
                                 if str(min) == 'nan' or str(min) == '':
                                     self.mensaje = ''

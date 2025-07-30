@@ -223,11 +223,6 @@ class Portas:
                 self.ciclo = False
             else:
                 try:
-                    # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
-                    tiempo_pausa = random.randint(15, 40)
-                    self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
-                    time.sleep(tiempo_pausa)
-
                     self.ventana_informacion.write(f'Portando numero {self.contador+1} de {self.excel.cantidad}')
                     self.crearVariablesExcel(self.contador)
                     if str(self.msisdn) != 'nan':
@@ -245,6 +240,11 @@ class Portas:
                     self.excel.guardar(self.contador, 'MENSAJE', 'error', destino='src\portas\portabilidad.xlsx')
                     self.reinicio()
                     self.contador += 1
+                
+                # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
+                tiempo_pausa = random.randint(15, 30)
+                self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                time.sleep(tiempo_pausa)
 
     def crearVariablesExcel(self,i):
         self.idCliente = str(self.excel.excel['CC CLIENTE'][i])

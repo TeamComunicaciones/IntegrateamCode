@@ -1132,7 +1132,7 @@ class Legalizador:
                 self.ventana_informacion.write('Proceso interrumpido por el usuario')
                 break
             
-            # ✅ VERIFICAR SESIÓN AL INICIO DE CADA LOTE
+            # VERIFICAR SESIÓN AL INICIO DE CADA LOTE
             if not self.verificar_sesion_activa():
                 self.ventana_informacion.write(f"❌ Error crítico: No se pudo restaurar la sesión para el lote {i+1}")
                 self.on_of(True)  # Detener el proceso
@@ -1190,7 +1190,7 @@ class Legalizador:
                     
                     # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
                     if j < fin_lote - 1:  # No pausar después de la última transacción del lote
-                        tiempo_pausa = random.randint(15, 40)
+                        tiempo_pausa = random.randint(15, 30)
                         self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
                         time.sleep(tiempo_pausa)
 

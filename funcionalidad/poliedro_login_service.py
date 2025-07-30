@@ -103,14 +103,15 @@ class LoginService:
                         self._esperar_antes_reintentar()
                         continue
                     return False
-                    
+                
                 # Paso 4: Validar login exitoso
-                if self._detectar_login_invalido():
-                    self._log_message(f"Login inválido en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
-                        self._esperar_antes_reintentar()
-                        continue
-                    return False
+                if not self.detectar_login_valido():
+                    if self._detectar_login_invalido():
+                        self._log_message(f"Login inválido en intento {intento + 1}")
+                        if intento < self.max_login_attempts - 1:
+                            self._esperar_antes_reintentar()
+                            continue
+                        return False
                     
                 # LOGIN EXITOSO
                 self._log_message(f"Login exitoso en intento {intento + 1}")
@@ -167,12 +168,12 @@ class LoginService:
         """
         try:
             self._log_message("📱 Obteniendo código OTP...")
-            
+            time.sleep(2)
             # Cambiar a la pestaña de MySMS
             self.web_controller.cambiar_pestaña()
             
             # Esperar a que llegue el SMS
-            time.sleep(5)
+            time.sleep(3)
             
             # Intentar obtener el código OTP
             for intento in range(self.max_otp_attempts):
@@ -225,13 +226,39 @@ class LoginService:
             
             # Hacer clic en el botón de login con OTP
             self.web_controller.click('ctl00_ContentPlaceHolder1_BtnLoginTokenEntrust', 'id')
-            time.sleep(3)
+            time.sleep(2)
             
             return True
             
         except Exception as e:
             self._log_error("_ingresar_codigo_otp", e)
             return False
+        
+    def detectar_login_valido(self):
+        """
+        Detecta si el login fue exitoso
+        
+        Returns:
+            bool: True si el login es válido, False en caso contrario
+        """
+        try:
+            # Verificar elementos que indican inicio de sesión exitoso
+            session_indicators = [
+                'si va a dejar de utilizar'
+            ]
+
+            textoInicio = self.web_controller.read('//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]', 'xpath')
+            if textoInicio:
+                texto_normalizado = textoInicio.lower()
+                if any(indicator in texto_normalizado for indicator in session_indicators):
+                    self._log_message("Login detectado como válido")
+                    return True
+
+        except Exception as e:
+            self._log_error("detectar_login_valido", e)
+            return False
+        
+        return False
     
     def _detectar_login_invalido(self):
         """
@@ -241,7 +268,6 @@ class LoginService:
             bool: True si el login es inválido, False en caso contrario
         """
         try:
-            time.sleep(2)
             error_element = ''
             error_indicators = [
                 'invalid_user_response',
@@ -486,12 +512,12 @@ class LoginService:
         """
         try:
             self._log_message("📱 Obteniendo código OTP...")
-            
+            time.sleep(2)
             # Cambiar a la pestaña de MySMS
             self.web_controller.cambiar_pestaña()
             
             # Esperar a que llegue el SMS
-            time.sleep(5)
+            time.sleep(3)
             
             # Intentar obtener el código OTP
             for intento in range(self.max_otp_attempts):
