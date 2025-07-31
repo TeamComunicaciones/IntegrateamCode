@@ -8,7 +8,11 @@ import customtkinter as ctk
 import time
 import requests
 import datetime
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from funcionalidad import poliedro_login_service
+import random
 
 class Preactivador:
 
@@ -24,18 +28,21 @@ class Preactivador:
         self.excel = excel.Excel_controller()
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link_google_messages = 'https://messages.google.com/web/conversations'
+        self.link_mysms = 'https://app.mysms.com/#87472'
+
         self.titulo = label.Label().create_label(master, 'PREACTIVADOR DE SIM', 0.2, 0.0, 0.5,0.2, letterSize= 25)
         self.ventana_informacion =  ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master,3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
         self.preactivador = ''
         self.time = tk.StringVar()
         self.time.set('0')
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.0, 0.60, 0.5,0.2, letterSize= 16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.1, 0.65, 0.5, 0.2, letterSize=16)
         input_widget = ctk.CTkEntry(self.menu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.5, rely=0.68, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.68, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color= color.team, text_color= 'white')
         # self.correo = 'correo'
         # self.correoEdit = tk.StringVar()
@@ -71,7 +78,44 @@ class Preactivador:
         
         self.tropas = tk.BooleanVar()
         self.checkbox_tropas =  checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Tropas.', self.on_checkbox_change_tropas, self.tropas)
+
+        # Configuraciones para campo de usuario y contrasena poliedro
+        # Etiquetas
+        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.59, 0.5, 0.04, letterSize=16)
+
+        # Variables
+        self.poliedro_user = ''
+        self.poliedro_pass = ''
+        self.poliedro_user_edit = tk.StringVar()
+        self.poliedro_user_edit.set(self.poliedro_user)
+        self.poliedro_pass_edit = tk.StringVar()
+        self.poliedro_pass_edit.set(self.poliedro_pass)
+
+        # Entradas (más angostas, alineadas a la izquierda)
+        input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
+        input_widget4.place(relx=0.10, rely=0.53, relheight=0.05, relwidth=0.55)
+
+        input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
+        input_widget5.place(relx=0.10, rely=0.63, relheight=0.05, relwidth=0.55)
+
+        # Botones OK a la derecha de cada entrada
+        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.53, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4.configure(fg_color=color.team, text_color='white')
+
+        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5.configure(fg_color=color.team, text_color='white')
+
+        # Elegir si se usa MySMS o Google Messages para obtener el OTP
+        self.checkbox_mysms = checkbox.Checkbox()
+        self.mysms = tk.BooleanVar()
+        self.checkbox_mysms = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'MySMS', self.on_checkbox_change_mysms, self.mysms)
+
+        self.checkbox_google_messages = checkbox.Checkbox()
+        self.google_messages = tk.BooleanVar()
+        self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
        
+
     def on_checkbox_change_tropas(self):
         if self.tropas.get():
             self.ventana_informacion.write('Cambiando modalidad a Tropas')
@@ -102,13 +146,43 @@ class Preactivador:
         self.ventana_informacion.write(f'Correo actualizado por {self.correo}')
     
     def abrir_pagina(self):
+        if not self.mysms.get() and not self.google_messages.get():
+            self.ventana_informacion.write('Seleccione un método para recibir el OTP')
+            return
+
         self.ventana_informacion.write('Navegador abierto')
         class Abrir_pagina1(web_controller.Web_Controller):pass
         self.preactivador = Abrir_pagina1(int(self.time.get()))
         self.preactivador.openEdge()
         time.sleep(3)
         self.preactivador.selectPage(self.link)
+
+        time.sleep(2)
+        if self.mysms.get():
+            self.preactivador.script(f"window.open('{self.link_mysms}', '_blank');")
+        elif self.google_messages.get():
+            self.preactivador.script(f"window.open('{self.link_google_messages}', '_blank');")
+
+    def cambioPoliedroUser(self):
+        self.poliedro_user = self.poliedro_user_edit.get()
+        self.ventana_informacion.write(f'Usuario Poliedro actualizado por {self.poliedro_user}')
+
+    def cambioPoliedroPass(self):
+        self.poliedro_pass = self.poliedro_pass_edit.get()
+        self.ventana_informacion.write(f'Contraseña Poliedro actualizada por {self.poliedro_pass}')
+
+    def on_checkbox_change_mysms(self):
+        if self.mysms.get():
+            self.ventana_informacion.write('Cambiando modalidad a MySMS')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
     
+    def on_checkbox_change_google_messages(self):
+        if self.google_messages.get():
+            self.ventana_informacion.write('Cambiando modalidad a Google Messages')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
+
     def ejecuccionHilo(self):
         hilo_equipos = threading.Thread(target=self.ejecuccion)
         hilo_equipos.start()
@@ -118,7 +192,24 @@ class Preactivador:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
             self.poliedro.definirBrowser(self.preactivador)
+            # Primer clic
+
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                self.on_of(True)
+            time.sleep(2)
+
+            try:
+                self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except:
+                pass
+
+            # self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('195')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
             self.excel.quitarFormatoCientifico('Iccid')
             self.ciclo = True
@@ -138,10 +229,36 @@ class Preactivador:
                             self.min = ''
                             self.EquiposInd()
                     except:
-                        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
-                        self.poliedro.seleccionAcceso('195', start=False)
-                        self.position(self.preactivador.retornarHtml(), 'paso1', True)
-                        self.contador += 1
+                        try:
+                            self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            if not self.wait_for_loading():
+                                raise Exception("Timeout esperando que la página cargue")
+                            self.poliedro.seleccionAcceso('195', start=False)
+                            if not self.wait_for_loading():
+                                raise Exception("Timeout esperando que la página cargue")
+                            self.position(self.preactivador.retornarHtml(), 'paso1', True)
+                            self.contador += 1
+                        except:
+                            self.poliedro_login_service = None
+                            if not self.login():
+                                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                                self.on_of(True)
+                                raise Exception("Error crítico: Fallo en login de Poliedro")
+                            
+                            time.sleep(2)
+                            try:
+                                self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                            except Exception as e:
+                                pass
+                            time.sleep(2)
+                            self.poliedro.seleccionAcceso('195', start=True)
+                            if not self.wait_for_loading():
+                                raise Exception("Timeout esperando que la página cargue")
+                    
+                    # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
+                    tiempo_pausa = random.randint(15, 30)
+                    self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                    time.sleep(tiempo_pausa)
             self.ventana_informacion.write('Proceso terminado')
             self.on_of(True)
         except:
@@ -355,6 +472,8 @@ class Preactivador:
         }
         
         self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        if not self.wait_for_loading(preactivador=False):
+            raise Exception("Timeout esperando que la página cargue")
         try:
             self.preactivador.click('btnNext', 'id')
         except:
@@ -364,16 +483,22 @@ class Preactivador:
                     self.excel.guardar(self.contador, 'Mensaje', message)
                     self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                     self.poliedro.seleccionAcceso('195', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando que la página cargue")
                     self.ventana_informacion.write(f"{self.cedula} Porta ya registrada'")
             except:
                 self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                 self.poliedro.seleccionAcceso('195', start=False)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando que la página cargue")
                 self.ventana_informacion.write(f"{self.cedula} error no identificado")
             raise('error controlado kit registrado')
         
         demographic_response = session.post(demographic_url, demographic_data, headers = headers)
         if demographic_response.status_code == 200:
             self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             self.pagina = 4
             self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
             self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
@@ -381,6 +506,8 @@ class Preactivador:
             self.preactivador.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
             self.pagina = 5
             self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             optionsFinal = [
                 ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
                 ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
@@ -445,10 +572,14 @@ class Preactivador:
                     self.excel.guardar(self.contador, 'Mensaje', message)
                     self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
                     self.poliedro.seleccionAcceso('195', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando que la página cargue")
                     self.ventana_informacion.write(f"{self.iccid} Sim ya registrada'")
             except:
                 self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
                 self.poliedro.seleccionAcceso('195', start=False)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando que la página cargue")
                 self.ventana_informacion.write(f"{self.iccid} error no identificado")
             raise('error controlado preactivador')
         self.etapa = 2
@@ -513,17 +644,23 @@ class Preactivador:
         if self.etapa == 5:
             time.sleep(self.time2)
             self.preactivador.click('btnPrev', 'id')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
             self.poliedro.seleccionAcceso('195', start=False)
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
         else:
             for i in range(self.etapa):
                 time.sleep(self.time2)
                 self.preactivador.click('btnPrev', 'id')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando que la página cargue")
         self.etapa == 0
     
     def position(self, html, paso=None, wait=False):
         self.scrap = scraping.Scraping(html)
         soup = self.scrap.soup
-
+        
         while wait:
             if paso == 'paso1':
                 elementos_requeridos = [
@@ -578,3 +715,86 @@ class Preactivador:
             else:
                 return False
         return True
+
+    def login(self):
+        """
+        Método simplificado que usa el servicio de login
+        """
+        try:
+            # Inicializar el servicio si no existe
+            if not self.poliedro_login_service:
+                self.inicializar_login_service()
+            
+            # Configurar credenciales actuales
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+            
+            # Ejecutar login automático
+            return self.poliedro_login_service.login_automatico()
+
+        except Exception as e:
+            self.log_error("login", e)
+            return False
+    
+    def inicializar_login_service(self):
+        """
+        Inicializa el servicio de login cuando el navegador esté listo
+        """
+        if self.preactivador and not self.poliedro_login_service:
+            self.poliedro_login_service = poliedro_login_service.LoginService(
+                self.preactivador, 
+                self.ventana_informacion
+            )
+            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            self.poliedro_login_service.configurar_reintentos(
+                max_intentos=2, 
+                intervalo_minutos=2
+            )
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+            self.poliedro_login_service.configurar_portales_otp(
+                mysms=self.mysms.get(),
+                google_messages=self.google_messages.get(),
+            )
+    
+    def wait_for_loading(self, timeout=120, sleep_interval=1, preactivador=True):
+        """
+        Método reutilizable para esperar que termine la carga.
+        
+        Args:
+            timeout (int): Tiempo máximo de espera en segundos
+            sleep_interval (float): Intervalo entre verificaciones
+            preactivador (bool): True para usar self.preactivador, False para self.poliedro
+
+        Returns:
+            bool: True si terminó la carga, False si hubo timeout
+        """
+        # ✅ APLICAR TIMEOUT ADAPTATIVO
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            try:
+                if preactivador:
+                    try:
+                        loading_style = self.preactivador.style('loading', 'id')
+                    except Exception:
+                        loading_style = self.poliedro.style('loading', 'id')
+                else:
+                    loading_style = self.poliedro.style('loading', 'id')
+                if "display: none" in loading_style:
+                    return True
+                elif "display: block" in loading_style:
+                    print(f'Loading... ({time.time() - start_time:.1f}s)')
+            except Exception:
+                # Si no puede leer el estilo, asumir que terminó la carga
+                return True
+                
+            time.sleep(sleep_interval)
+        
+        # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
+        self.recent_timeouts += 1
+        return False  # Timeout

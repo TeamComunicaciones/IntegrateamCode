@@ -27,7 +27,7 @@ class Sub_menu:
         self.colors = colors.Colors()
         self.button = botones.Buttons()
         self.create_frame = create_frame.Frames()
-        self.submenu = self.create_frame.create_frame(master, height=0.7, width=0.25, x=0.75, y=0.15)
+        self.submenu = self.create_frame.create_frame(master, height=0.74, width=0.25, x=0.75, y=0.17)
         self.button_name = [
             [self.boton1[0]],
             [self.boton2[0]],

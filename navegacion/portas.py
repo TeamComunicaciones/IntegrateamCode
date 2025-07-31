@@ -9,6 +9,8 @@ import time
 import tkinter as tk
 import customtkinter as ctk
 import requests
+from funcionalidad import poliedro_login_service
+import random
 
 
 class Portas:
@@ -23,6 +25,9 @@ class Portas:
         self.excel = excel.Excel_controller()
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link_google_messages = 'https://messages.google.com/web/conversations'
+        self.link_mysms = 'https://app.mysms.com/#87472'
+
         self.label = label.Label().create_label(master, 'PORTABILIDADES', 0.2, 0.0, 0.5,0.2, letterSize= 25)
         self.ventana_informacion =  ventana_informacion.Ventana_informacion(master)
         self.submenu= sm.Sub_menu(master, 3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
@@ -43,11 +48,48 @@ class Portas:
         self.repeticiones = '1'
         self.repeticionesEdit = tk.StringVar()
         self.repeticionesEdit.set(self.repeticiones)
-        self.titulo = label.Label().create_label(self.submenu.submenu, 'Ciclos', 0.0, 0.78, 0.5,0.05, letterSize= 16)
+        self.titulo = label.Label().create_label(self.submenu.submenu, 'Ciclos', 0.0, 0.75, 0.5,0.05, letterSize= 16)
         input_widget3 = ctk.CTkEntry(self.submenu.submenu, textvariable=self.repeticionesEdit)
-        input_widget3.place(relx=0.5, rely=0.79, relheight=0.05, relwidth=0.2)
-        self.okBotton3 = boton.create_button(self.submenu.submenu, 'OK', 0.7, 0.79, 0.15, 0.05, self.cambioCiclos)
+        input_widget3.place(relx=0.5, rely=0.75, relheight=0.05, relwidth=0.2)
+        self.okBotton3 = boton.create_button(self.submenu.submenu, 'OK', 0.7, 0.75, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color= color.team, text_color= 'white')
+
+        # Configuraciones para campo de usuario y contrasena poliedro
+        # Etiquetas
+        self.titulo3 = label.Label().create_label(self.submenu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.submenu.submenu, 'Poliedro Pass', 0.10, 0.59, 0.5, 0.04, letterSize=16)
+
+        # Variables
+        self.poliedro_user = ''
+        self.poliedro_pass = ''
+        self.poliedro_user_edit = tk.StringVar()
+        self.poliedro_user_edit.set(self.poliedro_user)
+        self.poliedro_pass_edit = tk.StringVar()
+        self.poliedro_pass_edit.set(self.poliedro_pass)
+
+        # Entradas (más angostas, alineadas a la izquierda)
+        input_widget4 = ctk.CTkEntry(self.submenu.submenu, textvariable=self.poliedro_user_edit)
+        input_widget4.place(relx=0.10, rely=0.53, relheight=0.05, relwidth=0.55)
+
+        input_widget5 = ctk.CTkEntry(self.submenu.submenu, textvariable=self.poliedro_pass_edit)
+        input_widget5.place(relx=0.10, rely=0.63, relheight=0.05, relwidth=0.55)
+
+        # Botones OK a la derecha de cada entrada
+        self.okBotton4 = boton.create_button(self.submenu.submenu, 'OK', 0.66, 0.53, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4.configure(fg_color=color.team, text_color='white')
+
+        self.okBotton5 = boton.create_button(self.submenu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5.configure(fg_color=color.team, text_color='white')
+
+        # Elegir si se usa MySMS o Google Messages para obtener el OTP
+        self.checkbox_mysms = checkbox.Checkbox()
+        self.mysms = tk.BooleanVar()
+        self.checkbox_mysms = checkbox.Checkbox().create_checkbox(self.submenu.submenu, 'MySMS', self.on_checkbox_change_mysms, self.mysms)
+
+        self.checkbox_google_messages = checkbox.Checkbox()
+        self.google_messages = tk.BooleanVar()
+        self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.submenu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
+       
         
     def on_checkbox_change(self):
         if self.checkbox_var.get():
@@ -81,18 +123,48 @@ class Portas:
         self.ventana_informacion.write(f'intervalo {self.time.get()} segundos')
     
     def abrir_pagina(self):
+        if not self.mysms.get() and not self.google_messages.get():
+            self.ventana_informacion.write('Seleccione un método para recibir el OTP')
+            return
+
         self.ventana_informacion.write('Navegador abierto')
         class Abrir_pagina1(web_controller.Web_Controller):pass
         self.portas = Abrir_pagina1(float(self.time.get()))
         self.portas.openEdge()
         self.portas.selectPage(self.link)
-        self.titulo = label.Label().create_label(self.submenu.submenu, 'Intervalos', 0.0, 0.65, 0.5,0.2, letterSize= 16)
+        self.titulo = label.Label().create_label(self.submenu.submenu, 'Intervalos', 0.0, 0.69, 0.5,0.05, letterSize= 16)
         input_widget = ctk.CTkEntry(self.submenu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.5, rely=0.69, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.submenu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.submenu.submenu, 'OK', 0.7, 0.69, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color= color.team, text_color= 'white')
+
+        time.sleep(2)
+        if self.mysms.get():
+            self.portas.script(f"window.open('{self.link_mysms}', '_blank');")
+        elif self.google_messages.get():
+            self.portas.script(f"window.open('{self.link_google_messages}', '_blank');")
+
+    def cambioPoliedroUser(self):
+        self.poliedro_user = self.poliedro_user_edit.get()
+        self.ventana_informacion.write(f'Usuario Poliedro actualizado por {self.poliedro_user}')
+
+    def cambioPoliedroPass(self):
+        self.poliedro_pass = self.poliedro_pass_edit.get()
+        self.ventana_informacion.write(f'Contraseña Poliedro actualizada por {self.poliedro_pass}')
+    
+    def on_checkbox_change_mysms(self):
+        if self.mysms.get():
+            self.ventana_informacion.write('Cambiando modalidad a MySMS')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
+    
+    def on_checkbox_change_google_messages(self):
+        if self.google_messages.get():
+            self.ventana_informacion.write('Cambiando modalidad a Google Messages')
+        else:
+            self.ventana_informacion.write('Cambiando modalidad a Estandar')
     
     def ejecuccionHilo(self):
         hilo_portas = threading.Thread(target=self.ejecuccion)
@@ -102,21 +174,47 @@ class Portas:
         try:
             self.on_of(False)
             self.ventana_informacion.write('Empezando ejecuccion')
+
             self.poliedro.definirBrowser(self.portas)
+            
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                self.on_of(True)
+            time.sleep(2)
+
+            if not self.tropas.get():
+                try:
+                    self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                except:
+                    pass
+
+            # self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('290')
-            self.excel.leer_excel('src\portas\portabilidad.xlsx','CC CLIENTE')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando que la página cargue")
+            self.excel.leer_excel('src\\portas\\portabilidad.xlsx', 'CC CLIENTE')
             self.excel.quitarFormatoCientifico('SERIAL')
+
             for i in range(int(self.repeticiones)):
                 self.ciclo = True
                 self.contador = 0
                 self.iteraciones()
+
             self.ventana_informacion.write('Proceso terminado')
             self.on_of(True)
-        except Exception as e:
-            self.ventana_informacion.write(f'se detiene el programa error: {e}')
             
-            self.alertas('se detiene el programa error')
-            raise('se detiene el programa')
+        except Exception as e:
+            if "Error crítico: Fallo en login de Poliedro" in str(e):
+                self.ventana_informacion.write(f'se detiene el programa error en login: {e}')
+                self.alertas('se detiene el programa error en login')
+            else: 
+                self.ventana_informacion.write(f'se detiene el programa error: {e}')
+                self.alertas('se detiene el programa error')
+            
+            raise Exception('se detiene el programa')
+
         
 
 
@@ -144,6 +242,11 @@ class Portas:
                     self.excel.guardar(self.contador, 'MENSAJE', 'error', destino='src\portas\portabilidad.xlsx')
                     self.reinicio()
                     self.contador += 1
+                
+                # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
+                tiempo_pausa = random.randint(15, 30)
+                self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                time.sleep(tiempo_pausa)
 
     def crearVariablesExcel(self,i):
         self.idCliente = str(self.excel.excel['CC CLIENTE'][i])
@@ -167,6 +270,8 @@ class Portas:
 
     def rellenoPrimerFormulario(self):
         self.pagina = 1
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         if len(self.idCliente) == 9:
             self.captarError('','No se admite cedula de 9 digitos')
         else:
@@ -232,6 +337,8 @@ class Portas:
                         pass
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 try: self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
                 except: pass
                 self.pagina = 2
@@ -298,32 +405,50 @@ class Portas:
             }
             
             self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga inicial en captura_datos")
             try:
                 self.portas.click('btnNext', 'id')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             except:
                 try:
                     message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Porta ya registrada':
                         self.excel.guardar(self.contador, 'Mensaje', message)
                         self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        if not self.wait_for_loading():
+                            raise Exception("Timeout esperando carga inicial en captura_datos")
                         self.poliedro.seleccionAcceso('290', start=False)
+                        if not self.wait_for_loading():
+                            raise Exception("Timeout esperando carga inicial en captura_datos")
                         self.ventana_informacion.write(f"{self.idCliente} Porta ya registrada'")
                 except:
                     self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga inicial en captura_datos")
                     self.poliedro.seleccionAcceso('290', start=False)
+                    if not self.wait_for_loading():
+                        raise Exception("Timeout esperando carga inicial en captura_datos")
                     self.ventana_informacion.write(f"{self.idCliente} error no identificado")
                 raise('error controlado kit registrado')
             
             demographic_response = session.post(demographic_url, demographic_data, headers = headers)
             if demographic_response.status_code == 200:
                 self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.pagina = 4
                 self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
                 self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
                 self.pagina = 5
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 optionsFinal = [
                     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
                     ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
@@ -346,7 +471,13 @@ class Portas:
     
     def terminarPorta(self):
         self.pagina = 6
+        time.sleep(4)
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         self.portas.click('/html/body/div/strong/strong/div[3]/div[1]/div/button[2]')
+        time.sleep(1)
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga inicial en captura_datos")
         self.msisdn = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/div/fieldset[3]/div/div/strong')
         print(self.msisdn)
         self.excel.guardar(self.contador,'MSISDN',self.msisdn, destino='src\portas\portabilidad.xlsx')
@@ -374,7 +505,11 @@ class Portas:
             if self.pagina == 6:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[1]')
                 time.sleep(2)
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[1]/div/div/ul/li[1]/span/input')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 5:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[1]')
                 time.sleep(2)
@@ -382,18 +517,152 @@ class Portas:
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 4:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[1]')
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 3:
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/input[1]')
                 time.sleep(2)
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
             if self.pagina == 2:
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[7]/input[1]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                self.poliedro.seleccionAcceso('290')
+                if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga inicial en captura_datos")
         except:
-            self.poliedro.reinicio()
+            try:
+                self.poliedro.reinicio()
+            except:
+                try:
+                    texto_pantalla = self.portas.read('titlesHeaderMainContent', 'id')
+                    if 'Si va a dejar de utilizar el Módulo' not in texto_pantalla:
+                        raise Exception('Error al reiniciar, no se pudo leer el texto de la pantalla')
+                except:
+                    self.poliedro_login_service = None
+                    if not self.login():
+                        self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                        self.on_of(True)
+                        raise Exception("Error crítico: Fallo en login de Poliedro")
+                    
+                    time.sleep(2)
+                    try:
+                        try:
+                            if not self.tropas.get():
+                                self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                        except:
+                            pass
+                        time.sleep(1)
+                        self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
+                        time.sleep(1)
+                        self.poliedro.seleccionAcceso('290')
+                    except Exception as e:
+                        return
+
+    def login(self):
+        """
+        Método simplificado que usa el servicio de login
+        """
+        try:
+            # Inicializar el servicio si no existe
+            if not self.poliedro_login_service:
+                self.inicializar_login_service()
+            
+            # Configurar credenciales actuales
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+            
+            # Ejecutar login automático
+            return self.poliedro_login_service.login_automatico()
+
+        except Exception as e:
+            self.log_error("login", e)
+            return False
+    
+    def inicializar_login_service(self):
+        """
+        Inicializa el servicio de login cuando el navegador esté listo
+        """
+        if self.portas and not self.poliedro_login_service:
+            self.poliedro_login_service = poliedro_login_service.LoginService(
+                self.portas, 
+                self.ventana_informacion
+            )
+            # CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            self.poliedro_login_service.configurar_reintentos(
+                max_intentos=2, 
+                intervalo_minutos=2
+            )
+            self.poliedro_login_service.configurar_credenciales(
+                self.poliedro_user, 
+                self.poliedro_pass
+            )
+            self.poliedro_login_service.configurar_portales_otp(
+                mysms=self.mysms.get(),
+                google_messages=self.google_messages.get(),
+            )
+    
+    def wait_for_loading(self, timeout=120, sleep_interval=1, portas=True):
+        """
+        Método reutilizable para esperar que termine la carga.
+        
+        Args:
+            timeout (int): Tiempo máximo de espera en segundos
+            sleep_interval (float): Intervalo entre verificaciones
+            portas (bool): True para usar self.portas, False para self.poliedro
+
+        Returns:
+            bool: True si terminó la carga, False si hubo timeout
+        """
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            try:
+                if portas:
+                    try:
+                        loading_style = self.portas.style('loading', 'id')
+                    except Exception:
+                        loading_style = self.poliedro.style('loading', 'id')
+                else:
+                    loading_style = self.poliedro.style('loading', 'id')
+                if "display: none" in loading_style:
+                    return True
+                elif "display: block" in loading_style:
+                    print(f'Loading... ({time.time() - start_time:.1f}s)')
+            except Exception:
+                # Si no puede leer el estilo, asumir que terminó la carga
+                return True
+                
+            time.sleep(sleep_interval)
+        
+        # REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
+        self.recent_timeouts += 1
+        return False  # Timeout

@@ -17,13 +17,13 @@ class Poliedro:
         # self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         # self.browser.selectPage(self.link2)
         if self.tropas:
-            self.browser.click('/html/body/p/table[2]/tbody/tr[2]/td[1]/table/tbody/tr/td/table/tbody/tr/td/div/div/div[2]/a') #/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]
-            self.browser.click('/html/body/p/table[2]/tbody/tr[2]/td[1]/table/tbody/tr/td/table/tbody/tr/td/div/div/div[3]/div[5]/a')
-            
+            self.browser.click('//*[@id="containerNavBar"]/ul/li[*]/a/span[contains(text(),"Activación Pospago")]', 'xpath') #/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]
+            self.browser.click('//*[@id="containerNavBar"]/ul/li[*]/ul/li[*]/a[contains(text(),"Activación Única Modernización")]', 'xpath')
+
         else:
-            if start:
-                self.browser.click('/html/body/table/tbody/tr[5]/td/table/tbody/tr/td[1]/div[1]/div[1]/div[5]')
-                self.browser.click('/html/body/table/tbody/tr[5]/td/table/tbody/tr/td[1]/div[1]/div[1]/div[6]/div[2]/a')
+            if start and not self.tropas:
+                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
+                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
         self.browser.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]')
         self.browser.write('/html/body/span/span/span[1]/input', opcion)
         self.browser.write('/html/body/span/span/span[1]/input', Keys.ENTER)
