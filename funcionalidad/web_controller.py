@@ -25,8 +25,6 @@ class Web_Controller:
         global aleatorio
         aleatorio = False
         self.browser = None
-        # self.edgedriver()
-        # self.openEdge()
     
     def actualizarIntervalo(self, valor, aleatorio_value=False):
         global sleep
@@ -44,26 +42,14 @@ class Web_Controller:
         chromedriver_autoinstaller.install()
     
     def edgedriver(self):
-        # Obtener la última versión del controlador de Microsoft Edge WebDriver
         response = requests.get('https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/LATEST_STABLE')
         latest_version = response.text.strip()
         print(latest_version)
-        # latest_version = '119.0.2151.44'
-        # print(latest_version)
-
-
-        # URL de descarga del controlador
         url = f'https://msedgedriver.azureedge.net/{latest_version}/edgedriver_win64.zip'
-
-        # Descargar y extraer el archivo zip del controlador
         response = urllib.request.urlopen(url)
         zipfile.ZipFile(BytesIO(response.read())).extractall(os.getcwd())
-
-        # Agregar el controlador al PATH del sistema
         os.environ['PATH'] += os.pathsep + os.getcwd()
-    
 
-    
     def validate(funcion):
         def execute(self,*args, **kwargs):
             proof = True
@@ -80,12 +66,12 @@ class Web_Controller:
                     return data
                 except Exception as err:
                     if contador < 8:
-                        # print(f'intento numero {contador} {err}')
                         time.sleep(1)
                         contador +=1
                     else:
-                        print(f'Excedio {args}')
-                        raise(f'Excedio {args}')
+                        print(f'Excedio los intentos para la funcion con argumentos: {args}')
+                        # <-- CAMBIO: Se corrige el 'raise' para lanzar una excepción válida.
+                        raise err
         return execute
     
     def validateShort(funcion):
@@ -98,13 +84,14 @@ class Web_Controller:
                     proof= False
                     time.sleep(int(sleep))
                     return data
-                except:
+                except Exception as e: # <-- CAMBIO: Captura la excepción para poder relanzarla.
                     if contador < 5:
                         print(f'intento numero {contador}')
                         time.sleep(1)
                         contador +=1
                     else:
-                        raise('Excedio el numero de intentos')
+                        # <-- CAMBIO: Se corrige el 'raise' para lanzar una excepción válida.
+                        raise Exception('Excedio el numero de intentos (short)') from e
         return execute
     
     def validateShort2(funcion):
@@ -117,26 +104,20 @@ class Web_Controller:
                     proof= False
                     time.sleep(int(sleep))
                     return data
-                except:
+                except Exception as e: # <-- CAMBIO: Captura la excepción para poder relanzarla.
                     if contador < 3:
                         print(f'intento numero {contador}')
                         time.sleep(1)
                         contador +=1
                     else:
-                        raise('Excedio el numero de intentos')
+                        # <-- CAMBIO: Se corrige el 'raise' para lanzar una excepción válida.
+                        raise Exception('Excedio el numero de intentos (short2)') from e
         return execute
     
     def openEdgeModeExplorer(self):
         options = webdriver.IeOptions()
-        # options.file_upload_dialog_timeout = 2000
-        # options.set_capability("silent", True)
-        # options.add_argument('-private')
-        
         driver = webdriver.Ie(options=options)
-
-        # Navegar para Url
         driver.get("http://www.google.com")
-
         driver.quit()
     
     def openChrome(self):
@@ -201,7 +182,7 @@ class Web_Controller:
         if cookies:
             cookie_text = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
         return cookie_text
-        
+    
     @validate
     def insert(self, byStr, text, by='xpath', enter =False):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
@@ -231,6 +212,16 @@ class Web_Controller:
         else: find =None
         if find is not None:
             find.click()
+
+    # <-- NUEVA FUNCIÓN: Se añade js_click para manejar clics interceptados.
+    @validate
+    def js_click(self, byStr, by='xpath'):
+        if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+        elif by == "id": find = self.browser.find_element_by_id(byStr)
+        elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+        if find is not None:
+            self.browser.execute_script("arguments[0].click();", find)
     
     @validate
     def click_ctr(self, byStr, by='xpath'):
@@ -320,15 +311,6 @@ class Web_Controller:
             return find.text
         else: return "none"
     
-    # @validate
-    # def waitExist(self, byStr, by='xpath'):
-    #     if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
-    #     elif by == "id": find = self.browser.find_element_by_id(byStr)
-    #     elif by == "name": find = self.browser.find_element_by_name(byStr)
-    #     if find is not None:
-    #         pass
-    #     else: raise('')
-    
     @validateShort2
     def waitExist2(self, byStr, by='xpath', write=False):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
@@ -361,7 +343,7 @@ class Web_Controller:
                 if condition in find.text:
                     raise('error')
     
-    @validate     
+    @validate
     def erase(self, byStr, by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
@@ -370,7 +352,7 @@ class Web_Controller:
         if find is not None:
             find.clear()
     
-    @validate   
+    @validate
     def eraseLetter(self, byStr, cantidad, by='xpath', move=False):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
@@ -382,7 +364,7 @@ class Web_Controller:
                     find.send_keys(Keys.ARROW_RIGHT)
                 find.send_keys(Keys.BACKSPACE)
 
-    @validate   
+    @validate
     def write(self, byStr, keys, by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
@@ -410,7 +392,6 @@ class Web_Controller:
         if find is not None:
             find.send_keys(Keys.ARROW_DOWN)
             find.send_keys(Keys.ENTER)
-
     
     def browserGet(self):
         return self.browser
@@ -418,4 +399,3 @@ class Web_Controller:
     def cerrar(self):
         self.browser.close()
         self.browser.quit()
-
