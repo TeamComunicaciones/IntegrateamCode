@@ -430,6 +430,15 @@ class LoginService:
         try:
             # Navegar a la página principal
             self._log_message("🔄 Navegando a la página de login...")
+            # Verificar que llegamos a la pantalla de login
+            if self._detectar_pantalla_login():
+                self._log_message("Navegación exitosa a la pantalla de login")
+                return True
+            
+            url_actual = self.web_controller.getCurrentUrl()
+            if url_actual and 'poliedro' not in url_actual:
+                self.web_controller.volver_pestaña()
+                time.sleep(2)
             
             # Navegar a la URL de login
             login_url = 'https://poliedrodist.comcel.com.co/'
@@ -450,32 +459,40 @@ class LoginService:
     
     def _detectar_pantalla_login(self):
         """
-        Detecta si estamos en la pantalla de login
+        Detecta si estamos en la pantalla de login de manera más robusta
         
         Returns:
             bool: True si estamos en la pantalla de login, False en caso contrario
         """
         try:
-            # Obtener HTML actual
-            html_content = self.web_controller.retornarHtml()
-            from funcionalidad import scraping
-            
-            scrap = scraping.Scraping(html_content)
-            soup = scrap.soup
-            
-            # Elementos que indican que estamos en la pantalla de login
-            login_indicators = [
-                ("input", "ctl00_ContentPlaceHolder1_txtUsuario"),
-                ("input", "ctl00_ContentPlaceHolder1_txtContraseña"), 
-                ("input", "btnIngresarUsuarioContraseña")
+            # Verificar múltiples indicadores de la pantalla de login
+            indicadores_login = [
+                ('ctl00_ContentPlaceHolder1_txtUsuario', 'id'),        # Campo de usuario
+                ('ctl00_ContentPlaceHolder1_txtContraseña', 'id'),     # Campo de contraseña
+                ('btnIngresarUsuarioContraseña', 'id')                 # Botón de ingreso
             ]
             
-            # Verificar que todos los elementos de login estén presentes
-            for tag, id_value in login_indicators:
-                if not soup.find(tag, id=id_value):
-                    return False
-                    
-            return True
+            # Verificar la URL actual
+            url_actual = self.web_controller.getCurrentUrl()
+            if url_actual and ('LoginPoliedro' in url_actual or 'poliedro' in url_actual):
+                # Verificar al menos 2 de los elementos para mayor seguridad
+                elementos_encontrados = 0
+                for elemento_id, tipo in indicadores_login:
+                    try:
+                        # Usar read o waitExist que no interactúan con el elemento
+                        if tipo == 'id':
+                            self.web_controller.waitExist(elemento_id, 'id', write=False)
+                            elementos_encontrados += 1
+                    except Exception:
+                        pass  # Ignorar si no se encuentra un elemento específico
+                        
+                # Si encontramos al menos 2 elementos, consideramos que es la pantalla de login
+                if elementos_encontrados >= 2:
+                    self._log_message("✅ Detectada pantalla de login")
+                    return True
+                
+            self._log_message("❌ No se detectó la pantalla de login")
+            return False
             
         except Exception as e:
             self._log_error("_detectar_pantalla_login", e)

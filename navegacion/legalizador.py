@@ -244,7 +244,7 @@ class Legalizador:
                 self.legalizador, 
                 self.ventana_informacion
             )
-            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            # CONFIGURAR REINTENTOS
             self.poliedro_login_service.configurar_reintentos(
                 max_intentos=2, 
                 intervalo_minutos=2

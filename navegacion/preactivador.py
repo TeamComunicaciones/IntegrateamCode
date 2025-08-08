@@ -224,6 +224,7 @@ class Preactivador:
                         if str(self.min) != 'nan':
                                 self.ventana_informacion.write(f'Preactivación ya realizada o con error')
                                 self.contador += 1
+                                continue
                         else:
                             self.mensaje = ''
                             self.min = ''
@@ -660,8 +661,13 @@ class Preactivador:
     def position(self, html, paso=None, wait=False):
         self.scrap = scraping.Scraping(html)
         soup = self.scrap.soup
+
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando que la página cargue")
         
-        while wait:
+        intentos = 0
+        max_intentos = 30
+        while wait and intentos < max_intentos:
             if paso == 'paso1':
                 elementos_requeridos = [
                     ("h3", "iconoTituloCliente"),
@@ -673,6 +679,7 @@ class Preactivador:
                 else:
                     self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
                     soup = self.scrap.soup
+                    intentos += 1
 
             elif paso == 'paso2':
                 elementos_requeridos = [
@@ -684,6 +691,8 @@ class Preactivador:
                 else:
                     self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
                     soup = self.scrap.soup
+                    intentos += 1
+
             elif paso == 'paso3':
                 elementos_requeridos = [
                     ("h3", "iconoTituloInfoPersonal")
@@ -693,6 +702,8 @@ class Preactivador:
                 else:
                     self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
                     soup = self.scrap.soup
+                    intentos += 1
+
             elif paso == 'paso4':
                 elementos_requeridos = [
                     ("h3", "iconoTituloDatosEquipoyPlan")
@@ -702,6 +713,10 @@ class Preactivador:
                 else:
                     self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
                     soup = self.scrap.soup
+                    intentos += 1
+        
+        if intentos >= max_intentos:
+            raise Exception("Timeout esperando la posición de los elementos requeridos")
 
     
     def validate_position(self, elementos_requeridos, soup, type='id'):
@@ -747,7 +762,7 @@ class Preactivador:
                 self.preactivador, 
                 self.ventana_informacion
             )
-            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            # CONFIGURAR REINTENTOS
             self.poliedro_login_service.configurar_reintentos(
                 max_intentos=2, 
                 intervalo_minutos=2
@@ -773,9 +788,8 @@ class Preactivador:
         Returns:
             bool: True si terminó la carga, False si hubo timeout
         """
-        # ✅ APLICAR TIMEOUT ADAPTATIVO
-        start_time = time.time()
 
+        start_time = time.time()
         while time.time() - start_time < timeout:
             try:
                 if preactivador:
@@ -789,12 +803,13 @@ class Preactivador:
                     return True
                 elif "display: block" in loading_style:
                     print(f'Loading... ({time.time() - start_time:.1f}s)')
+                else:
+                    print(f'Loading style no reconocido: {loading_style}')
+                    return True # Asumir que terminó si no se puede leer el estilo
             except Exception:
                 # Si no puede leer el estilo, asumir que terminó la carga
                 return True
                 
             time.sleep(sleep_interval)
         
-        # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
-        self.recent_timeouts += 1
         return False  # Timeout

@@ -372,6 +372,12 @@ class Web_Controller:
         else: find =None
         if find is not None:
             find.send_keys(keys)
+
+    @validate
+    def getCurrentUrl(self):
+        """Retorna la URL actual del navegador con validación"""
+        if self.browser is not None:
+            return self.browser.current_url
     
     def readonly(self, byStr, by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)

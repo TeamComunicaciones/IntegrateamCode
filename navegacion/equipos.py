@@ -188,9 +188,6 @@ class Equipos:
                     else:
                         try:    
                             try:
-                                tiempo_pausa = random.randint(15, 30)
-                                self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
-                                time.sleep(tiempo_pausa)
                                 min = str(self.excel.excel['Min'][self.contador])
                                 if str(min) == 'nan' or str(min) == '':
                                     self.mensaje = ''
@@ -198,6 +195,7 @@ class Equipos:
                                 else:
                                     self.ventana_informacion.write(f'ya procesada')
                                     self.contador += 1
+                                    continue
                             except:
                                 # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
                                 self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
@@ -239,6 +237,9 @@ class Equipos:
                             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
                             self.ventana_informacion.write("Redirigido para reintentar.")
                             time.sleep(3) """
+                    tiempo_pausa = random.randint(15, 30)
+                    self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                    time.sleep(tiempo_pausa)
                     continue
                     
                 self.ventana_informacion.write(f'ciclo {i} terminado')
@@ -587,7 +588,7 @@ class Equipos:
                 self.equipos, 
                 self.ventana_informacion
             )
-            # ✅ CONFIGURAR REINTENTOS (opcional, ya tiene valores por defecto)
+            # CONFIGURAR REINTENTOS
             self.poliedro_login_service.configurar_reintentos(
                 max_intentos=2, 
                 intervalo_minutos=2
@@ -613,8 +614,8 @@ class Equipos:
         Returns:
             bool: True si terminó la carga, False si hubo timeout
         """
+
         start_time = time.time()
-        
         while time.time() - start_time < timeout:
             try:
                 if equipos:
@@ -628,12 +629,13 @@ class Equipos:
                     return True
                 elif "display: block" in loading_style:
                     print(f'Loading... ({time.time() - start_time:.1f}s)')
+                else:
+                    print(f'Loading style no reconocido: {loading_style}')
+                    return True # Asumir que terminó si no se puede leer el estilo
             except Exception:
                 # Si no puede leer el estilo, asumir que terminó la carga
                 return True
                 
             time.sleep(sleep_interval)
         
-        # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
-        self.recent_timeouts += 1
         return False  # Timeout
