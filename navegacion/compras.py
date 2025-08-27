@@ -35,9 +35,9 @@ class Compras:
     def __init__(self,master, on_of):
         self.on_of = on_of
         self.titulo = label.Label().create_label(master, 'COMPRAS CONTROL INTERNO', 0.2, 0.0, 0.5,0.2, letterSize= 25)
-        self.link= 'https://190.144.217.66/Front_PortalComercial/controlseguridad/login-dos.asp'
-        self.link2='https://190.144.217.66/Front_PortalComercial/Portal/consultas/con_factura.asp'
-        self.link3='https://190.144.217.66/Front_PortalComercial/Portal/consultas/con_seriales_factura.asp'
+        self.link= 'https://portalcomercial.claro.com.co/Front_PortalComercial/controlseguridad/login-dos.asp'
+        self.link2='https://portalcomercial.claro.com.co/Front_PortalComercial/Portal/consultas/con_factura.asp'
+        self.link3='https://portalcomercial.claro.com.co/Front_PortalComercial/Portal/consultas/con_seriales_factura.asp'
         self.menu = sm.Sub_menu(master,1, boton1=['START', self.ejecuccionHilo])
         self.compras = ''
         self.entry_user = tk.StringVar()
