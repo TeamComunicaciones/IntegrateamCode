@@ -656,3 +656,29 @@ Traceback (most recent call last):
 selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]"}
   (Session info: MicrosoftEdge=139.0.3405.119)
 
+
+[_ingresar_credenciales] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 145, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtContraseña', self.password, 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 374, in write
+    find.send_keys(keys)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
