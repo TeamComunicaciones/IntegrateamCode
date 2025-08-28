@@ -402,6 +402,30 @@ class Web_Controller:
     def browserGet(self):
         return self.browser
     
+    def elementExists(self, byStr, by='xpath'):
+        """
+        Verifica si un elemento existe en la página sin lanzar excepciones.
+        
+        Args:
+            byStr (str): El identificador del elemento (xpath, id, name)
+            by (str): Tipo de búsqueda ('xpath', 'id', 'name'). Por defecto 'xpath'
+            
+        Returns:
+            bool: True si el elemento existe, False si no existe
+        """
+        try:
+            if by == "xpath": 
+                self.browser.find_element_by_xpath(byStr)
+            elif by == "id": 
+                self.browser.find_element_by_id(byStr)
+            elif by == "name": 
+                self.browser.find_element_by_name(byStr)
+            else:
+                return False
+            return True
+        except:
+            return False
+    
     def cerrar(self):
         self.browser.close()
         self.browser.quit()

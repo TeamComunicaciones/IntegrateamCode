@@ -245,9 +245,9 @@ class Portas:
                     self.contador += 1
                 
                 # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
-                tiempo_pausa = random.randint(15, 30)
-                self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
-                time.sleep(tiempo_pausa)
+                #tiempo_pausa = random.randint(15, 30)
+                #self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                #time.sleep(tiempo_pausa)
 
     def crearVariablesExcel(self,i):
         self.idCliente = str(self.excel.excel['CC CLIENTE'][i])
@@ -336,6 +336,11 @@ class Portas:
                         self.portas.insert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[3]/div[1]/div/input', self.fechaExpedicion)
                     except:
                         pass
+                # Check de tratamiento de datos
+                self.portas.click('DetailProduct_PortaTrataDatosCheck', 'id')
+                time.sleep(0.5)
+                # Check de número de portabilidad
+                self.portas.click('//*[@id="div_PortabilityNumber"]/div[1]/input', 'xpath')
                 time.sleep(2)
                 self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[5]/input[1]')
                 if not self.wait_for_loading():

@@ -39095,3 +39095,880 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 919, in position_detect
     raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
 Exception: No se pudo detectar posición después de 20 intentos
+
+[login] Error: main thread is not in main loop
+Traceback (most recent call last):
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 103, in login_automatico
+    self._esperar_antes_reintentar()
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 387, in _esperar_antes_reintentar
+    self._log_message(f"⏳ Reintentando en {i//60}:{i%60:02d} minutos...")
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 322, in _log_message
+    self.ventana_informacion.write(mensaje)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\ventana_informacion.py", line 18, in write
+    self.text_widget.config(state='normal')
+  File "C:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 1702, in configure
+    return self._configure('configure', cnf, kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 1692, in _configure
+    self.tk.call(_flatten((self._w, cmd)) + self._options(cnf))
+RuntimeError: main thread is not in main loop
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 277, in login
+    return self.poliedro_login_service.login_automatico()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 121, in login_automatico
+    self._log_error(f"login_automatico_intento_{intento + 1}", e)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 335, in _log_error
+    self._log_message(error_msg, is_error=True)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro_login_service.py", line 322, in _log_message
+    self.ventana_informacion.write(mensaje)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\ventana_informacion.py", line 18, in write
+    self.text_widget.config(state='normal')
+  File "C:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 1702, in configure
+    return self._configure('configure', cnf, kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 1692, in _configure
+    self.tk.call(_flatten((self._w, cmd)) + self._options(cnf))
+RuntimeError: main thread is not in main loop
+
+[iteración de lote 1] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 2] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 3] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 4] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 5] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 6] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 7] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 8] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 9] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 10] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 11] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 12] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 13] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 14] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 15] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 16] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 17] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 18] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 19] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 20] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 21] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 22] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 23] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[iteración de lote 24] Error: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1194, in procesar_por_lotes
+    self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                                                      ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'tiempo_pausa' where it is not associated with a value
+
+[verificar_urls transacción 31] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 34] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 36] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 39] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 43] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 45] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 48] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 50] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 57] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 63] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1173, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 34] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1174, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 45] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1177, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 741, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[verificar_urls transacción 50] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1198, in procesar_por_lotes
+    self.verificar_urls()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 751, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[btnPrev value read en activacion] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 752, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[btnPrev value read en activacion] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 752, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[btnNext click en legalizador] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnNext"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 800, in verificar_urls
+    self.legalizador.click('btnNext', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 210, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnNext"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[btnPrev value read en activacion] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 752, in verificar_urls
+    nombre_boton = self.legalizador.value('btnPrev', 'id')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 291, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[btnPrev click en restart_new] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 438, in captura_datos_optimized
+    raise Exception(f'Error al escribir cédula/nit: {cedula_pantalla}')
+Exception: Error al escribir cédula/nit: 101605568
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 448, in captura_datos_optimized
+    self.poliedro.seleccionAcceso('Seleccione...', start=False)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 29, in seleccionAcceso
+    self.browser.write('/html/body/span/span/span[1]/input', Keys.ENTER)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 369, in write
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/span/span/span[1]/input"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 699, in restart_new
+    self.legalizador.click('btnPrev', 'id')
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 210, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="btnPrev"]"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+[Error en ejecución de función] Error: Error en transacción - continuando con siguiente
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 438, in captura_datos_optimized
+    raise Exception(f'Error al escribir cédula/nit: {cedula_pantalla}')
+Exception: Error al escribir cédula/nit: 101605568
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 448, in captura_datos_optimized
+    self.poliedro.seleccionAcceso('Seleccione...', start=False)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\poliedro.py", line 29, in seleccionAcceso
+    self.browser.write('/html/body/span/span/span[1]/input', Keys.ENTER)
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 74, in execute
+    raise err
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 59, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\funcionalidad\web_controller.py", line 369, in write
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/span/span/span[1]/input"}
+  (Session info: MicrosoftEdge=139.0.3405.119)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 813, in verificar_urls
+    ejec()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 497, in captura_datos_optimized
+    self.restart_new()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 709, in restart_new
+    raise Exception('Error en transacción - continuando con siguiente')
+Exception: Error en transacción - continuando con siguiente
+
+[iteración de lote 80] Error: Datos inválidos - transacción saltada
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 1205, in procesar_por_lotes
+    self.establecer_datos()  # Primero establecer los datos
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 317, in establecer_datos
+    raise Exception("Datos inválidos - transacción saltada")
+Exception: Datos inválidos - transacción saltada
+
+[Error en ejecución de función] Error: Error en transacción - continuando con siguiente
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 528, in captura_demografica_optimized
+    raise('error controlado en formulario demografico')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 813, in verificar_urls
+    ejec()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 615, in captura_demografica_optimized
+    self.restart_new()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 709, in restart_new
+    raise Exception('Error en transacción - continuando con siguiente')
+Exception: Error en transacción - continuando con siguiente
+
+[Error en ejecución de función] Error: Error en transacción - continuando con siguiente
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 554, in captura_demografica_optimized
+    raise('error controlado en formulario demografico')
+TypeError: exceptions must derive from BaseException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 813, in verificar_urls
+    ejec()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 615, in captura_demografica_optimized
+    self.restart_new()
+  File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 709, in restart_new
+    raise Exception('Error en transacción - continuando con siguiente')
+Exception: Error en transacción - continuando con siguiente

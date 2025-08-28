@@ -331,7 +331,7 @@ class Legalizador:
         
         # Validar cédula (debe ser numérica y tener al least 6 dígitos)
         cedula_limpia = self.cedula.replace(' ', '').replace('.', '')
-        if not cedula_limpia.isdigit() or len(cedula_limpia) < 6 or cedula_limpia in ['nan', 'None', '']:
+        if not cedula_limpia.isdigit() or len(cedula_limpia) < 6 or len(cedula_limpia) == 9 or cedula_limpia in ['nan', 'None', '']:
             errores.append(f"Cédula inválida: {self.cedula}")
         
         # Validar IMEI (debe tener 15 dígitos)
@@ -535,7 +535,10 @@ class Legalizador:
                     break
                 except Exception as e:
                     contador += 1
-                    self.legalizador.click('btnPrev', 'id')
+                    try:
+                        self.legalizador.click('btnPrev', 'id')
+                    except Exception as btn_e:
+                        self.log_error("btnPrev click en captura_demografica", btn_e)
                     time.sleep(2)
                     if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
                         raise Exception("Timeout esperando carga después de ingresar correo")
@@ -654,7 +657,10 @@ class Legalizador:
             self.excel.guardar(self.contador, 'Mensaje', message_element)
             self.excel.guardar(self.contador, 'Min', 'Procesado')
             self.ventana_informacion.write(f"{self.iccid} {message_element}")
-            self.legalizador.click('btnPrev', 'id')
+            try:
+                self.legalizador.click('btnPrev', 'id')
+            except Exception as e:
+                self.log_error("btnPrev click en captar_activacion", e)
             self.position_detect()
         except Exception as e:
             if "Error crítico: Fallo en login de Poliedro" in str(e):
@@ -689,7 +695,10 @@ class Legalizador:
             # Intentar resetear el estado del navegador para la siguiente transacción
             try:
                 # Volver al estado inicial si es posible
-                self.legalizador.click('btnPrev', 'id')
+                try:
+                    self.legalizador.click('btnPrev', 'id')
+                except Exception as e:
+                    self.log_error("btnPrev click en restart_new", e)
                 time.sleep(2)
             except:
                 pass
@@ -710,7 +719,7 @@ class Legalizador:
 
         mode = 'on'
         intentos = 0
-        max_intentos = 30
+        max_intentos = 10
         procesado = False
         while intentos < max_intentos:
             intentos += 1
@@ -727,18 +736,26 @@ class Legalizador:
                     self.poliedro.seleccionAcceso('362', start=False)
                     if not self.wait_for_loading():
                         raise Exception("Timeout esperando carga inicial")
-                except:
-                    pass
+                except Exception as e:
+                    self.log_error("Error en restart", e)
             elif track == 'paso1' and mode == 'off':
                 procesado = True
                 break
             elif mode == 'off':
                 try:                        
                     self.legalizador.click('btnPrev', 'id')
-                except:
-                    pass
+                except Exception as e:
+                    print("btnPrev click en modo off", e)
             elif track == 'activacion':
-                nombre_boton = self.legalizador.value('btnPrev', 'id')
+                try:
+                    if self.legalizador.elementExists('btnPrev', 'id'):
+                        nombre_boton = self.legalizador.value('btnPrev', 'id')
+                    else:
+                        nombre_boton = None
+                except Exception as e:
+                    print("btnPrev value read en activacion", e)
+                    nombre_boton = None  # Valor por defecto si no se puede leer
+                    
                 if nombre_boton == 'Iniciar Nueva Activacion':
                     try:
                         message_element = self.legalizador.readShort2('messageFormItem', 'class')
@@ -746,35 +763,56 @@ class Legalizador:
                         self.excel.guardar(self.contador, 'Mensaje', message_element)
                         self.excel.guardar(self.contador, 'Min', 'Procesado')
                         self.ventana_informacion.write(f"{self.iccid} {message_element}")
-                        self.legalizador.click('btnPrev', 'id')
+                        time.sleep(1)
+                        if not self.wait_for_loading():
+                            raise Exception("Timeout esperando carga después de validación")
+                        try: 
+                            self.legalizador.click('btnPrev', 'id')
+                        except Exception as e: 
+                            print("btnPrev click después de transacción exitosa", e)
+                            # Intentar métodos alternativos de navegación si btnPrev falla
+                            try:
+                                self.position_detect()  # Detectar posición actual y navegar apropiadamente
+                            except:
+                                pass
                         # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                         procesado = True
                         break
-                    except:
+                    except Exception as e:
                         try:
-                            error = self.legalizador.readShort2('alertFormItem', 'class')
                             print(f'legalizada con error {self.contador}')
-                            self.legalizador.click('btnPrev', 'id')
+                            try:
+                                self.legalizador.click('btnPrev', 'id')
+                            except Exception as e:
+                                print("btnPrev click después de error", e)
                             # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                             procesado = True
                             break
-                        except:
-                            pass
+                        except Exception as e:
+                            self.log_error("verificar_urls - manejo de error", e)
                   
                 else:
                     try:
                         time.sleep(2)
                         if not self.wait_for_loading():
                             raise Exception("Timeout esperando carga después de validación")
-                        self.legalizador.click('btnNext', 'id')
-                    except:
-                        pass
+                        # Verificar si el botón existe antes de hacer clic
+                        if self.legalizador.elementExists('btnNext', 'id'):
+                            self.legalizador.click('btnNext', 'id')
+                        else:
+                            # El botón no existe, pero no es un error crítico
+                            print("btnNext no disponible - continuando proceso")
+                    except Exception as e:
+                        # Solo loggear si no es el error de btnNext
+                        if "btnNext" not in str(e):
+                            self.log_error("btnNext click en legalizador", e)
             else:
                 ejec = lista_ejecucion[track]
                 try:
                     print(f'ejecutando {ejec.__name__}')
                     ejec()
-                except:
+                except Exception as e:
+                    self.log_error("Error en ejecución de función", e)
                     mode = 'off'
         if not procesado:
             # Reintentar login y acceso desde cero
@@ -1190,7 +1228,7 @@ class Legalizador:
                     
                     # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
                     if j < fin_lote - 1:  # No pausar después de la última transacción del lote
-                        tiempo_pausa = random.randint(15, 30)
+                        tiempo_pausa = random.randint(15, 28)
                         self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
                         time.sleep(tiempo_pausa)
 
