@@ -257,7 +257,7 @@ class Preactivador:
                                 raise Exception("Timeout esperando que la página cargue")
                     
                     # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
-                    tiempo_pausa = random.randint(15, 30)
+                    tiempo_pausa = random.randint(4, 7)
                     self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
                     time.sleep(tiempo_pausa)
             self.ventana_informacion.write('Proceso terminado')

@@ -237,7 +237,7 @@ class Equipos:
                             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
                             self.ventana_informacion.write("Redirigido para reintentar.")
                             time.sleep(3) """
-                    tiempo_pausa = random.randint(15, 30)
+                    tiempo_pausa = random.randint(4, 7)
                     self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
                     time.sleep(tiempo_pausa)
                     continue

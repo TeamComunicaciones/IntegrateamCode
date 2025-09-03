@@ -331,9 +331,13 @@ class Legalizador:
         
         # Validar cédula (debe ser numérica y tener al least 6 dígitos)
         cedula_limpia = self.cedula.replace(' ', '').replace('.', '')
-        if not cedula_limpia.isdigit() or len(cedula_limpia) < 6 or len(cedula_limpia) == 9 or cedula_limpia in ['nan', 'None', '']:
+        if not cedula_limpia.isdigit() or len(cedula_limpia) < 6 or cedula_limpia in ['nan', 'None', '']:
             errores.append(f"Cédula inválida: {self.cedula}")
-        
+
+        # Validar si es cédula y tiene 9 dígitos
+        if self.documentType == 1 and len(cedula_limpia) == 9:
+            errores.append(f"Poliedro no permite 9 digitos para la cédula: {self.cedula}")
+
         # Validar IMEI (debe tener 15 dígitos)
         imei_limpio = self.imei.replace(' ', '').replace('.', '')
         if not imei_limpio.isdigit() or len(imei_limpio) != 15 or imei_limpio in ['nan', 'None', '']:
@@ -349,7 +353,7 @@ class Legalizador:
             errores.append(f"Nombre inválido: {self.nombre}")
         
         # Validar apellido para personas naturales
-        if self.documentType != 2 and (not self.apellido or self.apellido.strip() in ['nan', 'None', '']):
+        if self.documentType == 1 and (not self.apellido or self.apellido.strip() in ['nan', 'None', '']):
             errores.append(f"Apellido inválido para CC: {self.apellido}")
         
         # Si hay errores, guardarlos y retornar False
@@ -1228,7 +1232,7 @@ class Legalizador:
                     
                     # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
                     if j < fin_lote - 1:  # No pausar después de la última transacción del lote
-                        tiempo_pausa = random.randint(15, 28)
+                        tiempo_pausa = random.randint(4, 7)
                         self.ventana_informacion.write(f"Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
                         time.sleep(tiempo_pausa)
 
