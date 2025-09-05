@@ -337,7 +337,7 @@ class Portas:
                     except:
                         pass
                 # Check de tratamiento de datos
-                self.portas.click('DetailProduct_PortaTrataDatosCheck', 'id')
+                #self.portas.click('DetailProduct_PortaTrataDatosCheck', 'id')
                 time.sleep(0.5)
                 # Check de número de portabilidad
                 self.portas.click('//*[@id="div_PortabilityNumber"]/div[1]/input', 'xpath')
