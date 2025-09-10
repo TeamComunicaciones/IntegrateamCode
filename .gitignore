@@ -6,3 +6,4 @@ index.spec
 __pycache__/
 *.py[cod]
 *.pyo
+msedgedriver*.exe

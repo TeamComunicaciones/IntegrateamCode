@@ -269,11 +269,13 @@ class Preactivador:
     def EquiposInd(self):
         self.ventana_informacion.write(f'Activando Equipo {self.contador+1} de {self.excel.cantidad}')
         self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:] 
-        self.nit = str(self.excel.excel['Nit'][self.contador])
+        self.documento = str(self.excel.excel['Documento'][self.contador])
         self.cedula_excel = str(self.excel.excel['Cedula'][self.contador])
         self.codigo_distribuidor = self.preactivador.read('userDataCodDistribuidor', 'id')
         self.nombre = ''
         self.apellido = ''
+        self.tipoDoc = str(self.excel.excel['TipoDoc'][self.contador])
+        self.documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
 
         self.position(self.preactivador.retornarHtml(), 'paso1', True)
         cookies = self.preactivador.browser.get_cookies()
@@ -310,8 +312,8 @@ class Preactivador:
             'DetailProduct.DealerCps': False,
             'DetailProduct.CodTechImei': '',
             'DetailProduct.TypeActivationWB': 1,
-            'DetailProduct.DocumentTypeId': 2,
-            'DetailProduct.DocumentNumber': self.nit,
+            'DetailProduct.DocumentTypeId': self.documentType,
+            'DetailProduct.DocumentNumber': self.documento,
             'DetailProduct.LastName': '',
             'DetailProduct.RutNumber': '',
             'DetailProduct.ExpeditionDate': datetime.datetime.now().strftime("%d/%m/%Y"),
@@ -374,8 +376,8 @@ class Preactivador:
             "PersonalInfo.Phone.Prefix": "604",
             "PersonalInfo.Phone.PhoneNumber": "0313123",
             "PersonalInfo.EmailInitial": "",
-            "PersonalInfo.DocumentTypeId": "2",
-            "PersonalInfo.Document": self.nit,
+            "PersonalInfo.DocumentTypeId": self.documentType,
+            "PersonalInfo.Document": self.documento,
             "PersonalInfo.Address.AddressId": "",
             "PersonalInfo.Address.AddressClassId": "Otras",
             "PersonalInfo.Address.Address": "central",

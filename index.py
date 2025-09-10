@@ -12,7 +12,15 @@ def alertas(mensaje):
 
 
 if __name__ == '__main__':
+
+    try:
+        driver = Web_Controller(0).openEdge(headless=True)
+    except Exception as e:
+        print(f'[WARN] Inicialización del driver falló: {e}')
+    else:
+        if driver is not None:
+            driver.quit()
+
     app = applicacion.App
-    #driver_install = Web_Controller(0).edgedriver()
     root = app('1080x720', 'Team Comunicaciones', 'version: 3.6.15', alertas)
     root.start()

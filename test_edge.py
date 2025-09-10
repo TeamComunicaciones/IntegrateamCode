@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.edge.service import Service
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 # Crear opciones para Edge
 options = EdgeOptions()
@@ -11,7 +12,7 @@ service = Service(executable_path='msedgedriver.exe')
 
 try:
     # Crear instancia del navegador
-    driver = webdriver.Edge(service=service, options=options)
+    driver = webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()), options=options)
     
     # Navegar a una página de prueba
     driver.get("https://www.google.com")

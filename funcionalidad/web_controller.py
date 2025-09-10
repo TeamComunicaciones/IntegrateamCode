@@ -7,12 +7,16 @@ import requests
 import urllib.request
 import os
 import zipfile
+import winreg
+import subprocess
 from io import BytesIO
 from msedge.selenium_tools import Edge, EdgeOptions
+from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.edge.service import Service
 import random
 import traceback
 
@@ -40,15 +44,89 @@ class Web_Controller:
 
     def chromedriver(self):
         chromedriver_autoinstaller.install()
+
+    def get_edge_version(self):
+        """Obtiene la versión de Microsoft Edge instalada"""
+        path = r"SOFTWARE\Microsoft\Edge\BLBeacon"
+        registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, path, 0, winreg.KEY_READ)
+        version, _ = winreg.QueryValueEx(registry_key, "version")
+        return version
     
-    def edgedriver(self):
-        response = requests.get('https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/LATEST_STABLE')
-        latest_version = response.text.strip()
-        print(latest_version)
-        url = f'https://msedgedriver.azureedge.net/{latest_version}/edgedriver_win64.zip'
-        response = urllib.request.urlopen(url)
-        zipfile.ZipFile(BytesIO(response.read())).extractall(os.getcwd())
-        os.environ['PATH'] += os.pathsep + os.getcwd()
+    def get_driver_version(self, driver_path):
+        """Obtiene la versión del driver si ya existe"""
+        try:
+            result = subprocess.run([driver_path, "--version"], capture_output=True, text=True)
+            if result.returncode == 0:
+                return result.stdout.split()[1]
+        except Exception:
+            return None
+        return None
+    
+    def ensure_msedgedriver(self):
+        """Verifica si el driver es compatible con Edge; si no, lo descarga"""
+        # --- Carpeta drivers en la raíz del proyecto ---
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        dest_folder = os.path.join(project_root, "drivers")
+        os.makedirs(dest_folder, exist_ok=True)
+
+        edge_version = self.get_edge_version()
+        major_edge = edge_version.split(".")[0]
+        driver_path = os.path.join(dest_folder, "msedgedriver.exe")
+
+        # Si ya existe y es compatible
+        if os.path.exists(driver_path):
+            driver_version = self.get_driver_version(driver_path)
+            if driver_version and driver_version.split(".")[0] == major_edge:
+                return driver_path
+            else:
+                print("[INFO] Driver desactualizado, descargando nuevo...")
+
+        # Intentar descargar el driver de la misma versión de Edge
+        url = f"https://msedgedriver.microsoft.com/{edge_version}/edgedriver_win64.zip"
+        resp = requests.get(url, stream=True)
+
+        # Si no está disponible, descargar el último release del mismo major version
+        if resp.status_code != 200:
+            print(f"[WARN] No encontrado driver exacto {edge_version}, buscando LATEST_RELEASE_{major_edge}...")
+            latest_url = f"https://msedgedriver.microsoft.com/LATEST_RELEASE_{major_edge}"
+            latest_resp = requests.get(latest_url)
+            if latest_resp.status_code != 200:
+                raise Exception(f"No se pudo obtener driver para Edge {major_edge}")
+            driver_version = latest_resp.text.strip()
+            url = f"https://msedgedriver.microsoft.com/{driver_version}/edgedriver_win64.zip"
+            resp = requests.get(url, stream=True)
+
+        if resp.status_code != 200:
+            raise Exception(f"No se pudo descargar driver desde {url}")
+
+        # Guardar zip temporal
+        zip_path = os.path.join(dest_folder, "edgedriver.zip")
+        with open(zip_path, "wb") as f:
+            for chunk in resp.iter_content(1024):
+                f.write(chunk)
+
+        # Extraer
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(dest_folder)
+        os.remove(zip_path)
+
+        return driver_path
+    
+    #def edgedriver(self):
+    #     response = requests.get('https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/LATEST_STABLE')
+    #     latest_version = response.text.strip()
+    #     print(latest_version)
+    #     url = f'https://msedgedriver.azureedge.net/{latest_version}/edgedriver_win64.zip'
+    #     response = urllib.request.urlopen(url)
+    #     zipfile.ZipFile(BytesIO(response.read())).extractall(os.getcwd())
+    #     os.environ['PATH'] += os.pathsep + os.getcwd()
+
+    # def get_driver(self, headless: bool = False):
+    #     opts = Options()
+    #     if self.headless:
+    #         opts.add_argument("--headless=new")
+
+    #     return webdriver.Edge(options=opts)
 
     def validate(funcion):
         def execute(self,*args, **kwargs):
@@ -133,6 +211,8 @@ class Web_Controller:
             return False
     
     def openEdge(self, headless = False):
+        driver_path = self.ensure_msedgedriver()
+
         options = EdgeOptions()
         options.use_chromium = True
         options.add_argument("start-maximized")
@@ -141,8 +221,9 @@ class Web_Controller:
             options.add_argument("--headless=new")
             options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
-        self.browser = Edge(executable_path='msedgedriver.exe', options=options)
+        self.browser = Edge(executable_path=driver_path, options=options)
         self.browserOriginal = self.browser
+        return self.browser
 
     def openEdgeModeIE(self, headless = False):
         ieOptions = webdriver.IeOptions()
