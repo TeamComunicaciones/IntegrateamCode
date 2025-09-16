@@ -1,5 +1,5 @@
 from navegacion import sub_menu as sm, ventana_informacion
-from recursos import  label, botones, colors, checkbox
+from recursos import  label, botones, colors, checkbox, spinbox
 from funcionalidad import  web_controller, poliedro, excel, scraping
 from subprocess import Popen
 import threading
@@ -50,6 +50,18 @@ class Equipos:
         self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.79, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color= color.team, text_color= 'white')
 
+        # Configuracion para tiempo de espera
+        self.tiempo_espera_label = label.Label().create_label(self.menu.submenu, 'Tiempo de espera', 0.10, 0.36, 0.6, 0.04, letterSize=16)
+
+        self.spinbox_tiempo_espera = spinbox.CTkSpinbox(self.menu.submenu, from_=5, to=60, default=5)
+        self.spinbox_tiempo_espera.place(relx=0.10, rely=0.40, relheight=0.06, relwidth=0.55)
+
+        # Si el usuario no presiona OK, toma el valor por defecto
+        self.valor = self.spinbox_tiempo_espera.get_value()
+
+        self.tiempo_espera_okbutton = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.40, 0.15, 0.05, self.guardar_tiempo_espera)
+        self.tiempo_espera_okbutton.configure(fg_color=color.team, text_color='white')
+
         # Configuraciones para campo de usuario y contrasena poliedro
         # Etiquetas
         self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
@@ -85,7 +97,10 @@ class Equipos:
         self.checkbox_google_messages = checkbox.Checkbox()
         self.google_messages = tk.BooleanVar()
         self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
-       
+
+    def guardar_tiempo_espera(self):
+        self.valor = self.spinbox_tiempo_espera.get_value()
+        self.ventana_informacion.write(f'Tiempo de espera configurado: {self.valor} segundos')  
     
     def abrir_excel(self):
         self.ventana_informacion.write('excel equipos abierto recuerde cerrar antes de iniciar')
@@ -237,10 +252,11 @@ class Equipos:
                             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
                             self.ventana_informacion.write("Redirigido para reintentar.")
                             time.sleep(3) """
-                    tiempo_pausa = random.randint(4, 7)
-                    self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
-                    time.sleep(tiempo_pausa)
-                    continue
+                        base = self.valor
+                        variacion = random.randint(1,3)
+                        tiempo_pausa = random.randint(base - variacion, base + variacion)
+                        self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                        time.sleep(tiempo_pausa)
                     
                 self.ventana_informacion.write(f'ciclo {i} terminado')
             self.ventana_informacion.write('Proceso terminado')

@@ -1,6 +1,6 @@
 from navegacion import sub_menu as sm, ventana_informacion 
 from funcionalidad import  web_controller, poliedro, excel, clickImage
-from recursos import botones, label, checkbox, colors
+from recursos import botones, label, checkbox, colors, spinbox
 import threading
 from subprocess import Popen
 import pyperclip
@@ -54,6 +54,18 @@ class Portas:
         self.okBotton3 = boton.create_button(self.submenu.submenu, 'OK', 0.7, 0.75, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color= color.team, text_color= 'white')
 
+        # Configuracion para tiempo de espera
+        self.tiempo_espera_label = label.Label().create_label(self.submenu.submenu, 'Tiempo de espera', 0.10, 0.36, 0.6, 0.04, letterSize=16)
+
+        self.spinbox_tiempo_espera = spinbox.CTkSpinbox(self.submenu.submenu, from_=5, to=60, default=5)
+        self.spinbox_tiempo_espera.place(relx=0.10, rely=0.40, relheight=0.06, relwidth=0.55)
+
+        # Si el usuario no presiona OK, toma el valor por defecto
+        self.valor = self.spinbox_tiempo_espera.get_value()
+
+        self.tiempo_espera_okbutton = boton.create_button(self.submenu.submenu, 'OK', 0.66, 0.40, 0.15, 0.05, self.guardar_tiempo_espera)
+        self.tiempo_espera_okbutton.configure(fg_color=color.team, text_color='white')
+
         # Configuraciones para campo de usuario y contrasena poliedro
         # Etiquetas
         self.titulo3 = label.Label().create_label(self.submenu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
@@ -89,7 +101,10 @@ class Portas:
         self.checkbox_google_messages = checkbox.Checkbox()
         self.google_messages = tk.BooleanVar()
         self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.submenu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
-       
+
+    def guardar_tiempo_espera(self):
+        self.valor = self.spinbox_tiempo_espera.get_value()
+        self.ventana_informacion.write(f'Tiempo de espera configurado: {self.valor} segundos')   
         
     def on_checkbox_change(self):
         if self.checkbox_var.get():
@@ -245,9 +260,11 @@ class Portas:
                     self.contador += 1
                 
                 # PAUSA ALEATORIA ENTRE TRANSACCIONES PARA EVITAR DETECCIÓN DE BOT
-                #tiempo_pausa = random.randint(15, 30)
-                #self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
-                #time.sleep(tiempo_pausa)
+                base = self.valor
+                variacion = random.randint(1,3)
+                tiempo_pausa = random.randint(base - variacion, base + variacion)
+                self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+                time.sleep(tiempo_pausa)
 
     def crearVariablesExcel(self,i):
         self.idCliente = str(self.excel.excel['CC CLIENTE'][i])
@@ -296,7 +313,7 @@ class Portas:
                 primerFormulario = [
                     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[2]/div[2]/div/input', self.idCliente],
                     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[2]/div[3]/div/input', self.apellido],
-                    ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[2]/div/div[1]/div/input', self.idVendedor],
+                    ['//*[@id="DetailProduct_SellerId"]', self.idVendedor],
                     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[3]/div/div[1]/div[2]/input', self.min],
                     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[3]/div/div[1]/div[3]/div/input', self.nip],
                 ]

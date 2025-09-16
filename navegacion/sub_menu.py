@@ -51,9 +51,9 @@ class Sub_menu:
             self.boton = botones.Buttons()
             nombre_variable = f'boton {i}'
             funcion = lambda f =self.button_func[i]: f()
-            valor = self.boton.create_button2(self.submenu, self.button_name[i][0], 0.15 , 0.05 + self.move, 0.7, 0.10, func= funcion, agrandar=agrandar)
+            valor = self.boton.create_button2(self.submenu, self.button_name[i][0], 0.15 , 0.05 + self.move, 0.7, 0.08, func= funcion, agrandar=agrandar)
             setattr(self,nombre_variable,valor)
-            self.move += 0.15
+            self.move += 0.1
         
     
     def indicator(self):
