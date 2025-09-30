@@ -9,8 +9,6 @@ def alertas(mensaje):
     messagebox.showwarning(message=mensaje, title="Mensaje")   
     root.root.attributes("-topmost", False)
 
-
-
 if __name__ == '__main__':
 
     try:

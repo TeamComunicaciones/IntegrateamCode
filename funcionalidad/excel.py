@@ -23,8 +23,9 @@ class Excel_controller:
     def quitarFormatoCientifico(self, tituloColumna):
         if self.cantidad is not None:
             for i in range(self.cantidad):
-                self.excel[tituloColumna][i] = " "+str(self.excel[tituloColumna][i]).strip()
-        
+                #self.excel[tituloColumna][i] = " "+str(self.excel[tituloColumna][i]).strip()
+                valor = str(self.excel.loc[i, tituloColumna]).strip()
+                self.excel.loc[i, tituloColumna] = " " + valor 
         else:
             raise('No tiene cantidad determinada en la funcion de lectura, por no agregar titulo')
     

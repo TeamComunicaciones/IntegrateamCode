@@ -48,10 +48,10 @@ class Portas:
         self.repeticiones = '1'
         self.repeticionesEdit = tk.StringVar()
         self.repeticionesEdit.set(self.repeticiones)
-        self.titulo = label.Label().create_label(self.submenu.submenu, 'Ciclos', 0.0, 0.75, 0.5,0.05, letterSize= 16)
+        self.titulo = label.Label().create_label(self.submenu.submenu, 'Ciclos', 0.0, 0.70, 0.5,0.05, letterSize= 16)
         input_widget3 = ctk.CTkEntry(self.submenu.submenu, textvariable=self.repeticionesEdit)
-        input_widget3.place(relx=0.5, rely=0.75, relheight=0.05, relwidth=0.2)
-        self.okBotton3 = boton.create_button(self.submenu.submenu, 'OK', 0.7, 0.75, 0.15, 0.05, self.cambioCiclos)
+        input_widget3.place(relx=0.45, rely=0.70, relheight=0.05, relwidth=0.2)
+        self.okBotton3 = boton.create_button(self.submenu.submenu, 'OK', 0.65, 0.70, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color= color.team, text_color= 'white')
 
         # Configuracion para tiempo de espera
@@ -102,9 +102,19 @@ class Portas:
         self.google_messages = tk.BooleanVar()
         self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.submenu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
 
+        self.checkbox_modo_captura_datos = checkbox.Checkbox()
+        self.modo_captura_datos = tk.BooleanVar()
+        self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.submenu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
+
     def guardar_tiempo_espera(self):
         self.valor = self.spinbox_tiempo_espera.get_value()
-        self.ventana_informacion.write(f'Tiempo de espera configurado: {self.valor} segundos')   
+        self.ventana_informacion.write(f'Tiempo de espera configurado: {self.valor} segundos')
+
+    def on_checkbox_change_modo_captura(self):
+        if self.modo_captura_datos.get():
+            self.ventana_informacion.write('Envio de datos por API (No visible en navegador)')
+        else:
+            self.ventana_informacion.write('Envio de datos por Web (Visible en navegador)') 
         
     def on_checkbox_change(self):
         if self.checkbox_var.get():
@@ -230,9 +240,6 @@ class Portas:
             
             raise Exception('se detiene el programa')
 
-        
-
-
     def iteraciones(self):
 
         while self.ciclo:
@@ -293,16 +300,16 @@ class Portas:
         if len(self.idCliente) == 9:
             self.captarError('','No se admite cedula de 9 digitos')
         else:
-            self.portas.eraseLetter('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[3]/div/input', 20)
-            self.portas.insert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[3]/div/input', self.iccid, enter=True)
+            self.portas.eraseLetter('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[4]/div/input', 20)
+            self.portas.insert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[4]/div/input', self.iccid, enter=True)
             if str(self.iccid2) != 'nan':
                 try:
-                    self.portas.insert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[4]/div/input', self.iccid2)
+                    self.portas.insert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[5]/div/input', self.iccid2)
                     minpre = False
                 except: minpre = False
             else:
                 try:
-                    self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[4]/div/input', write=True)
+                    self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[5]/div/input', write=True)
                     minpre = True
                 except: minpre = False
             if minpre: 
@@ -395,37 +402,6 @@ class Portas:
             self.captarError('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[2]/div/div/div')
     
     def validado(self):
-            self.cookie_header['Cookie'] = self.portas.getCookies()
-            
-            headers = {
-                'Cookie': self.cookie_header['Cookie']
-            }
-            cookies = self.portas.browser.get_cookies()
-            session = requests.Session()
-            for cookie in cookies:
-                session.cookies.set(cookie['name'], cookie['value'])
-                
-            demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
-            demographic_data = {               
-                "PersonalInfo.GreetingId": "M",
-                "PersonalInfo.Name": self.nombre,
-                "PersonalInfo.LastName": self.apellido,
-                "PersonalInfo.Email": "master.33@gmail.com",
-                "PersonalInfo.Phone.PhoneId": "526553",
-                "PersonalInfo.Phone.PhoneClass": "",
-                "PersonalInfo.Phone.Prefix": "7",
-                "PersonalInfo.Phone.PhoneNumber": "8883136",
-                "PersonalInfo.EmailInitial": "master.33@gmail.com",
-                "PersonalInfo.DocumentTypeId": "1",
-                "PersonalInfo.Document": self.idCliente,
-                "PersonalInfo.Address.AddressId": "",
-                "PersonalInfo.Address.AddressClassId": "Otras",
-                "PersonalInfo.Address.Address": "central",
-                "PersonalInfo.Address.Department": "ANTIOQUIA",
-                "PersonalInfo.Address.City": "MEDELLIN",
-                "PersonalInfo.Address.Town": "Central",
-                "PersonalInfo.ProductDonorOperator": self.tipoLinea
-            }
             
             self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
             if not self.wait_for_loading():
@@ -455,36 +431,112 @@ class Portas:
                         raise Exception("Timeout esperando carga inicial en captura_datos")
                     self.ventana_informacion.write(f"{self.idCliente} error no identificado")
                 raise('error controlado kit registrado')
-            
-            demographic_response = session.post(demographic_url, demographic_data, headers = headers)
-            if demographic_response.status_code == 200:
-                self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
-                if not self.wait_for_loading():
-                    raise Exception("Timeout esperando carga inicial en captura_datos")
-                self.pagina = 4
-                self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
-                self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]')
-                if not self.wait_for_loading():
-                    raise Exception("Timeout esperando carga inicial en captura_datos")
-                self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
-                self.pagina = 5
-                self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
-                if not self.wait_for_loading():
-                    raise Exception("Timeout esperando carga inicial en captura_datos")
-                optionsFinal = [
-                    ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
-                    ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
-                ]
-                functionListFinal = [
-                    self.errorTamañoDireccion,
-                    self.terminarPorta,
-                ]
-                self.poliedro.detectOption(optionsFinal, functionListFinal, NoneFunc=self.errorGeneral)
+
+            if self.modo_captura_datos.get():
+                self.validado_api()
             else:
-                self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
-                raise Exception("Error en la URL de Demographic/Index1")
+                self.validado_web()
+                
+            self.pagina = 4
+            self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
+            self.poliedro.tipoDoc('w', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
+            self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga inicial en captura_datos")
+            self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+            self.pagina = 5
+            self.portas.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga inicial en captura_datos")
+            optionsFinal = [
+                ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
+                ['/html/body/div/strong/strong/div[3]/div[1]/div/button[2]'],
+            ]
+            functionListFinal = [
+                self.errorTamañoDireccion,
+                self.terminarPorta,
+            ]
+            self.poliedro.detectOption(optionsFinal, functionListFinal, NoneFunc=self.errorGeneral)
     
+    def validado_web(self):
+        """Versión Web de la captura de datos (visible en UI)"""
+        #Saludo
+        self.poliedro.tipoDoc('M', '//*[@id="select2-PersonalInfo_GreetingId-container"]')
+ 
+        #Nombre
+        nombre_actual = self.portas.value("PersonalInfo_Name",'id')
+        if not nombre_actual.strip():    
+            self.portas.write("PersonalInfo_Name", self.nombre, 'id')
+        
+        #Apellido
+        apellido_actual = self.portas.value("PersonalInfo_LastName",'id')
+        if not apellido_actual.strip():
+            self.portas.write("PersonalInfo_LastName", self.apellido, 'id')
+        
+        #Cedula
+        id_actual = self.portas.value("PersonalInfo_Document",'id')
+        if not id_actual.strip():
+            self.portas.write("PersonalInfo_Document", self.idCliente, 'id')
+
+        #Pospago o prepago
+        checkboxes = self.portas.browser.find_elements_by_xpath('//*[@id="PersonalInfo_ProductDonorOperator"]')
+        if self.tipoLinea.lower() == "pospago":
+            checkboxes[0].click()
+        elif self.tipoLinea.lower() == "prepago":
+            checkboxes[1].click()
+        
+        time.sleep(2)
+        if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
+
+        self.portas.click("btnNext", "id")
+
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de hacer clic en Siguiente")
+
+    
+    def validado_api(self):
+        demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
+        demographic_data = {               
+            "PersonalInfo.GreetingId": "M",
+            "PersonalInfo.Name": self.nombre,
+            "PersonalInfo.LastName": self.apellido,
+            "PersonalInfo.Email": "master.33@gmail.com",
+            "PersonalInfo.Phone.PhoneId": "526553",
+            "PersonalInfo.Phone.PhoneClass": "",
+            "PersonalInfo.Phone.Prefix": "7",
+            "PersonalInfo.Phone.PhoneNumber": "8883136",
+            "PersonalInfo.EmailInitial": "master.33@gmail.com",
+            "PersonalInfo.DocumentTypeId": "1",
+            "PersonalInfo.Document": self.idCliente,
+            "PersonalInfo.Address.AddressId": "",
+            "PersonalInfo.Address.AddressClassId": "Otras",
+            "PersonalInfo.Address.Address": "central",
+            "PersonalInfo.Address.Department": "ANTIOQUIA",
+            "PersonalInfo.Address.City": "MEDELLIN",
+            "PersonalInfo.Address.Town": "Central",
+            "PersonalInfo.ProductDonorOperator": self.tipoLinea
+        }
+
+        self.cookie_header['Cookie'] = self.portas.getCookies()
+        cookies = self.portas.browser.get_cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+            
+        headers = {'Cookie': self.cookie_header['Cookie']}
+
+        demographic_response = session.post(demographic_url, data=demographic_data, headers = headers)
+
+        if demographic_response.status_code != 200:
+            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1",destino="src\portas\portabilidad.xlsx")
+            raise Exception("Error en la URL de Demographic/Index1")
+        
+        self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga inicial en captura_datos")
+        
+
     def tryInsert(self, path, text):
         try: self.portas.insert(path, text) 
         except: pass

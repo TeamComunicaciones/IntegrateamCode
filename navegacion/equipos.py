@@ -34,20 +34,20 @@ class Equipos:
         self.equipos = ''
         self.time = tk.StringVar()
         self.time.set('0')
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.0, 0.65, 0.5,0.2, letterSize= 16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.0, 0.62, 0.5,0.2, letterSize= 16)
         input_widget = ctk.CTkEntry(self.menu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.45, rely=0.7, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.7, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color= color.team, text_color= 'white')
         self.repeticiones = '1'
         self.repeticionesEdit = tk.StringVar()
         self.repeticionesEdit.set(self.repeticiones) 
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Ciclos', 0.0, 0.78, 0.5,0.05, letterSize= 16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Ciclos', 0.0, 0.76, 0.5,0.05, letterSize= 16)
         input_widget3 = ctk.CTkEntry(self.menu.submenu, textvariable=self.repeticionesEdit)
-        input_widget3.place(relx=0.5, rely=0.79, relheight=0.05, relwidth=0.2)
-        self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.79, 0.15, 0.05, self.cambioCiclos)
+        input_widget3.place(relx=0.45, rely=0.76, relheight=0.05, relwidth=0.2)
+        self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.76, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color= color.team, text_color= 'white')
 
         # Configuracion para tiempo de espera
@@ -98,9 +98,19 @@ class Equipos:
         self.google_messages = tk.BooleanVar()
         self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
 
+        self.checkbox_modo_captura_datos = checkbox.Checkbox()
+        self.modo_captura_datos = tk.BooleanVar()
+        self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
+
     def guardar_tiempo_espera(self):
         self.valor = self.spinbox_tiempo_espera.get_value()
         self.ventana_informacion.write(f'Tiempo de espera configurado: {self.valor} segundos')  
+    
+    def on_checkbox_change_modo_captura(self):
+        if self.modo_captura_datos.get():
+            self.ventana_informacion.write('Envio de datos por API (No visible en navegador)')
+        else:
+            self.ventana_informacion.write('Envio de datos por Web (Visible en navegador)')
     
     def abrir_excel(self):
         self.ventana_informacion.write('excel equipos abierto recuerde cerrar antes de iniciar')
@@ -279,68 +289,11 @@ class Equipos:
         self.vRegion = ""
 
         self.position(self.equipos.retornarHtml(), 'paso1', True)
-        cookies = self.equipos.browser.get_cookies()
-        session = requests.Session()
-        for cookie in cookies:
-            session.cookies.set(cookie['name'], cookie['value'])
-        
-        self.cookie_header['Cookie'] = self.equipos.getCookies()
-        headers = {
-            'Cookie': self.cookie_header['Cookie']
-        }
 
-        #primera
-        url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2'
-        payload = {
-            'ProductShortcutName': '194 - (GAKC) - Activación Kit Contado',
-            'Pospago': False,
-            'TechnologyId': 1,
-            'ObligaFlagImei': '',
-            'NumIOT': '910.919',
-            'DealerCode': self.codigo_distribuidor,
-            'productShortcut': 194,
-            'ActivationId': 27,
-            'ModuleId': 6,
-            'ProductTypeId': 1,
-            'PaymentId': 1,
-            'PlanId': 13,
-            'ProductId': 194,
-            'Pospago': False,
-            'IsSpecialUser': False,
-            'ActiveFieldsPortability': True,
-            'DetailProduct.ApplyPreactivedMin': False,
-            'DetailProduct.CausalGsmServiceChange': 0,
-            'DetailProduct.DealerCps': False,
-            'DetailProduct.CodTechImei': '',
-            'DetailProduct.DocumentTypeId': '',
-            'DetailProduct.RutNumber': '',
-            'DetailProduct.ExpeditionDate': '',
-            'DetailProduct.Imei': self.imei.replace(' ',''),
-            'DetailProduct.AuxiliaryIccid': '',
-            'DetailProduct.Iccid': self.iccid,
-            'DetailProduct.AuxiliaryIccid': '',
-            'DetailProduct.DocumentTypeIdRL': '',
-            'DetailProduct.DocumentNumberRL': '',
-            'DetailProduct.ExpeditionDateRL': '',
-            'DetailProduct.SellerId': self.cedulaVendedor,
-            'DetailProduct.ContractNumber': '',
-            'DetailProduct.PortabilityNumber': '',
-            'DetailProduct.RutCheck': False,
-            'DetailProduct.CheckEsim': False,
-            'DetailProduct.ContractNumberCheck': False,
-        }
-
-        post_response = session.post(url, headers=headers, data=payload)
-        if post_response.status_code == 200:
-            if 'errores' in post_response.json():
-                self.excel.guardar(self.contador, 'Mensaje', post_response.json()['errores'][0], destino='src\equipos\equipos.xlsx')
-                self.excel.guardar(self.contador, 'Min', 'error', destino='src\equipos\equipos.xlsx')
-                self.ventana_informacion.write(post_response.json()['errores'][0])
-                raise('error validacion 1')
-            else:
-                self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        if self.modo_captura_datos.get():
+            self.captura_datos_api()
         else:
-            raise('error validacion 1')
+            self.captura_datos_web()
 
         self.position(self.equipos.retornarHtml(), 'paso2', True)
         try:
@@ -396,6 +349,95 @@ class Equipos:
         # self.guardarData()
         # # self.poliedro.reinicio()
         # self.contador += 1
+
+    def captura_datos_web(self):
+        """Versión Web de la captura de datos (visible en UI)"""
+        self.equipos.write("DetailProduct_Imei", self.imei.replace(' ', ''), 'id')
+        self.equipos.write("DetailProduct_Iccid", self.iccid, 'id')
+        self.equipos.write("DetailProduct_SellerId", self.cedulaVendedor, 'id')
+
+        time.sleep(2)
+        if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
+        
+        # click en siguiente
+        self.equipos.click("btnNext", "id")
+
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de hacer clic en Siguiente")
+        
+        # --- Captura de errores en Web ---
+        errores = self.equipos.readMulty("errorFormItem", "class")
+        if errores and errores != "none":  
+            # guardar primer error (o concatenar todos si quieres)
+            self.excel.guardar(self.contador, "Mensaje", errores[0], destino="src\equipos\equipos.xlsx")
+            self.excel.guardar(self.contador, "Min", "error", destino="src\equipos\equipos.xlsx")
+            self.ventana_informacion.write(f"Error detectado en web: {errores[0]}")
+            raise Exception("Error validación WEB")
+    
+    def captura_datos_api(self):
+        url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2'
+        payload = {
+            'ProductShortcutName': '194 - (GAKC) - Activación Kit Contado',
+            'Pospago': False,
+            'TechnologyId': 1,
+            'ObligaFlagImei': '',
+            'NumIOT': '910.919',
+            'DealerCode': self.codigo_distribuidor,
+            'productShortcut': 194,
+            'ActivationId': 27,
+            'ModuleId': 6,
+            'ProductTypeId': 1,
+            'PaymentId': 1,
+            'PlanId': 13,
+            'ProductId': 194,
+            'Pospago': False,
+            'IsSpecialUser': False,
+            'ActiveFieldsPortability': True,
+            'DetailProduct.ApplyPreactivedMin': False,
+            'DetailProduct.CausalGsmServiceChange': 0,
+            'DetailProduct.DealerCps': False,
+            'DetailProduct.CodTechImei': '',
+            'DetailProduct.DocumentTypeId': '',
+            'DetailProduct.RutNumber': '',
+            'DetailProduct.ExpeditionDate': '',
+            'DetailProduct.Imei': self.imei.replace(' ',''),
+            'DetailProduct.AuxiliaryIccid': '',
+            'DetailProduct.Iccid': self.iccid,
+            'DetailProduct.AuxiliaryIccid': '',
+            'DetailProduct.DocumentTypeIdRL': '',
+            'DetailProduct.DocumentNumberRL': '',
+            'DetailProduct.ExpeditionDateRL': '',
+            'DetailProduct.SellerId': self.cedulaVendedor,
+            'DetailProduct.ContractNumber': '',
+            'DetailProduct.PortabilityNumber': '',
+            'DetailProduct.RutCheck': False,
+            'DetailProduct.CheckEsim': False,
+            'DetailProduct.ContractNumberCheck': False,
+        }
+
+        cookies = self.equipos.browser.get_cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+        
+        self.cookie_header['Cookie'] = self.equipos.getCookies()
+        headers = {
+            'Cookie': self.cookie_header['Cookie']
+        }
+
+        post_response = session.post(url, headers=headers, data=payload)
+        if post_response.status_code == 200:
+            if 'errores' in post_response.json():
+                self.excel.guardar(self.contador, 'Mensaje', post_response.json()['errores'][0], destino='src\equipos\equipos.xlsx')
+                self.excel.guardar(self.contador, 'Min', 'error', destino='src\equipos\equipos.xlsx')
+                self.ventana_informacion.write(post_response.json()['errores'][0])
+                raise('error validacion 1')
+            else:
+                self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        else:
+            raise('error validacion API')
+
     
     def validado(self):
         self.icc = ""

@@ -37,12 +37,12 @@ class Preactivador:
         self.preactivador = ''
         self.time = tk.StringVar()
         self.time.set('0')
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.1, 0.65, 0.5, 0.2, letterSize=16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.04, 0.61, 0.5, 0.2, letterSize=16)
         input_widget = ctk.CTkEntry(self.menu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.45, rely=0.68, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.68, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color= color.team, text_color= 'white')
         # self.correo = 'correo'
         # self.correoEdit = tk.StringVar()
@@ -64,8 +64,8 @@ class Preactivador:
         self.correoEdit = tk.StringVar()
         self.correoEdit.set(self.correo) 
         input_widget2 = ctk.CTkEntry(self.menu.submenu, textvariable=self.correoEdit)
-        input_widget2.place(relx=0.1, rely=0.80, relheight=0.05, relwidth=0.5)
-        self.okBotton2 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.80, 0.15, 0.05, self.cambioCorreo)
+        input_widget2.place(relx=0.1, rely=0.75, relheight=0.05, relwidth=0.5)
+        self.okBotton2 = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.75, 0.15, 0.05, self.cambioCorreo)
         self.okBotton2.configure(fg_color= color.team, text_color= 'white')
 
         # self.nit = 'nit o cc'
@@ -93,8 +93,8 @@ class Preactivador:
 
         # Configuraciones para campo de usuario y contrasena poliedro
         # Etiquetas
-        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.49, 0.5, 0.04, letterSize=16)
-        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.59, 0.5, 0.04, letterSize=16)
+        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.47, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.57, 0.5, 0.04, letterSize=16)
 
         # Variables
         self.poliedro_user = ''
@@ -106,16 +106,16 @@ class Preactivador:
 
         # Entradas (más angostas, alineadas a la izquierda)
         input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
-        input_widget4.place(relx=0.10, rely=0.53, relheight=0.05, relwidth=0.55)
+        input_widget4.place(relx=0.10, rely=0.51, relheight=0.05, relwidth=0.55)
 
         input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
-        input_widget5.place(relx=0.10, rely=0.63, relheight=0.05, relwidth=0.55)
+        input_widget5.place(relx=0.10, rely=0.61, relheight=0.05, relwidth=0.55)
 
         # Botones OK a la derecha de cada entrada
-        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.53, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.51, 0.15, 0.05, self.cambioPoliedroUser)
         self.okBotton4.configure(fg_color=color.team, text_color='white')
 
-        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.63, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.61, 0.15, 0.05, self.cambioPoliedroPass)
         self.okBotton5.configure(fg_color=color.team, text_color='white')
 
         # Elegir si se usa MySMS o Google Messages para obtener el OTP
@@ -126,10 +126,20 @@ class Preactivador:
         self.checkbox_google_messages = checkbox.Checkbox()
         self.google_messages = tk.BooleanVar()
         self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
+
+        self.checkbox_modo_captura_datos = checkbox.Checkbox()
+        self.modo_captura_datos = tk.BooleanVar()
+        self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
        
     def guardar_tiempo_espera(self):
         self.valor = self.spinbox_tiempo_espera.get_value()
         self.ventana_informacion.write(f'Tiempo de espera configurado: {self.valor} segundos')
+    
+    def on_checkbox_change_modo_captura(self):
+        if self.modo_captura_datos.get():
+            self.ventana_informacion.write('Envio de datos por API (No visible en navegador)')
+        else:
+            self.ventana_informacion.write('Envio de datos por Web (Visible en navegador)')
 
     def on_checkbox_change_tropas(self):
         if self.tropas.get():
@@ -290,73 +300,17 @@ class Preactivador:
         self.cedula_excel = str(self.excel.excel['Cedula'][self.contador])
         self.codigo_distribuidor = self.preactivador.read('userDataCodDistribuidor', 'id')
         self.nombre = ''
-        self.apellido = ''
+        self.apellido = ' '
         self.tipoDoc = str(self.excel.excel['TipoDoc'][self.contador])
         self.documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
+        self.tipoDoc_aux = "cedula" if self.documentType == 1 else "nit"
 
         self.position(self.preactivador.retornarHtml(), 'paso1', True)
-        cookies = self.preactivador.browser.get_cookies()
-        session = requests.Session()
-        for cookie in cookies:
-            session.cookies.set(cookie['name'], cookie['value'])
         
-        self.cookie_header['Cookie'] = self.preactivador.getCookies()
-        headers = {
-            'Cookie': self.cookie_header['Cookie']
-        }
-
-        #primera
-        url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2'
-        payload = {
-            'ProductShortcutName': '195 - (GAWBE) - WelcomeBack',
-            'Pospago': False,
-            'TechnologyId': 1,
-            'ObligaFlagImei': '',
-            'NumIOT': '910.919',
-            'DealerCode': self.codigo_distribuidor,
-            'productShortcut': 195,
-            'ActivationId': 28,
-            'ModuleId': 7,
-            'ProductTypeId': 1,
-            'PaymentId': 1,
-            'PlanId': 13,
-            'ProductId': 195,
-            'Pospago': False,
-            'IsSpecialUser': False,
-            'ActiveFieldsPortability': True,
-            'DetailProduct.ApplyPreactivedMin': False,
-            'DetailProduct.CausalGsmServiceChange': 0,
-            'DetailProduct.DealerCps': False,
-            'DetailProduct.CodTechImei': '',
-            'DetailProduct.TypeActivationWB': 1,
-            'DetailProduct.DocumentTypeId': self.documentType,
-            'DetailProduct.DocumentNumber': self.documento,
-            'DetailProduct.LastName': '',
-            'DetailProduct.RutNumber': '',
-            'DetailProduct.ExpeditionDate': datetime.datetime.now().strftime("%d/%m/%Y"),
-            'DetailProduct.OptionImei': 2,
-            'DetailProduct.Imei': '',
-            'DetailProduct.AuxiliaryImei': '',
-            'DetailProduct.Iccid': self.iccid,
-            'DetailProduct.AuxiliaryIccid': '',
-            'DetailProduct.IsPreviousIMEI': True,
-            'DetailProduct.DocumentTypeIdRL': '',
-            'DetailProduct.DocumentNumberRL': '',
-            'DetailProduct.ExpeditionDateRL': '',
-            'DetailProduct.SellerId': self.cedula_excel,
-            'DetailProduct.ContractNumber': '',
-            'DetailProduct.PortabilityNumber': '',
-            'DetailProduct.RutCheck': False,
-            'DetailProduct.IsPreviousIMEI': True,
-            'DetailProduct.IsPreviousICCID': False,
-            'DetailProduct.ContractNumberCheck': False
-        }
-
-        post_response = session.post(url, headers=headers, data=payload)
-        if post_response.status_code == 200:
-            self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        if self.modo_captura_datos.get():
+            self.captura_datos_api()
         else:
-            raise('error validacion 1')
+            self.captura_datos_web()
         
         self.position(self.preactivador.retornarHtml(), 'paso2', True)
         
@@ -382,35 +336,13 @@ class Preactivador:
         self.preactivador.click('btnNext', 'id')
         self.position(self.preactivador.retornarHtml(), 'paso3', True)
         self.nombre = self.preactivador.value('PersonalInfo_Name', 'id')
-        demographic_url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1'
-        demographic_data = {
-            "PersonalInfo.GreetingId": "O",
-            "PersonalInfo.Name": self.nombre,
-            "PersonalInfo.LastName": self.apellido,
-            "PersonalInfo.Email": self.correo,
-            "PersonalInfo.Phone.PhoneId": "",
-            "PersonalInfo.Phone.PhoneClass": "2",
-            "PersonalInfo.Phone.Prefix": "604",
-            "PersonalInfo.Phone.PhoneNumber": "0313123",
-            "PersonalInfo.EmailInitial": "",
-            "PersonalInfo.DocumentTypeId": self.documentType,
-            "PersonalInfo.Document": self.documento,
-            "PersonalInfo.Address.AddressId": "",
-            "PersonalInfo.Address.AddressClassId": "Otras",
-            "PersonalInfo.Address.Address": "central",
-            "PersonalInfo.Address.Department": "ANTIOQUIA",
-            "PersonalInfo.Address.City": "MEDELLIN",
-            "PersonalInfo.Address.Town": "Central"
-        }
 
-        demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
-        if demographic_response.status_code == 200:
-            self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+        if self.modo_captura_datos.get():
+            self.datos_demograficos_api()
         else:
-            raise('error demografic')
-
+            self.datos_demograficos_web()
+        
         self.position(self.preactivador.retornarHtml(), 'paso4', True)
-
 
         self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
         self.preactivador.click('/html/body/span/span/span[2]/ul/li[2]')
@@ -457,6 +389,191 @@ class Preactivador:
         #     self.ventana_informacion.write(f'Activacion erronea de equipo {self.iccid}')
         #     self.poliedro.reinicio()
         #     self.contador += 1
+    
+    def captura_datos_web(self):
+        #Tipo documento
+        self.poliedro.tipoDoc(self.tipoDoc_aux,'//*[@id="select2-DetailProduct_DocumentTypeId-container"]')
+
+        #Documento
+        self.preactivador.write("DetailProduct_DocumentNumber",self.documento,"id")
+
+        #Apellido
+        self.preactivador.write("DetailProduct_LastName",self.apellido,"id")
+
+        #Opción serial
+        self.poliedro.tipoDoc('sin','//*[@id="select2-DetailProduct_OptionImei-container"]')
+
+        #Serial
+        self.preactivador.write("DetailProduct_Iccid",self.iccid,"id")
+
+        #Documento vendedor
+        self.preactivador.write("DetailProduct_SellerId",self.cedula_excel,"id")
+
+        time.sleep(2)
+        if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
+        
+        # click en siguiente
+        self.preactivador.click("btnNext", "id")
+
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de hacer clic en Siguiente")
+
+
+    def captura_datos_api(self):
+        url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2'
+        payload = {
+            'ProductShortcutName': '195 - (GAWBE) - WelcomeBack',
+            'Pospago': False,
+            'TechnologyId': 1,
+            'ObligaFlagImei': '',
+            'NumIOT': '910.919',
+            'DealerCode': self.codigo_distribuidor,
+            'productShortcut': 195,
+            'ActivationId': 28,
+            'ModuleId': 7,
+            'ProductTypeId': 1,
+            'PaymentId': 1,
+            'PlanId': 13,
+            'ProductId': 195,
+            'Pospago': False,
+            'IsSpecialUser': False,
+            'ActiveFieldsPortability': True,
+            'DetailProduct.ApplyPreactivedMin': False,
+            'DetailProduct.CausalGsmServiceChange': 0,
+            'DetailProduct.DealerCps': False,
+            'DetailProduct.CodTechImei': '',
+            'DetailProduct.TypeActivationWB': 1,
+            'DetailProduct.DocumentTypeId': self.documentType,
+            'DetailProduct.DocumentNumber': self.documento,
+            'DetailProduct.LastName': '',
+            'DetailProduct.RutNumber': '',
+            'DetailProduct.ExpeditionDate': datetime.datetime.now().strftime("%d/%m/%Y"),
+            'DetailProduct.OptionImei': 2,
+            'DetailProduct.Imei': '',
+            'DetailProduct.AuxiliaryImei': '',
+            'DetailProduct.Iccid': self.iccid,
+            'DetailProduct.AuxiliaryIccid': '',
+            'DetailProduct.IsPreviousIMEI': True,
+            'DetailProduct.DocumentTypeIdRL': '',
+            'DetailProduct.DocumentNumberRL': '',
+            'DetailProduct.ExpeditionDateRL': '',
+            'DetailProduct.SellerId': self.cedula_excel,
+            'DetailProduct.ContractNumber': '',
+            'DetailProduct.PortabilityNumber': '',
+            'DetailProduct.RutCheck': False,
+            'DetailProduct.IsPreviousIMEI': True,
+            'DetailProduct.IsPreviousICCID': False,
+            'DetailProduct.ContractNumberCheck': False
+        }
+
+        cookies = self.preactivador.browser.get_cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+        
+        self.cookie_header['Cookie'] = self.preactivador.getCookies()
+        headers = {'Cookie': self.cookie_header['Cookie']}
+
+        post_response = session.post(url, headers=headers, data=payload)
+        if post_response.status_code != 200:
+            raise('Error en la respuesta de CaptureData')
+        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+
+
+    def datos_demograficos_web(self):
+        #Saludo
+        self.poliedro.tipoDoc('O', '//*[@id="select2-PersonalInfo_GreetingId-container"]')
+
+        #Nombres
+        nombre_actual = self.preactivador.value("PersonalInfo_Name",'id')
+        if not nombre_actual.strip():    
+            self.preactivador.write("PersonalInfo_Name", self.nombre, 'id')
+
+        #Apellidos
+        apellido_actual = self.preactivador.value("PersonalInfo_LastName",'id')
+        if not apellido_actual.strip():
+            self.preactivador.write("PersonalInfo_LastName", self.apellido, 'id')
+
+        #Correo
+        self.preactivador.write("PersonalInfo_Email", self.correo, 'id')
+
+        #Documento
+        id_actual = self.preactivador.value("PersonalInfo_Document",'id')
+        if not id_actual.strip():
+            self.preactivador.write("PersonalInfo_Document", self.documento, 'id')
+
+        #Telefono
+        #Tipo
+        self.poliedro.tipoDoc('fijo', '//*[@id="PhoneClass"]')
+
+        #Indicativo
+        self.poliedro.tipoDoc('604', '//*[@id="Prefix"]')
+
+        #Numero
+        self.preactivador.write("PhoneNumber", '0313123', 'id')
+
+        #Direccion
+        #Dir completa
+        self.poliedro.tipoDoc('Otras', '//*[@id="AddressClassId"]')
+
+        #Campo abajo de 'otras'
+        self.preactivador.write("Address", 'central', 'id')
+
+        #Departamento
+        self.poliedro.tipoDoc('ANTIOQUIA', '//*[@id="Department"]')
+
+        #Ciudad
+        self.poliedro.tipoDoc('MEDELLIN', '//*[@id="City"]')
+
+        #Barrio
+        self.preactivador.write("Town", 'central', 'id')
+
+        time.sleep(2)
+        if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de validación")
+        
+        # click en siguiente
+        self.preactivador.click("btnNext", "id")
+
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de hacer clic en Siguiente")
+
+    
+    def datos_demograficos_api(self):
+        demographic_url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1'
+        demographic_data = {
+            "PersonalInfo.GreetingId": "O",
+            "PersonalInfo.Name": self.nombre,
+            "PersonalInfo.LastName": self.apellido,
+            "PersonalInfo.Email": self.correo,
+            "PersonalInfo.Phone.PhoneId": "",
+            "PersonalInfo.Phone.PhoneClass": "2",
+            "PersonalInfo.Phone.Prefix": "604",
+            "PersonalInfo.Phone.PhoneNumber": "0313123",
+            "PersonalInfo.EmailInitial": "",
+            "PersonalInfo.DocumentTypeId": self.documentType,
+            "PersonalInfo.Document": self.documento,
+            "PersonalInfo.Address.AddressId": "",
+            "PersonalInfo.Address.AddressClassId": "Otras",
+            "PersonalInfo.Address.Address": "central",
+            "PersonalInfo.Address.Department": "ANTIOQUIA",
+            "PersonalInfo.Address.City": "MEDELLIN",
+            "PersonalInfo.Address.Town": "Central"
+        }
+
+        cookies = self.preactivador.browser.get_cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+        
+        self.cookie_header['Cookie'] = self.preactivador.getCookies()
+        headers = {'Cookie': self.cookie_header['Cookie']}
+
+        demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
+        if demographic_response.status_code != 200:
+            raise('error demografic')
+        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
             
     def validado(self):
         self.cookie_header['Cookie'] = self.preactivador.getCookies()
