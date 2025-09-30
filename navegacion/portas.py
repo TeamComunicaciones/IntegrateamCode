@@ -300,16 +300,16 @@ class Portas:
         if len(self.idCliente) == 9:
             self.captarError('','No se admite cedula de 9 digitos')
         else:
-            self.portas.eraseLetter('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[4]/div/input', 20)
-            self.portas.insert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[4]/div/input', self.iccid, enter=True)
+            self.portas.eraseLetter('//*[@id="DetailProduct_Iccid"]', 20)
+            self.portas.insert('//*[@id="DetailProduct_Iccid"]', self.iccid, enter=True)
             if str(self.iccid2) != 'nan':
                 try:
-                    self.portas.insert('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[5]/div/input', self.iccid2)
+                    self.portas.insert('//*[@id="DetailProduct_MinBroughtPortability"]', self.iccid2)
                     minpre = False
                 except: minpre = False
             else:
                 try:
-                    self.portas.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[4]/div[5]/div/input', write=True)
+                    self.portas.waitExist('//*[@id="DetailProduct_MinBroughtPortability"]', write=True)
                     minpre = True
                 except: minpre = False
             if minpre: 
