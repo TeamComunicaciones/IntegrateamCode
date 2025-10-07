@@ -539,6 +539,7 @@ class Preactivador:
             
             self.preactivador.write("Address", "central", "id")
             self.selectDropDown("Department","ANTIOQUIA")
+            time.sleep(1)
             self.selectDropDown("City","MEDELLIN")
             self.preactivador.write("Town", "Central", "id")
 

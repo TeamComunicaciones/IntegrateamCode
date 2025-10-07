@@ -515,6 +515,7 @@ class Portas:
             
             self.portas.write("Address", "central", "id")
             self.selectDropDown("Department","ANTIOQUIA")
+            time.sleep(1)
             self.selectDropDown("City","MEDELLIN")
             self.portas.write("Town", "Central", "id")
 
