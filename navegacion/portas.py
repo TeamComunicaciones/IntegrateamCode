@@ -11,7 +11,8 @@ import customtkinter as ctk
 import requests
 from funcionalidad import poliedro_login_service
 import random
-
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 
 class Portas:
  
@@ -461,7 +462,7 @@ class Portas:
     def validado_web(self):
         """Versión Web de la captura de datos (visible en UI)"""
         #Saludo
-        self.poliedro.tipoDoc('M', '//*[@id="select2-PersonalInfo_GreetingId-container"]')
+        self.poliedro.tipoDoc('Sr', '//*[@id="select2-PersonalInfo_GreetingId-container"]')
  
         #Nombre
         nombre_actual = self.portas.value("PersonalInfo_Name",'id')
@@ -472,11 +473,50 @@ class Portas:
         apellido_actual = self.portas.value("PersonalInfo_LastName",'id')
         if not apellido_actual.strip():
             self.portas.write("PersonalInfo_LastName", self.apellido, 'id')
+
+        correo_actual = self.portas.value("PersonalInfo_Email","id")
+        if not correo_actual or not correo_actual.strip():
+            self.portas.write("PersonalInfo_Email", self.correo, 'id')
+
+        #Telefono
+        telefono_actual = self.portas.value("PhoneId","id")
+        if not telefono_actual or not telefono_actual.strip():
+            
+            #Tipo
+            self.selectDropDown("PhoneClass","fijo")
+
+            time.sleep(2)
+            if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga después de validación")
+
+            #Indicativo
+            self.selectDropDown("Prefix","7")
+
+            #Numero
+            self.portas.write("PhoneNumber","8883136","id")
         
+        #Tipo documento
+        self.poliedro.tipoDoc('Cedula', '//*[@id="select2-PersonalInfo_DocumentTypeId-container"]')
+ 
         #Cedula
         id_actual = self.portas.value("PersonalInfo_Document",'id')
-        if not id_actual.strip():
+        if not id_actual.strip() or id_actual.strip() == "0":
+            campo = self.portas.browser.find_element_by_id("PersonalInfo_Document")
+            campo.clear()
             self.portas.write("PersonalInfo_Document", self.idCliente, 'id')
+
+        #Dirección
+        direccion_actual = self.portas.value("AddressId","id")
+        if not direccion_actual or not direccion_actual.strip():
+            self.selectDropDown("AddressClassId","Otras")
+            time.sleep(2)
+            if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga después de validación")
+            
+            self.portas.write("Address", "central", "id")
+            self.selectDropDown("Department","ANTIOQUIA")
+            self.selectDropDown("City","MEDELLIN")
+            self.portas.write("Town", "Central", "id")
 
         #Pospago o prepago
         checkboxes = self.portas.browser.find_elements_by_xpath('//*[@id="PersonalInfo_ProductDonorOperator"]')
@@ -535,6 +575,35 @@ class Portas:
         self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga inicial en captura_datos")
+        
+    def selectDropDown(self, id, value):
+        """
+        Selecciona un valor de un dropdown. Funciona tanto para Select2 como para <select> normales.
+        """
+        try:
+            el = self.portas.browser.find_element_by_id(id)
+            classes = el.get_attribute("class") or ""
+
+            # 🟢 Caso 1: Select2
+            if "select2-hidden-accessible" in classes:
+                self.portas.click(f"select2-{id}-container", "id")
+                self.portas.write("/html/body/span/span/span[1]/input", value, "xpath")
+                self.portas.write("/html/body/span/span/span[1]/input", Keys.ENTER, "xpath")
+
+            # 🟢 Caso 2: <select> HTML normal
+            else:
+                select = Select(el)
+                # intenta primero por texto visible (insensible a mayúsculas)
+                matched = False
+                for option in select.options:
+                    if option.text.strip().lower() == value.strip().lower():
+                        option.click()
+                        matched = True
+                        break
+                if not matched:
+                    select.select_by_value(value)
+        except Exception as e:
+            self.log_error(f"selectDropDown({id})", e)
         
 
     def tryInsert(self, path, text):

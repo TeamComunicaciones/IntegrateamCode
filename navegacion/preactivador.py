@@ -13,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
 import random
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 
 class Preactivador:
 
@@ -303,7 +305,7 @@ class Preactivador:
         self.apellido = ' '
         self.tipoDoc = str(self.excel.excel['TipoDoc'][self.contador])
         self.documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
-        self.tipoDoc_aux = "cedula" if self.documentType == 1 else "nit"
+        self.tipoDoc_aux = "Cedula" if self.documentType == 1 else "NIT"
 
         self.position(self.preactivador.retornarHtml(), 'paso1', True)
         
@@ -483,7 +485,7 @@ class Preactivador:
 
     def datos_demograficos_web(self):
         #Saludo
-        self.poliedro.tipoDoc('O', '//*[@id="select2-PersonalInfo_GreetingId-container"]')
+        self.poliedro.tipoDoc('Sr', '//*[@id="select2-PersonalInfo_GreetingId-container"]')
 
         #Nombres
         nombre_actual = self.preactivador.value("PersonalInfo_Name",'id')
@@ -496,38 +498,49 @@ class Preactivador:
             self.preactivador.write("PersonalInfo_LastName", self.apellido, 'id')
 
         #Correo
-        self.preactivador.write("PersonalInfo_Email", self.correo, 'id')
-
-        #Documento
-        id_actual = self.preactivador.value("PersonalInfo_Document",'id')
-        if not id_actual.strip():
-            self.preactivador.write("PersonalInfo_Document", self.documento, 'id')
+        correo_actual = self.preactivador.value("PersonalInfo_Email","id")
+        if not correo_actual or not correo_actual.strip():
+            self.preactivador.write("PersonalInfo_Email", self.correo, 'id')
 
         #Telefono
-        #Tipo
-        self.poliedro.tipoDoc('fijo', '//*[@id="PhoneClass"]')
+        telefono_actual = self.preactivador.value("PhoneId","id")
+        if not telefono_actual or not telefono_actual.strip():
+            
+            #Tipo
+            self.selectDropDown("PhoneClass","fijo")
 
-        #Indicativo
-        self.poliedro.tipoDoc('604', '//*[@id="Prefix"]')
+            time.sleep(2)
+            if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga después de validación")
 
-        #Numero
-        self.preactivador.write("PhoneNumber", '0313123', 'id')
+            #Indicativo
+            self.selectDropDown("Prefix","604")
 
-        #Direccion
-        #Dir completa
-        self.poliedro.tipoDoc('Otras', '//*[@id="AddressClassId"]')
+            #Numero
+            self.preactivador.write("PhoneNumber","0313123","id")
 
-        #Campo abajo de 'otras'
-        self.preactivador.write("Address", 'central', 'id')
+        #Tipo documento
+        self.poliedro.tipoDoc(self.tipoDoc_aux,'//*[@id="select2-PersonalInfo_DocumentTypeId-container"]')
 
-        #Departamento
-        self.poliedro.tipoDoc('ANTIOQUIA', '//*[@id="Department"]')
+        #Cedula
+        id_actual = self.preactivador.value("PersonalInfo_Document",'id')
+        if not id_actual.strip() or id_actual.strip() == "0":
+            campo = self.preactivador.browser.find_element_by_id("PersonalInfo_Document")
+            campo.clear()
+            self.preactivador.write("PersonalInfo_Document", self.documento, 'id')
 
-        #Ciudad
-        self.poliedro.tipoDoc('MEDELLIN', '//*[@id="City"]')
-
-        #Barrio
-        self.preactivador.write("Town", 'central', 'id')
+        #Dirección
+        direccion_actual = self.preactivador.value("AddressId","id")
+        if not direccion_actual or not direccion_actual.strip():
+            self.selectDropDown("AddressClassId","Otras")
+            time.sleep(2)
+            if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga después de validación")
+            
+            self.preactivador.write("Address", "central", "id")
+            self.selectDropDown("Department","ANTIOQUIA")
+            self.selectDropDown("City","MEDELLIN")
+            self.preactivador.write("Town", "Central", "id")
 
         time.sleep(2)
         if not self.wait_for_loading():
@@ -654,6 +667,34 @@ class Preactivador:
             self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
             raise Exception("Error en la URL de Demographic/Index1")
     
+    def selectDropDown(self, id, value):
+        """
+        Selecciona un valor de un dropdown. Funciona tanto para Select2 como para <select> normales.
+        """
+        try:
+            el = self.preactivador.browser.find_element_by_id(id)
+            classes = el.get_attribute("class") or ""
+
+            # 🟢 Caso 1: Select2
+            if "select2-hidden-accessible" in classes:
+                self.preactivador.click(f"select2-{id}-container", "id")
+                self.preactivador.write("/html/body/span/span/span[1]/input", value, "xpath")
+                self.preactivador.write("/html/body/span/span/span[1]/input", Keys.ENTER, "xpath")
+
+            # 🟢 Caso 2: <select> HTML normal
+            else:
+                select = Select(el)
+                # intenta primero por texto visible (insensible a mayúsculas)
+                matched = False
+                for option in select.options:
+                    if option.text.strip().lower() == value.strip().lower():
+                        option.click()
+                        matched = True
+                        break
+                if not matched:
+                    select.select_by_value(value)
+        except Exception as e:
+            self.log_error(f"selectDropDown({id})", e)
     
     def captarError(self, path, mensaje=None):
         if mensaje == None:
