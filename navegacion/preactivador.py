@@ -695,7 +695,7 @@ class Preactivador:
                 if not matched:
                     select.select_by_value(value)
         except Exception as e:
-            self.log_error(f"selectDropDown({id})", e)
+            print(f"Error en selectDropDown({id}): {e}")
     
     def captarError(self, path, mensaje=None):
         if mensaje == None:
