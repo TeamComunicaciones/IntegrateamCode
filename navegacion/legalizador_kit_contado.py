@@ -12,8 +12,10 @@ import traceback
 from funcionalidad import poliedro_login_service
 from selenium.webdriver.common.keys import Keys
 import random
+import pandas as pd
+from selenium.webdriver.support.ui import Select
 
-class Legalizador_sims:
+class LegalizadorKitContado:
 
     def __init__(self, master, on_of):
         self.on_of = on_of
@@ -27,10 +29,10 @@ class Legalizador_sims:
         self.link_mysms = 'https://app.mysms.com/#87472'
 
         #Diseño en UI
-        self.label = label.Label().create_label(master, 'LEGALIZADOR SIMCARD', 0.2, 0.0, 0.5,0.2, letterSize= 25)
+        self.label = label.Label().create_label(master, 'LEGALIZADOR KIT CONTADO', 0.2, 0.0, 0.5,0.2, letterSize= 25)
         self.ventana_informacion = ventana_informacion.Ventana_informacion(master)
         self.menu= sm.Sub_menu(master, 3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
-        self.legalizador_sims = ''
+        self.legalizador_kit_contado = ''
         self.time = tk.StringVar()
         self.time.set('0')
         boton = botones.Buttons()
@@ -100,15 +102,15 @@ class Legalizador_sims:
         
         self.ventana_informacion.write('Navegador abierto')
         class Abrir_pagina1(web_controller.Web_Controller):pass
-        self.legalizador_sims = Abrir_pagina1(int(self.time.get()))
-        self.legalizador_sims.openEdge()
-        self.legalizador_sims.selectPage(self.link)
+        self.legalizador_kit_contado = Abrir_pagina1(int(self.time.get()))
+        self.legalizador_kit_contado.openEdge()
+        self.legalizador_kit_contado.selectPage(self.link)
 
         time.sleep(2)
         if self.mysms.get():
-            self.legalizador_sims.script(f"window.open('{self.link_mysms}', '_blank');")
+            self.legalizador_kit_contado.script(f"window.open('{self.link_mysms}', '_blank');")
         elif self.google_messages.get():
-            self.legalizador_sims.script(f"window.open('{self.link_google_messages}', '_blank');")
+            self.legalizador_kit_contado.script(f"window.open('{self.link_google_messages}', '_blank');")
 
     def guardar_tiempo_espera(self):
         self.valor = self.spinbox_tiempo_espera.get_value()
@@ -146,17 +148,17 @@ class Legalizador_sims:
             self.ventana_informacion.write('Cambiando modalidad a Estandar')
     
     def abrir_excel(self):
-        self.ventana_informacion.write('Abriendo Excel legalizador_sims, recuerde cerrar antes de iniciar')
-        p = Popen("src\legalizador_sims\openExcel.bat")
+        self.ventana_informacion.write('Abriendo Excel legalizador_kit_contado, recuerde cerrar antes de iniciar')
+        p = Popen("src\legalizador_kit_contado\openExcel.bat")
         stdout, stderr = p.communicate()
     
     def ejecuccionHilo(self):
-        hilo_legalizador_sims = threading.Thread(target=self.ejecuccion)
-        hilo_legalizador_sims.start()
-    
+        hilo_legalizador_kit_contado = threading.Thread(target=self.ejecuccion)
+        hilo_legalizador_kit_contado.start()
+
     def ejecuccion(self):
         try:
-            self.poliedro.definirBrowser(self.legalizador_sims)
+            self.poliedro.definirBrowser(self.legalizador_kit_contado)
         except Exception as e:
             self.log_error("definirBrowser", e)
             return
@@ -172,26 +174,26 @@ class Legalizador_sims:
         time.sleep(2)
 
         try:
-            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a') #Cambiar por xpath dinamico //*[@id="containerNavBar"]/ul/li[12]/a
+            self.legalizador_kit_contado.click('//*[@id="containerNavBar"]/ul/li[12]/a') #Cambiar por xpath dinamico //*[@id="containerNavBar"]/ul/li[12]/a
         except Exception as e:
             self.log_error("click en menú", e)
             return
         
         time.sleep(3)
-        self.poliedro.seleccionAcceso('376', start=True)
-        if not self.wait_for_loading(legalizador_sims=False):
+        self.poliedro.seleccionAcceso('270', start=True)
+        if not self.wait_for_loading(legalizador_kit_contado=False):
             raise Exception("Timeout esperando carga")
         
-        try:
-            self.position(self.legalizador_sims.retornarHtml(),'CaptureData', True)
-        except Exception as e:
-            self.log_error("CaptureData", e)
-            return
+        # try:
+        #     self.position(self.legalizador_kit_contado.retornarHtml(),'CaptureData', True)
+        # except Exception as e:
+        #     self.log_error("CaptureData", e)
+        #     return
         
         try:
             for i in range(int(self.repeticiones)):
                 self.contador = 0
-                self.excel.leer_excel('src\\legalizador_sims\\legalizador_sims.xlsx', 'Iccid')
+                self.excel.leer_excel('src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx', 'Iccid')
                 self.excel.quitarFormatoCientifico('Iccid')
                 
                 for self.contador in range(self.excel.cantidad):
@@ -201,6 +203,7 @@ class Legalizador_sims:
                         if not self.ejecutar_etapa("Validation", self.validation): continue
                         if not self.ejecutar_etapa("Demographic", self.demographic): continue
                         if not self.ejecutar_etapa("Product/Service", self.product_service): continue
+                        if not self.ejecutar_etapa("Payment", self.payment): continue
                         if not self.ejecutar_etapa("Activation", self.activation): continue
 
                         self.ventana_informacion.write(f"✅ Fila {self.contador+1} completada")
@@ -212,8 +215,8 @@ class Legalizador_sims:
                         time.sleep(tiempo_pausa)
 
                     except Exception as e:
-                        self.excel.guardar(self.contador, 'Min', 'error', destino="src\\legalizador_sims\\legalizador_sims.xlsx")
-                        self.excel.guardar(self.contador, 'Mensaje', str(e), destino="src\\legalizador_sims\\legalizador_sims.xlsx") # Corregir
+                        self.excel.guardar(self.contador, 'Min', 'error', destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx")
+                        self.excel.guardar(self.contador, 'Mensaje', str(e), destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx") # Corregir
                         self.ventana_informacion.write(f"❌ Error en fila {self.contador+1}: {e}")
                         self.log_error(f"fila {self.contador+1}", e)
                         continue
@@ -238,58 +241,62 @@ class Legalizador_sims:
             self.ventana_informacion.write(f"❌ Error en {nombre}: {e}")
 
             # Reiniciar proceso
-            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a')
+            self.legalizador_kit_contado.click('//*[@id="containerNavBar"]/ul/li[12]/a')
             time.sleep(1)
-            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a')
-            self.poliedro.seleccionAcceso('376', start=True)
-            if not self.wait_for_loading(legalizador_sims=False):
+            self.legalizador_kit_contado.click('//*[@id="containerNavBar"]/ul/li[12]/a')
+            self.poliedro.seleccionAcceso('270', start=True)
+            if not self.wait_for_loading(legalizador_kit_contado=False):
                 raise Exception("Timeout esperando carga")
             
             return False
-
+        
     def establecer_datos(self):
         # Obtener datos del Excel
-        self.min = str(self.excel.excel['min'][self.contador])
-        self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:] 
-        self.id_vendedor = str(self.excel.excel['CcVendedor'][self.contador]).replace('.0','')
-        self.nombre = str(self.excel.excel['nombre'][self.contador])
-        self.apellido = str(self.excel.excel['apellido'][self.contador])
-        self.id_cliente = str(self.excel.excel['CcCliente'][self.contador]).replace('.0','')
+        self.tipo_documento = str(self.excel.excel['Tipo identificacion cliente'][self.contador])
+        self.id_cliente = str(self.excel.excel['Identificacion cliente'][self.contador]).replace('.0','')
+        self.imei = str(self.excel.excel['Imei'][self.contador])
+        self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:]
+        self.id_vendedor = str(self.excel.excel['Vendedor'][self.contador]).replace('.0','')
 
-        self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
+        # Manejo de valores vacíos o NaN
+        apellido_valor = self.excel.excel['Apellido'][self.contador]
+        nombre_valor = self.excel.excel['Nombre'][self.contador]
 
+        # Si el apellido está vacío o es NaN, dejarlo como un espacio
+        self.apellido = ' ' if pd.isna(apellido_valor) or str(apellido_valor).strip() == '' else str(apellido_valor)
+        self.nombre = ' ' if pd.isna(nombre_valor) or str(nombre_valor).strip() == '' else str(nombre_valor)
+        
+        self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad}')
+    
     def capture_data(self):
         #Info Cliente
-        self.selectDropDown("DetailProduct_DocumentTypeId", "Cedula")
-        self.legalizador_sims.write("DetailProduct_DocumentNumber",self.id_cliente,"id")
-        self.legalizador_sims.write("DetailProduct_LastName",self.apellido,"id")
+        self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
+        self.legalizador_kit_contado.write("DetailProduct_DocumentNumber",self.id_cliente,"id")
+
+        if self.tipo_documento.lower() == "cedula" or self.tipo_documento.lower() == "cédula":
+            self.legalizador_kit_contado.write("DetailProduct_LastName",self.apellido,"id")
 
         #Info Equipo
-        self.legalizador_sims.write("DetailProduct_Iccid",self.iccid,"id")
+        self.legalizador_kit_contado.write("DetailProduct_Imei",self.imei,"id")
+        self.legalizador_kit_contado.write("DetailProduct_Iccid",self.iccid,"id")
         
         #Info venta
-        self.legalizador_sims.write("DetailProduct_SellerId",self.id_vendedor,"id")
-        self.legalizador_sims.write("DetailProduct_Msisdn",self.min,"id")
+        self.legalizador_kit_contado.write("DetailProduct_SellerId",self.id_vendedor,"id")
 
         time.sleep(2)
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de validación")
         
-        self.legalizador_sims.click('btnNext', 'id')
+        self.legalizador_kit_contado.click('btnNext', 'id')
 
+        time.sleep(2)
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en Capture Data")
         
     def validation(self):
-        # try:
-        #     self.position(self.legalizador_sims.retornarHtml(),'Validation', True)
-        # except Exception as e:
-        #     self.log_error("Validation", e)
-        #     return
-
         try:
             # Intentar leer el mensaje principal
-            validate = self.legalizador_sims.read(
+            validate = self.legalizador_kit_contado.read(
                 '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span'
             )
         except Exception:
@@ -303,7 +310,7 @@ class Legalizador_sims:
             # --- Captura de errores en Web ---
             errores = []
             try:
-                errores = self.legalizador_sims.readMulty("errorFormItem", "class")
+                errores = self.legalizador_kit_contado.readMulty("errorFormItem", "class")
             except Exception as e:
                 self.log_error("readMulty Validation", e)
 
@@ -311,248 +318,214 @@ class Legalizador_sims:
                 mensaje_error = "; ".join(errores)
                 self.excel.guardar(
                     self.contador, "Mensaje", mensaje_error,
-                    destino="src\\legalizador_sims\\legalizador_sims.xlsx"
+                    destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx"
                 )
                 self.excel.guardar(
                     self.contador, "Min", "error",
-                    destino="src\\legalizador_sims\\legalizador_sims.xlsx"
+                    destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx"
                 )
                 raise Exception(f"Error en validación web: {mensaje_error}")
             else:
                 raise Exception("No se detectó mensaje de validación ni error visible")
         
         # --- Si todo está bien, continuar ---
-        self.legalizador_sims.click("btnNext", "id")
+        self.legalizador_kit_contado.click("btnNext", "id")
 
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en Validación")
         
     def demographic(self):
-        try:
-            self.position(self.legalizador_sims.retornarHtml(),'Demographic', True)
-        except Exception as e:
-            self.log_error("Demographic", e)
-            return
+        # try:
+        #     self.position(self.legalizador_kit_contado.retornarHtml(),'Demographic', True)
+        # except Exception as e:
+        #     self.log_error("Demographic", e)
+        #     return
         
         # --- Saludo ---
+        time.sleep(2)
         self.selectDropDown("PersonalInfo_GreetingId", "Sr")
 
         # --- Nombre ---
-        nombre_actual = self.legalizador_sims.value("PersonalInfo_Name", "id")
+        nombre_actual = self.legalizador_kit_contado.value("PersonalInfo_Name", "id")
         if not nombre_actual.strip():
-            self.legalizador_sims.write("PersonalInfo_Name", self.nombre, "id")
+            self.legalizador_kit_contado.write("PersonalInfo_Name", self.nombre, "id")
 
         # --- Apellido ---
-        apellido_actual = self.legalizador_sims.value("PersonalInfo_LastName", "id")
-        if not apellido_actual.strip():
-            self.legalizador_sims.write("PersonalInfo_LastName", self.apellido, "id")
+        if self.tipo_documento.lower() == "cedula" or self.tipo_documento.lower() == "cédula":
+            apellido_actual = self.legalizador_kit_contado.value("PersonalInfo_LastName", "id")
+            if not apellido_actual.strip():
+                self.legalizador_kit_contado.write("PersonalInfo_LastName", self.apellido, "id")
 
         # --- Correo ---
-        correo_actual = self.legalizador_sims.value("PersonalInfo_Email", "id")
+        correo_actual = self.legalizador_kit_contado.value("PersonalInfo_Email", "id")
         if not correo_actual or not correo_actual.strip():
-            self.legalizador_sims.write("PersonalInfo_Email", 'master.33@gmail.com', "id")
+            self.legalizador_kit_contado.write("PersonalInfo_Email", 'master.33@gmail.com', "id")
 
         # --- Teléfono ---
-        telefono_actual = self.legalizador_sims.value("PhoneId", "id")
+        telefono_actual = self.legalizador_kit_contado.value("PhoneId", "id")
         if not telefono_actual or not telefono_actual.strip():
             # Tipo de teléfono
-            self.selectDropDown("PhoneClass", "fijo")
+            self.selectDropDownNormal("PhoneClass", "Fijo")
 
             time.sleep(2)
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando carga después de seleccionar tipo de teléfono")
 
             # Indicativo
-            self.selectDropDown("Prefix", "7")
+            self.selectDropDownNormal("Prefix", "7")
 
             # Número
-            self.legalizador_sims.write("PhoneNumber", "8883136", "id")
+            self.legalizador_kit_contado.write("PhoneNumber", "8883136", "id")
 
         # --- Tipo de documento ---
-        self.poliedro.tipoDoc("Cedula", '//*[@id="select2-PersonalInfo_DocumentTypeId-container"]')
+        self.poliedro.tipoDoc(self.tipo_documento, '//*[@id="select2-PersonalInfo_DocumentTypeId-container"]')
 
         # --- Documento ---
-        id_actual = self.legalizador_sims.value("PersonalInfo_Document", "id")
+        id_actual = self.legalizador_kit_contado.value("PersonalInfo_Document", "id")
         if not id_actual.strip() or id_actual.strip() == "0":
-            campo = self.legalizador_sims.browser.find_element_by_id("PersonalInfo_Document")
+            campo = self.legalizador_kit_contado.browser.find_element_by_id("PersonalInfo_Document")
             campo.clear()
-            self.legalizador_sims.write("PersonalInfo_Document", self.idCliente, "id")
+            self.legalizador_kit_contado.write("PersonalInfo_Document", self.id_cliente, "id")
 
         # --- Dirección ---
-        direccion_actual = self.legalizador_sims.value("AddressId", "id")
+        direccion_actual = self.legalizador_kit_contado.value("AddressId", "id")
         if not direccion_actual or not direccion_actual.strip():
-            self.selectDropDown("AddressClassId", "Otras")
+            self.selectDropDownNormal("AddressClassId", "Otras")
 
             time.sleep(2)
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando carga después de seleccionar tipo de dirección")
 
-            self.legalizador_sims.write("Address", "central", "id")
-            self.selectDropDown("Department", "ANTIOQUIA")
+            self.legalizador_kit_contado.write("Address", "central", "id")
+            self.selectDropDownNormal("Department", "ANTIOQUIA")
             time.sleep(1)
-            self.selectDropDown("City", "MEDELLIN")
-            self.legalizador_sims.write("Town", "Central", "id")
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de elegir departamento")
+            self.selectDropDownNormal("City", "MEDELLIN")
+            self.legalizador_kit_contado.write("Town", "Central", "id")
         
         time.sleep(2)
         # --- Continuar a la siguiente etapa ---
-        self.legalizador_sims.click("btnNext", "id")
+        self.legalizador_kit_contado.click("btnNext", "id")
 
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en Demographic")
         
     def product_service(self):
-        self.selectDropDown("ProductInfo_ProductModelId", "Al")
+        time.sleep(2)
+        fecha_actual = self.legalizador_kit_contado.value("EquipmentPlanDataViewModel_SaleDate", "id")
+        if not fecha_actual.strip():
+            fecha = datetime.now().strftime("%d/%m/%Y")
+            self.legalizador_kit_contado.write("EquipmentPlanDataViewModel_SaleDate", fecha, "id")
+        
+        self.selectDropDown("EquipmentPlanDataViewModel_Plan", "Kit Prepago")
+        
+        time.sleep(2)
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de validación")
+        
+        checkbox = self.legalizador_kit_contado.browser.find_element_by_xpath('//*[@id="2"]')
+        if not checkbox.is_selected():
+            self.legalizador_kit_contado.browser.execute_script("arguments[0].click();", checkbox)
+
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de hacer clic en checkbox")
+            
+            self.legalizador_kit_contado.click('//*[@id="MsgModal"]/div/button[2]')
+        
+        self.legalizador_kit_contado.click("btnNext", "id")
+
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de hacer clic en Siguiente en ProductService")
+
+    def payment(self):
+        time.sleep(2)
+        self.selectDropDown("PaymentTypeDdl", "Efectivo")
 
         time.sleep(2)
-        self.legalizador_sims.click("btnNext", "id")
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de escoger tipo de pago")
+        
+        monto = self.legalizador_kit_contado.value("TotalValueToPay", "id")
+        campo_monto = self.legalizador_kit_contado.browser.find_element_by_id("PaymentDetails_Amount")
+        campo_monto.clear()
+        self.legalizador_kit_contado.write("PaymentDetails_Amount", monto, "id")
+
+        self.legalizador_kit_contado.click('//*[@id="CreateNewPayment"]')
+
+        time.sleep(2)
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de agregar forma de pago")
+        
+        self.legalizador_kit_contado.click("btnNext", "id")
+
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de hacer clic en Siguiente en Payment")
+    
+    def activation(self):
+        time.sleep(2)
+        self.legalizador_kit_contado.click("btnNext", "id")
 
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en ProductService")
         
-    def activacion(self):
-        self.legalizador_sims.click("btnNext", "id")
-
-        if not self.wait_for_loading():
-            raise Exception("Timeout esperando carga después de hacer clic en Siguiente en ProductService")
-        
-        message_element = self.legalizador_sims.readShort2('messageFormItem', 'class')
-        self.excel.guardar(self.contador, 'Mensaje', message_element, destino="src\\legalizador_sims\\legalizador_sims.xlsx")
-        self.excel.guardar(self.contador, 'Min', 'Procesado', destino="src\\legalizador_sims\\legalizador_sims.xlsx")
+        message_element = self.legalizador_kit_contado.readShort2('messageFormItem', 'class')
+        self.excel.guardar(self.contador, 'Mensaje', message_element, destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx")
+        self.excel.guardar(self.contador, 'Min', 'Procesado', destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx")
         self.ventana_informacion.write(f"{self.iccid} {message_element}")
         
         time.sleep(2)
         if not self.wait_for_loading():    
             raise Exception("Timeout esperando carga después de validación")
         
-        self.legalizador_sims.click("btnPrev", "id")
+        self.legalizador_kit_contado.click("btnPrev", "id")
 
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en 'Iniciar nueva activación'")
+        
+        self.selectDropDown("productShortcut", "270")
 
     def selectDropDown(self, id, value):
         """
         Selecciona un valor de un dropdown usando el ID del elemento y el valor a seleccionar.
         """
-        self.legalizador_sims.click(f'select2-{id}-container', 'id')
-        self.legalizador_sims.write(f'/html/body/span/span/span[1]/input', value, 'xpath')
-        self.legalizador_sims.write(f'/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+        self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+        self.legalizador_kit_contado.write(f'/html/body/span/span/span[1]/input', value, 'xpath')
+        self.legalizador_kit_contado.write(f'/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
 
-
-    def position(self, html, paso=None, wait=False):
-        self.scrap = scraping.Scraping(html)
-        soup = self.scrap.soup
-        count = 0
-        top = 100 if paso != 'Validation' else 500
-
-        while wait:
-            if paso == 'CaptureData':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloCliente"),
-                    ("h3", "iconoTituloInfoVenta"),
-                    ("h3", "iconoTituloEquipo"),
-                ]
-                if self.validate_position(elementos_requeridos, soup):
-                    return 1
-                else:
-                    self.scrap = scraping.Scraping(self.legalizador_sims.retornarHtml())
-                    soup = self.scrap.soup
-                    count += 1
-                    time.sleep(0.1)
-                    if count == top:
-                        raise('restar controlado')
-            elif paso == 'Validation':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloDatosDistribuidor"),
-                ]
-                if self.validate_position(elementos_requeridos, soup, 'class'):
-                    return 9
-                else:
-                    self.scrap = scraping.Scraping(self.legalizador_sims.retornarHtml())
-                    soup = self.scrap.soup
-                    count += 1
-                    time.sleep(0.1)
-                    if count == top:
-                        raise('restar controlado')
-            elif paso == 'Demographic':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloInfoPersonal"),
-                ]
-                if self.validate_position(elementos_requeridos, soup, 'class'):
-                    return 9
-                else:
-                    self.scrap = scraping.Scraping(self.legalizador_sims.retornarHtml())
-                    soup = self.scrap.soup
-                    count += 1
-                    time.sleep(0.1)
-                    if count == top:
-                        raise('restar controlado')
-            elif paso == 'ProductService':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloDatosEquipoyPlan"),
-                ]
-                if self.validate_position(elementos_requeridos, soup, 'class'):
-                    return 9
-                else:
-                    self.scrap = scraping.Scraping(self.legalizador_sims.retornarHtml())
-                    soup = self.scrap.soup
-                    count += 1
-                    time.sleep(0.1)
-                    if count == top:
-                        raise('restar controlado')
-            elif paso == 'Activation':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloActivacionesCliente"),
-                    ("h3", "iconoTituloActivacionesServicios"),
-                    ("h3", "iconoTituloActivacionesProducto"),
-                ]
-                if self.validate_position(elementos_requeridos, soup, 'class'):
-                    return 9
-                else:
-                    self.scrap = scraping.Scraping(self.legalizador_sims.retornarHtml())
-                    soup = self.scrap.soup
-                    count += 1
-                    time.sleep(0.1)
-                    if count == top:
-                        raise('restar controlado')
-            elif paso == 'restart':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloProducto"),
-                    ("span", "select2-selection__rendered"),
-                ]
-                if self.validate_position(elementos_requeridos, soup, 'class'):
-                    return 0
-                else:
-                    self.scrap = scraping.Scraping(self.legalizador_sims.retornarHtml())
-                    soup = self.scrap.soup
-                    count += 1
-                    time.sleep(0.1)
-                    if count == top:
-                        raise('restar controlado')
-                    
-    def validate_position(self, elementos_requeridos, soup, type='id'):
+    def selectDropDownNormal(self, id, value):
         """
-        Valida si los elementos están presentes Y visibles en la página
+        Selecciona un valor de un <select> HTML clásico usando el ID del elemento y el texto visible.
+        Coincidencia exacta, insensible a mayúsculas/minúsculas y tildes.
         """
-        for tag, id_value in elementos_requeridos:
-            if type == 'id':
-                element = soup.find(tag, id=id_value)
-            elif type == 'class':
-                element = soup.find(tag, class_=id_value)
-            else:
-                return False
-            
-            if not element:
-                return False
-                
-        return True
+        try:
+            select_element = self.legalizador_kit_contado.browser.find_element_by_id(id)
+            select = Select(select_element)
 
+            value_normalized = str(value).strip().lower()
+            matched = False
+
+            # Buscar coincidencia exacta por texto visible (sin mayúsculas)
+            for option in select.options:
+                if option.text.strip().lower() == value_normalized:
+                    option.click()
+                    matched = True
+                    break
+
+            # Si no hay coincidencia por texto, intentar por value
+            if not matched:
+                select.select_by_value(value)
+
+        except Exception as e:
+            print(f"❌ Error en selectDropDownNormal({id}): {e}")
+        
     def inicializar_login_service(self):
         """
         Inicializa el servicio de login cuando el navegador esté listo
         """
-        if self.legalizador_sims and not self.poliedro_login_service:
+        if self.legalizador_kit_contado and not self.poliedro_login_service:
             self.poliedro_login_service = poliedro_login_service.LoginService(
-                self.legalizador_sims, 
+                self.legalizador_kit_contado, 
                 self.ventana_informacion
             )
             # CONFIGURAR REINTENTOS
@@ -597,7 +570,7 @@ class Legalizador_sims:
             f.write(traceback.format_exc())
         self.ventana_informacion.write(f"Error en {contexto}: {str(e)}")
 
-    def wait_for_loading(self, timeout=120, sleep_interval=1, legalizador_sims=True):
+    def wait_for_loading(self, timeout=120, sleep_interval=1, legalizador_kit_contado=True):
         """
         Método reutilizable para esperar que termine la carga.
         
@@ -613,9 +586,9 @@ class Legalizador_sims:
         start_time = time.time()
         while time.time() - start_time < timeout:
             try:
-                if legalizador_sims:
+                if legalizador_kit_contado:
                     try:
-                        loading_style = self.legalizador_sims.style('loading', 'id')
+                        loading_style = self.legalizador_kit_contado.style('loading', 'id')
                     except Exception:
                         loading_style = self.poliedro.style('loading', 'id')
                 else:
@@ -633,6 +606,4 @@ class Legalizador_sims:
                 
             time.sleep(sleep_interval)
         
-        return False  # Timeout
-    
-    
+        return False

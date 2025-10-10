@@ -39972,3 +39972,1368 @@ Traceback (most recent call last):
   File "C:\Users\Camilo Jaramillo\source\repos\Team\Codigo Version 3.11\AutomatizadorSoftware2\navegacion\legalizador.py", line 709, in restart_new
     raise Exception('Error en transacción - continuando con siguiente')
 Exception: Error en transacción - continuando con siguiente
+
+[login] Error: 'Legalizador_sims' object has no attribute 'legalizador'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 561, in login
+    self.inicializar_login_service()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 535, in inicializar_login_service
+    if self.legalizador and not self.poliedro_login_service:
+       ^^^^^^^^^^^^^^^^
+AttributeError: 'Legalizador_sims' object has no attribute 'legalizador'
+
+[bloque principal] Error: 'iccid'
+Traceback (most recent call last):
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3652, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 147, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'iccid'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 194, in ejecuccion
+    self.excel.leer_excel('src\\legalizador_sims\\legalizador_sims.xlsx', 'iccid')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\excel.py", line 10, in leer_excel
+    self.cantidad = len(self.excel[tituloColumna])
+                        ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\frame.py", line 3761, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3654, in get_loc
+    raise KeyError(key) from err
+KeyError: 'iccid'
+
+[bloque principal] Error: [Errno 13] Permission denied: 'src\\legalizador\\legalizador.xlsx'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 251, in establecer_datos
+    self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
+                                                                                                           ^^^^^^^^
+AttributeError: 'Legalizador_sims' object has no attribute 'min'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 216, in ejecuccion
+    self.excel.guardar(self.contador, 'Min', 'error')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\excel.py", line 22, in guardar
+    self.excel.to_excel(destino, index=False)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\generic.py", line 2252, in to_excel
+    formatter.write(
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\formats\excel.py", line 934, in write
+    writer = ExcelWriter(  # type: ignore[abstract]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 60, in __init__
+    super().__init__(
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1219, in __init__
+    self._handles = get_handle(
+                    ^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\common.py", line 868, in get_handle
+    handle = open(handle, ioargs.mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'src\\legalizador\\legalizador.xlsx'
+
+[fila 1] Error: 'Legalizador_sims' object has no attribute 'min'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 251, in establecer_datos
+    self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
+                                                                                                           ^^^^^^^^
+AttributeError: 'Legalizador_sims' object has no attribute 'min'
+
+[fila 2] Error: 'Legalizador_sims' object has no attribute 'min'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 251, in establecer_datos
+    self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
+                                                                                                           ^^^^^^^^
+AttributeError: 'Legalizador_sims' object has no attribute 'min'
+
+[fila 3] Error: 'Legalizador_sims' object has no attribute 'min'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 251, in establecer_datos
+    self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
+                                                                                                           ^^^^^^^^
+AttributeError: 'Legalizador_sims' object has no attribute 'min'
+
+[fila 4] Error: 'Legalizador_sims' object has no attribute 'min'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 251, in establecer_datos
+    self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
+                                                                                                           ^^^^^^^^
+AttributeError: 'Legalizador_sims' object has no attribute 'min'
+
+[fila 1] Error: 'iccid'
+Traceback (most recent call last):
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3652, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 147, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'iccid'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 253, in establecer_datos
+    self.iccid = str(self.excel.excel['iccid'][self.contador])[-12:]
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\frame.py", line 3761, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3654, in get_loc
+    raise KeyError(key) from err
+KeyError: 'iccid'
+
+[fila 2] Error: 'iccid'
+Traceback (most recent call last):
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3652, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 147, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'iccid'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 253, in establecer_datos
+    self.iccid = str(self.excel.excel['iccid'][self.contador])[-12:]
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\frame.py", line 3761, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3654, in get_loc
+    raise KeyError(key) from err
+KeyError: 'iccid'
+
+[fila 3] Error: 'iccid'
+Traceback (most recent call last):
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3652, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 147, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'iccid'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 253, in establecer_datos
+    self.iccid = str(self.excel.excel['iccid'][self.contador])[-12:]
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\frame.py", line 3761, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3654, in get_loc
+    raise KeyError(key) from err
+KeyError: 'iccid'
+
+[fila 4] Error: 'iccid'
+Traceback (most recent call last):
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3652, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 147, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'iccid'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.establecer_datos()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 253, in establecer_datos
+    self.iccid = str(self.excel.excel['iccid'][self.contador])[-12:]
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\frame.py", line 3761, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3654, in get_loc
+    raise KeyError(key) from err
+KeyError: 'iccid'
+
+[Validation] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 289, in validation
+    validate = self.legalizador_sims.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 351, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[fila 1] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 289, in validation
+    validate = self.legalizador_sims.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 351, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 201, in ejecuccion
+    if not self.ejecutar_etapa("Validation", self.validation): continue
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 243, in ejecutar_etapa
+    self.poliedro.seleccionAcceso('376', start=True)
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\poliedro.py", line 26, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 290, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 262, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", "Cedula")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 417, in selectDropDown
+    self.legalizador_sims.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[fila 2] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="containerNavBar"]/ul/li[12]/a"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 262, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", "Cedula")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 417, in selectDropDown
+    self.legalizador_sims.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    if not self.ejecutar_etapa("Capture Data", self.capture_data): continue
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 241, in ejecutar_etapa
+    self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 290, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="containerNavBar"]/ul/li[12]/a"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 290, in validation
+    validate = self.legalizador_sims.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 351, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 290, in validation
+    validate = self.legalizador_sims.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 351, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 290, in validation
+    validate = self.legalizador_sims.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 351, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 290, in validation
+    validate = self.legalizador_sims.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 351, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; Validación Legalización WelcomeBack = Falso
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 321, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; Validación Legalización WelcomeBack = Falso
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; Validación Legalización WelcomeBack = Falso
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 321, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; Validación Legalización WelcomeBack = Falso
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; Validación Legalización WelcomeBack = Falso
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 233, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 321, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; Validación Legalización WelcomeBack = Falso
+
+[CaptureData] Error: 'LegalizadorKitContado' object has no attribute 'position'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 187, in ejecuccion
+    self.position(self.legalizador_kit_contado.retornarHtml(),'CaptureData', True)
+    ^^^^^^^^^^^^^
+AttributeError: 'LegalizadorKitContado' object has no attribute 'position'
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 323, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Capture Data] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 274, in capture_data
+    self.legalizador_kit_contado.write("DetailProduct_LastName",self.apellido,"id")
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 455, in write
+    find.send_keys(keys)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Demographic] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 353, in demographic
+    self.legalizador_kit_contado.write("PersonalInfo_LastName", self.apellido, "id")
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 455, in write
+    find.send_keys(keys)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: [Errno 13] Permission denied: 'src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 317, in validation
+    self.excel.guardar(
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\excel.py", line 22, in guardar
+    self.excel.to_excel(destino, index=False)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\generic.py", line 2252, in to_excel
+    formatter.write(
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\formats\excel.py", line 934, in write
+    writer = ExcelWriter(  # type: ignore[abstract]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 60, in __init__
+    super().__init__(
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1219, in __init__
+    self._handles = get_handle(
+                    ^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\io\common.py", line 868, in get_handle
+    handle = open(handle, ioargs.mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx'
+
+[Payment] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PaymentTypeDdl-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 427, in payment
+    self.selectDropDown("PaymentTypeDdl", "Efectivo")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 471, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PaymentTypeDdl-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[fila 3] Error: 'LegalizadorKitContado' object has no attribute 'activation'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 206, in ejecuccion
+    if not self.ejecutar_etapa("Activation", self.activation): continue
+                                             ^^^^^^^^^^^^^^^
+AttributeError: 'LegalizadorKitContado' object has no attribute 'activation'
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 272, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 471, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Payment] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PaymentTypeDdl-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 427, in payment
+    self.selectDropDown("PaymentTypeDdl", "Efectivo")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 471, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PaymentTypeDdl-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Product/Service] Error: Message: element click intercepted: Element <input data-bind="enable: $root.InformativeErrors().length &lt;= 0" type="button" class="btn btn-siguiente" id="btnNext" value="Continuar "> is not clickable at point (1249, 724). Other element would receive the click: <div id="messages" style="display: block;">...</div>
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 425, in product_service
+    self.legalizador_kit_contado.click("btnNext", "id")
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 295, in click
+    find.click()
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted: Element <input data-bind="enable: $root.InformativeErrors().length &lt;= 0" type="button" class="btn btn-siguiente" id="btnNext" value="Continuar "> is not clickable at point (1249, 724). Other element would receive the click: <div id="messages" style="display: block;">...</div>
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[fila 2] Error: Message: element click intercepted: Element <a href="/Dispatcher/MainMenu">...</a> is not clickable at point (192, 407). Other element would receive the click: <div id="messages" style="display: block;">...</div>
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 425, in product_service
+    self.legalizador_kit_contado.click("btnNext", "id")
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 295, in click
+    find.click()
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted: Element <input data-bind="enable: $root.InformativeErrors().length &lt;= 0" type="button" class="btn btn-siguiente" id="btnNext" value="Continuar "> is not clickable at point (1249, 724). Other element would receive the click: <div id="messages" style="display: block;">...</div>
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 204, in ejecuccion
+    if not self.ejecutar_etapa("Product/Service", self.product_service): continue
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 243, in ejecutar_etapa
+    self.legalizador_kit_contado.click('//*[@id="containerNavBar"]/ul/li[12]/a')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 295, in click
+    find.click()
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted: Element <a href="/Dispatcher/MainMenu">...</a> is not clickable at point (192, 407). Other element would receive the click: <div id="messages" style="display: block;">...</div>
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 272, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 475, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI - Identificación Internacional del Equipo Móvil. = p
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI - Identificación Internacional del Equipo Móvil. = p
+
+[Demographic] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 343, in demographic
+    self.selectDropDown("PersonalInfo_GreetingId", "Sr")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 482, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[login] Error: 'NoneType' object has no attribute 'configurar_credenciales'
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 519, in login
+    self.poliedro_login_service.configurar_credenciales(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'configurar_credenciales'
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Demographic] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 343, in demographic
+    self.selectDropDown("PersonalInfo_GreetingId", "Sr")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 482, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 272, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 482, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-DetailProduct_DocumentTypeId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI - Identificación Internacional del Equipo Móvil. = p
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI - Identificación Internacional del Equipo Móvil. = p
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 325, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Demographic] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PhoneClass-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 365, in demographic
+    self.selectDropDown("PhoneClass", "fijo")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 484, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PhoneClass-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Demographic] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PhoneClass-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 365, in demographic
+    self.selectDropDown("PhoneClass", "Fijo")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 484, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PhoneClass-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Demographic] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 235, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 343, in demographic
+    self.selectDropDown("PersonalInfo_GreetingId", "Sr")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 484, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: Todos los campos obligatorios deben ser diligenciados
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 327, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: Todos los campos obligatorios deben ser diligenciados
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentNumber"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 274, in capture_data
+    self.legalizador_kit_contado.write("DetailProduct_DocumentNumber",self.id_cliente,"id")
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 451, in write
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentNumber"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentTypeId"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 237, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 274, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 503, in selectDropDown
+    el = driver.find_element(By.ID, id)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentTypeId"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentTypeId"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 237, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 274, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 503, in selectDropDown
+    el = driver.find_element(By.ID, id)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentTypeId"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Capture Data] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentTypeId"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 237, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 274, in capture_data
+    self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 503, in selectDropDown
+    el = driver.find_element(By.ID, id)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="DetailProduct_DocumentTypeId"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 327, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Demographic] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 345, in demographic
+    self.selectDropDown("PersonalInfo_GreetingId", "Sr")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 486, in selectDropDown
+    self.legalizador_kit_contado.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-PersonalInfo_GreetingId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI/ICCID ya existente en una activación = Falso
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 327, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI/ICCID ya existente en una activación = Falso
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 327, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+
+[Product/Service] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="EquipmentPlanDataViewModel_SaleDate"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 412, in product_service
+    fecha_actual = self.legalizador_kit_contado.value("EquipmentPlanDataViewModel_SaleDate", "id")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 372, in value
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="EquipmentPlanDataViewModel_SaleDate"]"}
+  (Session info: MicrosoftEdge=141.0.3537.57)
+
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI - Identificación Internacional del Equipo Móvil. = p
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 327, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; IMEI - Identificación Internacional del Equipo Móvil. = p
+
+[Validation] Error: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 236, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_kit_contado.py", line 327, in validation
+    raise Exception(f"Error en validación web: {mensaje_error}")
+Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; ICC_ID - Identificación Tarjeta de Circuito Integrada. = v

@@ -451,7 +451,7 @@ class Web_Controller:
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
         else: find =None
-        if find is not None:
+        if find is not None and keys is not None:
             find.send_keys(keys)
 
     @validate

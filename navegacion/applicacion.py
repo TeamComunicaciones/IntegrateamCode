@@ -50,6 +50,8 @@ class App:
         self.button_equipos.configure(state="disabled")
         self.button_preactivador.configure(state="disabled")
         self.button_legalizador.configure(state="disabled")
+        self.button_legalizador_sims.configure(state="normal")
+        self.button_legalizador_kit_contado.configure(state="normal")
         self.button_portas.configure(state="disabled")
         self.estadopanel = False
 
@@ -59,6 +61,8 @@ class App:
         self.button_equipos.configure(state="normal")
         self.button_preactivador.configure(state="normal")
         self.button_legalizador.configure(state="normal")
+        self.button_legalizador_sims.configure(state="normal")
+        self.button_legalizador_kit_contado.configure(state="normal")
         self.button_portas.configure(state="normal")
         self.estadopanel = True
         
@@ -84,8 +88,9 @@ class App:
         self.button_portas = self.button.create_button(self.menu_frame, "PORTAS", 0.10, 0.49, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.portas_frame))
         self.button_seriales = self.button.create_button(self.menu_frame, "SERIALES", 0.10, 0.56, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.consulta_seriales_frame))
         self.button_legalizador_sims = self.button.create_button(self.menu_frame, "LEG. SIMCARD", 0.10, 0.63, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.legalizador_sims_frame))
-        self.button_recargas = self.button.create_button(self.menu_frame, "RECARGAS", 0.10, 0.70, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.recargas_frame))
-        self.button_volantes = self.button.create_button(self.menu_frame, "VOLANTES", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.volantes_frame))
+        self.button_legalizador_kit_contado = self.button.create_button(self.menu_frame, "LEG. KIT CONTADO", 0.10, 0.70, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.legalizador_kit_contado_frame))
+        self.button_recargas = self.button.create_button(self.menu_frame, "RECARGAS", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.recargas_frame))
+        self.button_volantes = self.button.create_button(self.menu_frame, "VOLANTES", 0.10, 0.84, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.volantes_frame))
         # self.button_consulta_seriales = self.button.create_button(self.menu_frame, "CONS SERIALES", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.consulta_seriales2_frame))
         # self.button_comercial = self.button.create_button(self.menu_frame, "COMERCIAL", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.comercial_frame))
         self.canvas = Canvas(self.menu_frame, bg=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), bd=0.1, highlightbackground = getattr(self.colors,f'separador_{str(ctk.get_appearance_mode())}'))
@@ -105,6 +110,7 @@ class App:
         self.button_portas.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         self.button_seriales.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         self.button_legalizador_sims.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
+        self.button_legalizador_kit_contado.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         self.button_recargas.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         self.button_volantes.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
         # self.button_consulta_seriales.configure(fg_color=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), text_color=getattr(self.colors,f'text_{str(ctk.get_appearance_mode())}'))
@@ -164,6 +170,11 @@ class App:
         legalizador_simcard.Legalizador_sims(self.interfas_frame, self.on_of_panel)
         self.screen = 'consulta_seriales_frame'
 
+    def legalizador_kit_contado_frame(self):
+        self.button_legalizador_kit_contado.configure(fg_color=self.colors.team, text_color='white')
+        legalizador_kit_contado.LegalizadorKitContado(self.interfas_frame, self.on_of_panel)
+        self.screen = 'consulta_seriales_frame'
+
     def recargas_frame(self):
         self.button_recargas.configure(fg_color=self.colors.team, text_color='white')
         # recargas.Recargas(self.interfas_frame, self.on_of_panel)
@@ -221,5 +232,3 @@ class App:
         boton2 = self.button.create_button(subventana, "Continuar", 0, 0, 0, 0, func2, pack=True, teamColor=True)
         ctk.CTkLabel(subventana, text='').pack()
         return subventana
-        
-

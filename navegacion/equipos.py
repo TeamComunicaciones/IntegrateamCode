@@ -101,6 +101,24 @@ class Equipos:
         self.checkbox_modo_captura_datos = checkbox.Checkbox()
         self.modo_captura_datos = tk.BooleanVar()
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
+    
+    def abrir_pagina(self):
+        if not self.mysms.get() and not self.google_messages.get():
+            self.ventana_informacion.write('Seleccione un método para recibir el OTP')
+            return
+
+        self.ventana_informacion.write('Navegador abierto')
+        class Abrir_pagina1(web_controller.Web_Controller):pass
+        self.equipos = Abrir_pagina1(int(self.time.get()))
+        self.equipos.openEdge()
+        time.sleep(3)
+        self.equipos.selectPage(self.link)
+
+        time.sleep(2)
+        if self.mysms.get():
+            self.equipos.script(f"window.open('{self.link_mysms}', '_blank');")
+        elif self.google_messages.get():
+            self.equipos.script(f"window.open('{self.link_google_messages}', '_blank');")
 
     def guardar_tiempo_espera(self):
         self.valor = self.spinbox_tiempo_espera.get_value()
@@ -128,24 +146,6 @@ class Equipos:
     def cambioCiclos(self):
         self.repeticiones = self.repeticionesEdit.get()
         self.ventana_informacion.write(f'Numero de repeticiones configurado en {self.repeticiones}')
-    
-    def abrir_pagina(self):
-        if not self.mysms.get() and not self.google_messages.get():
-            self.ventana_informacion.write('Seleccione un método para recibir el OTP')
-            return
-
-        self.ventana_informacion.write('Navegador abierto')
-        class Abrir_pagina1(web_controller.Web_Controller):pass
-        self.equipos = Abrir_pagina1(int(self.time.get()))
-        self.equipos.openEdge()
-        time.sleep(3)
-        self.equipos.selectPage(self.link)
-
-        time.sleep(2)
-        if self.mysms.get():
-            self.equipos.script(f"window.open('{self.link_mysms}', '_blank');")
-        elif self.google_messages.get():
-            self.equipos.script(f"window.open('{self.link_google_messages}', '_blank');")
 
     def cambioPoliedroUser(self):
         self.poliedro_user = self.poliedro_user_edit.get()

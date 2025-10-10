@@ -395,12 +395,14 @@ class Preactivador:
     def captura_datos_web(self):
         #Tipo documento
         self.poliedro.tipoDoc(self.tipoDoc_aux,'//*[@id="select2-DetailProduct_DocumentTypeId-container"]')
+        time.sleep(2)
 
         #Documento
         self.preactivador.write("DetailProduct_DocumentNumber",self.documento,"id")
 
         #Apellido
-        self.preactivador.write("DetailProduct_LastName",self.apellido,"id")
+        if self.documentType == 1:  # Solo si es cédula
+            self.preactivador.write("DetailProduct_LastName",self.apellido,"id")
 
         #Opción serial
         self.poliedro.tipoDoc('sin','//*[@id="select2-DetailProduct_OptionImei-container"]')
@@ -484,6 +486,7 @@ class Preactivador:
 
 
     def datos_demograficos_web(self):
+        time.sleep(2)
         #Saludo
         self.poliedro.tipoDoc('Sr', '//*[@id="select2-PersonalInfo_GreetingId-container"]')
 
@@ -493,9 +496,10 @@ class Preactivador:
             self.preactivador.write("PersonalInfo_Name", self.nombre, 'id')
 
         #Apellidos
-        apellido_actual = self.preactivador.value("PersonalInfo_LastName",'id')
-        if not apellido_actual.strip():
-            self.preactivador.write("PersonalInfo_LastName", self.apellido, 'id')
+        if self.documentType == 1:  # Solo si es cédula
+            apellido_actual = self.preactivador.value("PersonalInfo_LastName",'id')
+            if not apellido_actual.strip():
+                self.preactivador.write("PersonalInfo_LastName", self.apellido, 'id')
 
         #Correo
         correo_actual = self.preactivador.value("PersonalInfo_Email","id")
@@ -507,14 +511,14 @@ class Preactivador:
         if not telefono_actual or not telefono_actual.strip():
             
             #Tipo
-            self.selectDropDown("PhoneClass","fijo")
+            self.selectDropDownNormal("PhoneClass","fijo")
 
             time.sleep(2)
             if not self.wait_for_loading():
                     raise Exception("Timeout esperando carga después de validación")
 
             #Indicativo
-            self.selectDropDown("Prefix","604")
+            self.selectDropDownNormal("Prefix","604")
 
             #Numero
             self.preactivador.write("PhoneNumber","0313123","id")
@@ -532,15 +536,17 @@ class Preactivador:
         #Dirección
         direccion_actual = self.preactivador.value("AddressId","id")
         if not direccion_actual or not direccion_actual.strip():
-            self.selectDropDown("AddressClassId","Otras")
+            self.selectDropDownNormal("AddressClassId","Otras")
             time.sleep(2)
             if not self.wait_for_loading():
                     raise Exception("Timeout esperando carga después de validación")
             
             self.preactivador.write("Address", "central", "id")
-            self.selectDropDown("Department","ANTIOQUIA")
-            time.sleep(1)
-            self.selectDropDown("City","MEDELLIN")
+            self.selectDropDownNormal("Department","ANTIOQUIA")
+            time.sleep(2)
+            if not self.wait_for_loading():
+                    raise Exception("Timeout esperando carga después de validación")
+            self.selectDropDownNormal("City","MEDELLIN")
             self.preactivador.write("Town", "Central", "id")
 
         time.sleep(2)
@@ -667,35 +673,69 @@ class Preactivador:
         else:
             self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
             raise Exception("Error en la URL de Demographic/Index1")
-    
+        
     def selectDropDown(self, id, value):
         """
-        Selecciona un valor de un dropdown. Funciona tanto para Select2 como para <select> normales.
+        Selecciona un valor de un dropdown usando el ID del elemento y el valor a seleccionar.
+        """
+        self.preactivador.click(f'select2-{id}-container', 'id')
+        self.preactivador.write(f'/html/body/span/span/span[1]/input', value, 'xpath')
+        self.preactivador.write(f'/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+
+    def selectDropDownNormal(self, id, value):
+        """
+        Selecciona un valor de un <select> HTML clásico usando el ID del elemento y el texto visible.
+        Coincidencia exacta, insensible a mayúsculas/minúsculas y tildes.
         """
         try:
-            el = self.preactivador.browser.find_element_by_id(id)
-            classes = el.get_attribute("class") or ""
+            select_element = self.preactivador.browser.find_element_by_id(id)
+            select = Select(select_element)
 
-            # 🟢 Caso 1: Select2
-            if "select2-hidden-accessible" in classes:
-                self.preactivador.click(f"select2-{id}-container", "id")
-                self.preactivador.write("/html/body/span/span/span[1]/input", value, "xpath")
-                self.preactivador.write("/html/body/span/span/span[1]/input", Keys.ENTER, "xpath")
+            value_normalized = str(value).strip().lower()
+            matched = False
 
-            # 🟢 Caso 2: <select> HTML normal
-            else:
-                select = Select(el)
-                # intenta primero por texto visible (insensible a mayúsculas)
-                matched = False
-                for option in select.options:
-                    if option.text.strip().lower() == value.strip().lower():
-                        option.click()
-                        matched = True
-                        break
-                if not matched:
-                    select.select_by_value(value)
+            # Buscar coincidencia exacta por texto visible (sin mayúsculas)
+            for option in select.options:
+                if option.text.strip().lower() == value_normalized:
+                    option.click()
+                    matched = True
+                    break
+
+            # Si no hay coincidencia por texto, intentar por value
+            if not matched:
+                select.select_by_value(value)
+
         except Exception as e:
-            print(f"Error en selectDropDown({id}): {e}")
+            print(f"❌ Error en selectDropDownNormal({id}): {e}")
+    
+    # def selectDropDown(self, id, value):
+    #     """
+    #     Selecciona un valor de un dropdown. Funciona tanto para Select2 como para <select> normales.
+    #     """
+    #     try:
+    #         el = self.preactivador.browser.find_element_by_id(id)
+    #         classes = el.get_attribute("class") or ""
+
+    #         # 🟢 Caso 1: Select2
+    #         if "select2-hidden-accessible" in classes:
+    #             self.preactivador.click(f"select2-{id}-container", "id")
+    #             self.preactivador.write("/html/body/span/span/span[1]/input", value, "xpath")
+    #             self.preactivador.write("/html/body/span/span/span[1]/input", Keys.ENTER, "xpath")
+
+    #         # 🟢 Caso 2: <select> HTML normal
+    #         else:
+    #             select = Select(el)
+    #             # intenta primero por texto visible (insensible a mayúsculas)
+    #             matched = False
+    #             for option in select.options:
+    #                 if option.text.strip().lower() == value.strip().lower():
+    #                     option.click()
+    #                     matched = True
+    #                     break
+    #             if not matched:
+    #                 select.select_by_value(value)
+    #     except Exception as e:
+    #         print(f"Error en selectDropDown({id}): {e}")
     
     def captarError(self, path, mensaje=None):
         if mensaje == None:

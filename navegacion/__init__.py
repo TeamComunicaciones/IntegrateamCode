@@ -12,3 +12,4 @@ from .actualizar_precios import *
 from .recargas import *
 from .logo import *
 from .volantes import *
+from .legalizador_kit_contado import *
