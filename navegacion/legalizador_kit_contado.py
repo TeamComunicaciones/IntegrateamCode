@@ -157,6 +157,11 @@ class LegalizadorKitContado:
         hilo_legalizador_kit_contado.start()
 
     def ejecuccion(self):
+        # --- Validar que el navegador esté abierto ---
+        if not self.legalizador_kit_contado:
+            self.ventana_informacion.write("❌ Debe abrir la página antes de iniciar")
+            return
+        
         try:
             self.poliedro.definirBrowser(self.legalizador_kit_contado)
         except Exception as e:
@@ -168,7 +173,7 @@ class LegalizadorKitContado:
         if not self.login():
             self.ventana_informacion.write('Error en login, verifique sus credenciales')
             self.on_of(True)
-            self.alertas('se detiene el programa error en login')
+            self.ventana_informacion.write("Se detiene el programa por error")
             # Lanzar excepción para salir del bloque try y entrar al except final
             raise Exception("Error crítico: Fallo en login de Poliedro")
         time.sleep(2)
@@ -217,7 +222,7 @@ class LegalizadorKitContado:
                     except Exception as e:
                         self.excel.guardar(self.contador, 'Min', 'error', destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx")
                         self.excel.guardar(self.contador, 'Mensaje', str(e), destino="src\\legalizador_kit_contado\\legalizador_kit_contado.xlsx") # Corregir
-                        self.ventana_informacion.write(f"❌ Error en fila {self.contador+1}: {e}")
+                        self.ventana_informacion.write(f"❌ Error en fila {self.contador+1}")
                         self.log_error(f"fila {self.contador+1}", e)
                         continue
 
@@ -228,7 +233,7 @@ class LegalizadorKitContado:
             self.on_of(True)
         except Exception as e:
             self.log_error("bloque principal", e)
-            self.alertas('Se detiene el programa por error')
+            self.ventana_informacion.write("Se detiene el programa por error")
     
     def ejecutar_etapa(self, nombre, funcion):
         try:
@@ -238,7 +243,7 @@ class LegalizadorKitContado:
             return True
         except Exception as e:
             self.log_error(nombre, e)
-            self.ventana_informacion.write(f"❌ Error en {nombre}: {e}")
+            self.ventana_informacion.write(f"❌ Error en {nombre}")
 
             # Reiniciar proceso
             self.legalizador_kit_contado.click('//*[@id="containerNavBar"]/ul/li[12]/a')
@@ -253,6 +258,8 @@ class LegalizadorKitContado:
     def establecer_datos(self):
         # Obtener datos del Excel
         self.tipo_documento = str(self.excel.excel['Tipo identificacion cliente'][self.contador])
+        if self.tipo_documento.lower() == 'cc':
+            self.tipo_documento = 'Cedula'
         self.id_cliente = str(self.excel.excel['Identificacion cliente'][self.contador]).replace('.0','')
         self.imei = str(self.excel.excel['Imei'][self.contador])
         self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:]
@@ -273,7 +280,7 @@ class LegalizadorKitContado:
         self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
         self.legalizador_kit_contado.write("DetailProduct_DocumentNumber",self.id_cliente,"id")
 
-        if self.tipo_documento.lower() == "cedula" or self.tipo_documento.lower() == "cédula":
+        if self.tipo_documento.lower() in {"cedula", "cédula", "cc"}:
             self.legalizador_kit_contado.write("DetailProduct_LastName",self.apellido,"id")
 
         #Info Equipo
@@ -351,7 +358,7 @@ class LegalizadorKitContado:
             self.legalizador_kit_contado.write("PersonalInfo_Name", self.nombre, "id")
 
         # --- Apellido ---
-        if self.tipo_documento.lower() == "cedula" or self.tipo_documento.lower() == "cédula":
+        if self.tipo_documento.lower() in {"cedula", "cédula", "cc"}:
             apellido_actual = self.legalizador_kit_contado.value("PersonalInfo_LastName", "id")
             if not apellido_actual.strip():
                 self.legalizador_kit_contado.write("PersonalInfo_LastName", self.apellido, "id")

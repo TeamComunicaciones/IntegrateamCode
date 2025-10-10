@@ -12,6 +12,7 @@ import traceback
 from funcionalidad import poliedro_login_service
 from selenium.webdriver.common.keys import Keys
 import random
+from selenium.webdriver.support.ui import Select
 
 class Legalizador_sims:
 
@@ -155,6 +156,11 @@ class Legalizador_sims:
         hilo_legalizador_sims.start()
     
     def ejecuccion(self):
+        # --- Validar que el navegador esté abierto ---
+        if not self.legalizador_sims:
+            self.ventana_informacion.write("❌ Debe abrir la página antes de iniciar")
+            return
+        
         try:
             self.poliedro.definirBrowser(self.legalizador_sims)
         except Exception as e:
@@ -166,7 +172,7 @@ class Legalizador_sims:
         if not self.login():
             self.ventana_informacion.write('Error en login, verifique sus credenciales')
             self.on_of(True)
-            self.alertas('se detiene el programa error en login')
+            self.ventana_informacion.write("Se detiene el programa por error")
             # Lanzar excepción para salir del bloque try y entrar al except final
             raise Exception("Error crítico: Fallo en login de Poliedro")
         time.sleep(2)
@@ -182,11 +188,11 @@ class Legalizador_sims:
         if not self.wait_for_loading(legalizador_sims=False):
             raise Exception("Timeout esperando carga")
         
-        try:
-            self.position(self.legalizador_sims.retornarHtml(),'CaptureData', True)
-        except Exception as e:
-            self.log_error("CaptureData", e)
-            return
+        # try:
+        #     self.position(self.legalizador_sims.retornarHtml(),'CaptureData', True)
+        # except Exception as e:
+        #     self.log_error("CaptureData", e)
+        #     return
         
         try:
             for i in range(int(self.repeticiones)):
@@ -214,7 +220,7 @@ class Legalizador_sims:
                     except Exception as e:
                         self.excel.guardar(self.contador, 'Min', 'error', destino="src\\legalizador_sims\\legalizador_sims.xlsx")
                         self.excel.guardar(self.contador, 'Mensaje', str(e), destino="src\\legalizador_sims\\legalizador_sims.xlsx") # Corregir
-                        self.ventana_informacion.write(f"❌ Error en fila {self.contador+1}: {e}")
+                        self.ventana_informacion.write(f"❌ Error en fila {self.contador+1}")
                         self.log_error(f"fila {self.contador+1}", e)
                         continue
 
@@ -225,7 +231,7 @@ class Legalizador_sims:
             self.on_of(True)
         except Exception as e:
             self.log_error("bloque principal", e)
-            self.alertas('Se detiene el programa por error')
+            self.ventana_informacion.write("Se detiene el programa por error")
     
     def ejecutar_etapa(self, nombre, funcion):
         try:
@@ -235,7 +241,7 @@ class Legalizador_sims:
             return True
         except Exception as e:
             self.log_error(nombre, e)
-            self.ventana_informacion.write(f"❌ Error en {nombre}: {e}")
+            self.ventana_informacion.write(f"❌ Error en {nombre}")
 
             # Reiniciar proceso
             self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a')
@@ -254,15 +260,20 @@ class Legalizador_sims:
         self.id_vendedor = str(self.excel.excel['CcVendedor'][self.contador]).replace('.0','')
         self.nombre = str(self.excel.excel['nombre'][self.contador])
         self.apellido = str(self.excel.excel['apellido'][self.contador])
+        self.tipo_documento = str(self.excel.excel['tipoDoc'][self.contador])
+        if self.tipo_documento.lower() == 'cc':
+            self.tipo_documento = 'Cedula'
         self.id_cliente = str(self.excel.excel['CcCliente'][self.contador]).replace('.0','')
 
         self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
 
     def capture_data(self):
         #Info Cliente
-        self.selectDropDown("DetailProduct_DocumentTypeId", "Cedula")
+        self.selectDropDown("DetailProduct_DocumentTypeId", self.tipo_documento)
         self.legalizador_sims.write("DetailProduct_DocumentNumber",self.id_cliente,"id")
-        self.legalizador_sims.write("DetailProduct_LastName",self.apellido,"id")
+
+        if self.tipo_documento.lower() in {"cedula", "cédula", "cc"}:
+            self.legalizador_sims.write("DetailProduct_LastName",self.apellido,"id")
 
         #Info Equipo
         self.legalizador_sims.write("DetailProduct_Iccid",self.iccid,"id")
@@ -328,12 +339,7 @@ class Legalizador_sims:
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en Validación")
         
     def demographic(self):
-        try:
-            self.position(self.legalizador_sims.retornarHtml(),'Demographic', True)
-        except Exception as e:
-            self.log_error("Demographic", e)
-            return
-        
+        time.sleep(2)
         # --- Saludo ---
         self.selectDropDown("PersonalInfo_GreetingId", "Sr")
 
@@ -343,9 +349,10 @@ class Legalizador_sims:
             self.legalizador_sims.write("PersonalInfo_Name", self.nombre, "id")
 
         # --- Apellido ---
-        apellido_actual = self.legalizador_sims.value("PersonalInfo_LastName", "id")
-        if not apellido_actual.strip():
-            self.legalizador_sims.write("PersonalInfo_LastName", self.apellido, "id")
+        if self.tipo_documento.lower() in {"cedula", "cédula", "cc"}:
+            apellido_actual = self.legalizador_sims.value("PersonalInfo_LastName", "id")
+            if not apellido_actual.strip():
+                self.legalizador_sims.write("PersonalInfo_LastName", self.apellido, "id")
 
         # --- Correo ---
         correo_actual = self.legalizador_sims.value("PersonalInfo_Email", "id")
@@ -356,41 +363,43 @@ class Legalizador_sims:
         telefono_actual = self.legalizador_sims.value("PhoneId", "id")
         if not telefono_actual or not telefono_actual.strip():
             # Tipo de teléfono
-            self.selectDropDown("PhoneClass", "fijo")
+            self.selectDropDownNormal("PhoneClass", "fijo")
 
             time.sleep(2)
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando carga después de seleccionar tipo de teléfono")
 
             # Indicativo
-            self.selectDropDown("Prefix", "7")
+            self.selectDropDownNormal("Prefix", "7")
 
             # Número
             self.legalizador_sims.write("PhoneNumber", "8883136", "id")
 
         # --- Tipo de documento ---
-        self.poliedro.tipoDoc("Cedula", '//*[@id="select2-PersonalInfo_DocumentTypeId-container"]')
+        self.poliedro.tipoDoc(self.tipo_documento, '//*[@id="select2-PersonalInfo_DocumentTypeId-container"]')
 
         # --- Documento ---
         id_actual = self.legalizador_sims.value("PersonalInfo_Document", "id")
         if not id_actual.strip() or id_actual.strip() == "0":
             campo = self.legalizador_sims.browser.find_element_by_id("PersonalInfo_Document")
             campo.clear()
-            self.legalizador_sims.write("PersonalInfo_Document", self.idCliente, "id")
+            self.legalizador_sims.write("PersonalInfo_Document", self.id_cliente, "id")
 
         # --- Dirección ---
         direccion_actual = self.legalizador_sims.value("AddressId", "id")
         if not direccion_actual or not direccion_actual.strip():
-            self.selectDropDown("AddressClassId", "Otras")
+            self.selectDropDownNormal("AddressClassId", "Otras")
 
             time.sleep(2)
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando carga después de seleccionar tipo de dirección")
 
             self.legalizador_sims.write("Address", "central", "id")
-            self.selectDropDown("Department", "ANTIOQUIA")
-            time.sleep(1)
-            self.selectDropDown("City", "MEDELLIN")
+            self.selectDropDownNormal("Department", "ANTIOQUIA")
+            time.sleep(2)
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de seleccionar tipo de dirección")
+            self.selectDropDownNormal("City", "MEDELLIN")
             self.legalizador_sims.write("Town", "Central", "id")
         
         time.sleep(2)
@@ -401,6 +410,7 @@ class Legalizador_sims:
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en Demographic")
         
     def product_service(self):
+        time.sleep(2)
         self.selectDropDown("ProductInfo_ProductModelId", "Al")
 
         time.sleep(2)
@@ -409,7 +419,8 @@ class Legalizador_sims:
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en ProductService")
         
-    def activacion(self):
+    def activation(self):
+        time.sleep(2)
         self.legalizador_sims.click("btnNext", "id")
 
         if not self.wait_for_loading():
@@ -428,6 +439,8 @@ class Legalizador_sims:
 
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en 'Iniciar nueva activación'")
+        
+        self.selectDropDown("productShortcut", "270")
 
     def selectDropDown(self, id, value):
         """
@@ -437,6 +450,31 @@ class Legalizador_sims:
         self.legalizador_sims.write(f'/html/body/span/span/span[1]/input', value, 'xpath')
         self.legalizador_sims.write(f'/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
 
+    def selectDropDownNormal(self, id, value):
+        """
+        Selecciona un valor de un <select> HTML clásico usando el ID del elemento y el texto visible.
+        Coincidencia exacta, insensible a mayúsculas/minúsculas y tildes.
+        """
+        try:
+            select_element = self.legalizador_sims.browser.find_element_by_id(id)
+            select = Select(select_element)
+
+            value_normalized = str(value).strip().lower()
+            matched = False
+
+            # Buscar coincidencia exacta por texto visible (sin mayúsculas)
+            for option in select.options:
+                if option.text.strip().lower() == value_normalized:
+                    option.click()
+                    matched = True
+                    break
+
+            # Si no hay coincidencia por texto, intentar por value
+            if not matched:
+                select.select_by_value(value)
+
+        except Exception as e:
+            print(f"❌ Error en selectDropDownNormal({id}): {e}")
 
     def position(self, html, paso=None, wait=False):
         self.scrap = scraping.Scraping(html)
@@ -634,5 +672,3 @@ class Legalizador_sims:
             time.sleep(sleep_interval)
         
         return False  # Timeout
-    
-    
