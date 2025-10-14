@@ -197,8 +197,8 @@ class Legalizador_sims:
         try:
             for i in range(int(self.repeticiones)):
                 self.contador = 0
-                self.excel.leer_excel('src\\legalizador_sims\\legalizador_sims.xlsx', 'Iccid')
-                self.excel.quitarFormatoCientifico('Iccid')
+                self.excel.leer_excel('src\\legalizador_sims\\legalizador_sims.xlsx', 'serial')
+                self.excel.quitarFormatoCientifico('serial')
                 
                 for self.contador in range(self.excel.cantidad):
                     try:
@@ -256,7 +256,7 @@ class Legalizador_sims:
     def establecer_datos(self):
         # Obtener datos del Excel
         self.min = str(self.excel.excel['min'][self.contador])
-        self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:] 
+        self.iccid = str(self.excel.excel['serial'][self.contador])[-12:] 
         self.id_vendedor = str(self.excel.excel['CcVendedor'][self.contador]).replace('.0','')
         self.nombre = str(self.excel.excel['nombre'][self.contador])
         self.apellido = str(self.excel.excel['apellido'][self.contador])
@@ -411,7 +411,7 @@ class Legalizador_sims:
         
     def product_service(self):
         time.sleep(2)
-        self.selectDropDown("ProductInfo_ProductModelId", "Al")
+        self.selectDropDown("EquipmentPlanDataViewModel_MobileEquipment", "Al")
 
         time.sleep(2)
         self.legalizador_sims.click("btnNext", "id")
@@ -440,7 +440,7 @@ class Legalizador_sims:
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en 'Iniciar nueva activación'")
         
-        self.selectDropDown("productShortcut", "270")
+        self.selectDropDown("productShortcut", "376")
 
     def selectDropDown(self, id, value):
         """

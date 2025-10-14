@@ -483,14 +483,14 @@ class Portas:
         if not telefono_actual or not telefono_actual.strip():
             
             #Tipo
-            self.selectDropDown("PhoneClass","fijo")
+            self.selectDropDownNormal("PhoneClass","fijo")
 
             time.sleep(2)
             if not self.wait_for_loading():
                     raise Exception("Timeout esperando carga después de validación")
 
             #Indicativo
-            self.selectDropDown("Prefix","7")
+            self.selectDropDownNormal("Prefix","7")
 
             #Numero
             self.portas.write("PhoneNumber","8883136","id")
@@ -508,15 +508,15 @@ class Portas:
         #Dirección
         direccion_actual = self.portas.value("AddressId","id")
         if not direccion_actual or not direccion_actual.strip():
-            self.selectDropDown("AddressClassId","Otras")
+            self.selectDropDownNormal("AddressClassId","Otras")
             time.sleep(2)
             if not self.wait_for_loading():
                     raise Exception("Timeout esperando carga después de validación")
             
             self.portas.write("Address", "central", "id")
-            self.selectDropDown("Department","ANTIOQUIA")
+            self.selectDropDownNormal("Department","ANTIOQUIA")
             time.sleep(1)
-            self.selectDropDown("City","MEDELLIN")
+            self.selectDropDownNormal("City","MEDELLIN")
             self.portas.write("Town", "Central", "id")
 
         #Pospago o prepago
@@ -579,32 +579,37 @@ class Portas:
         
     def selectDropDown(self, id, value):
         """
-        Selecciona un valor de un dropdown. Funciona tanto para Select2 como para <select> normales.
+        Selecciona un valor de un dropdown usando el ID del elemento y el valor a seleccionar.
+        """
+        self.portas.click(f'select2-{id}-container', 'id')
+        self.portas.write(f'/html/body/span/span/span[1]/input', value, 'xpath')
+        self.portas.write(f'/html/body/span/span/span[1]/input', Keys.ENTER, 'xpath')
+        
+    def selectDropDownNormal(self, id, value):
+        """
+        Selecciona un valor de un <select> HTML clásico usando el ID del elemento y el texto visible.
+        Coincidencia exacta, insensible a mayúsculas/minúsculas y tildes.
         """
         try:
-            el = self.portas.browser.find_element_by_id(id)
-            classes = el.get_attribute("class") or ""
+            select_element = self.portas.browser.find_element_by_id(id)
+            select = Select(select_element)
 
-            # 🟢 Caso 1: Select2
-            if "select2-hidden-accessible" in classes:
-                self.portas.click(f"select2-{id}-container", "id")
-                self.portas.write("/html/body/span/span/span[1]/input", value, "xpath")
-                self.portas.write("/html/body/span/span/span[1]/input", Keys.ENTER, "xpath")
+            value_normalized = str(value).strip().lower()
+            matched = False
 
-            # 🟢 Caso 2: <select> HTML normal
-            else:
-                select = Select(el)
-                # intenta primero por texto visible (insensible a mayúsculas)
-                matched = False
-                for option in select.options:
-                    if option.text.strip().lower() == value.strip().lower():
-                        option.click()
-                        matched = True
-                        break
-                if not matched:
-                    select.select_by_value(value)
+            # Buscar coincidencia exacta por texto visible (sin mayúsculas)
+            for option in select.options:
+                if option.text.strip().lower() == value_normalized:
+                    option.click()
+                    matched = True
+                    break
+
+            # Si no hay coincidencia por texto, intentar por value
+            if not matched:
+                select.select_by_value(value)
+
         except Exception as e:
-            print(f"Error en selectDropDown({id}): {e}")
+            print(f"❌ Error en selectDropDownNormal({id}): {e}")
         
 
     def tryInsert(self, path, text):

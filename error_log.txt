@@ -41487,3 +41487,129 @@ Traceback (most recent call last):
   File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 331, in validation
     raise Exception(f"Error en validación web: {mensaje_error}")
 Exception: Error en validación web: La activación no puede continuar por las siguientes razones:; Validación Legalización WelcomeBack = Falso
+
+[bloque principal] Error: 'Iccid'
+Traceback (most recent call last):
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3652, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 147, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Iccid'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 200, in ejecuccion
+    self.excel.leer_excel('src\\legalizador_sims\\legalizador_sims.xlsx', 'Iccid')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\excel.py", line 10, in leer_excel
+    self.cantidad = len(self.excel[tituloColumna])
+                        ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\frame.py", line 3761, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3654, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Iccid'
+
+[Product/Service] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-ProductInfo_ProductModelId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.71)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 239, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 414, in product_service
+    self.selectDropDown("ProductInfo_ProductModelId", "Al")
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 449, in selectDropDown
+    self.legalizador_sims.click(f'select2-{id}-container', 'id')
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 152, in execute
+    raise err
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 137, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 291, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="select2-ProductInfo_ProductModelId-container"]"}
+  (Session info: MicrosoftEdge=141.0.3537.71)
+
+
+[Activation] Error: Excedio el numero de intentos (short2)
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 181, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 335, in readShort2
+    elif by == "class": find = self.browser.find_element_by_class_name(byStr)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 564, in find_element_by_class_name
+    return self.find_element(by=By.CLASS_NAME, value=name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":".messageFormItem"}
+  (Session info: MicrosoftEdge=141.0.3537.71)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 239, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 429, in activation
+    message_element = self.legalizador_sims.readShort2('messageFormItem', 'class')
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 192, in execute
+    raise Exception('Excedio el numero de intentos (short2)') from e
+Exception: Excedio el numero de intentos (short2)
+
+[Activation] Error: Excedio el numero de intentos (short2)
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 181, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 335, in readShort2
+    elif by == "class": find = self.browser.find_element_by_class_name(byStr)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 564, in find_element_by_class_name
+    return self.find_element(by=By.CLASS_NAME, value=name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "c:\Users\corte\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":".messageFormItem"}
+  (Session info: MicrosoftEdge=141.0.3537.71)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 239, in ejecutar_etapa
+    funcion()
+  File "C:\Users\corte\IntegrateamCode\navegacion\legalizador_simcard.py", line 429, in activation
+    message_element = self.legalizador_sims.readShort2('messageFormItem', 'class')
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\IntegrateamCode\funcionalidad\web_controller.py", line 192, in execute
+    raise Exception('Excedio el numero de intentos (short2)') from e
+Exception: Excedio el numero de intentos (short2)
