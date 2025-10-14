@@ -178,7 +178,7 @@ class Legalizador_sims:
         time.sleep(2)
 
         try:
-            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a') #Cambiar por xpath dinamico //*[@id="containerNavBar"]/ul/li[12]/a
+            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[last()]/a')
         except Exception as e:
             self.log_error("click en menú", e)
             return
@@ -244,9 +244,9 @@ class Legalizador_sims:
             self.ventana_informacion.write(f"❌ Error en {nombre}")
 
             # Reiniciar proceso
-            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a')
+            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[last()]/a')
             time.sleep(1)
-            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[12]/a')
+            self.legalizador_sims.click('//*[@id="containerNavBar"]/ul/li[last()]/a')
             self.poliedro.seleccionAcceso('376', start=True)
             if not self.wait_for_loading(legalizador_sims=False):
                 raise Exception("Timeout esperando carga")
