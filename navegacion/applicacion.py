@@ -95,7 +95,7 @@ class App:
         # self.button_comercial = self.button.create_button(self.menu_frame, "COMERCIAL", 0.10, 0.77, 0.8, 0.05, func= lambda: self.hide_menu_indicators(self.comercial_frame))
         self.canvas = Canvas(self.menu_frame, bg=getattr(self.colors,f'fondo_{str(ctk.get_appearance_mode())}'), bd=0.1, highlightbackground = getattr(self.colors,f'separador_{str(ctk.get_appearance_mode())}'))
         self.canvas.place(relwidth=0.01, relheight=1, relx=0.99)
-        self.version = self.label.create_label(self.menu_frame, self.version, 0.1, 0.85, 0.8, 0.2, 10)
+        self.version = self.label.create_label(self.menu_frame, self.version, 0.1, 0.90, 0.8, 0.05, 10)
         self.switch_theme = ctk.CTkSwitch(self.menu_frame, text=self.texto_theme, command= lambda :self.change_theme()).place(relx=0.10, rely=0.96)
 
     
