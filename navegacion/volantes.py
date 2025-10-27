@@ -121,10 +121,27 @@ class Volantes:
         hilo_legalizador.start()
         
     def consulta(self):
+        
+        # <-- INICIO DE LA MODIFICACIÓN
+        # Diccionario para mapear los tipos de volante de forma más limpia
+        volante_map = {
+            'R': 'Reposición',
+            'V': 'Voz',
+            'D': 'Dato'  # <-- Agregamos el nuevo tipo 'Dato'
+        }
+        # <-- FIN DE LA MODIFICACIÓN
+        
         for codigo, items in self.__codigos_pendientes.items():
             for item in items:
-                for volantetype in ['R', 'V']:
-                    volante = 'Reposición' if volantetype == 'R' else 'Voz'
+                
+                # <-- INICIO DE LA MODIFICACIÓN
+                # Modificamos el bucle para incluir 'D'
+                for volantetype in ['R', 'V', 'D']:
+                    
+                    # Asignamos el nombre usando el diccionario
+                    volante = volante_map.get(volantetype, 'Desconocido') 
+                # <-- FIN DE LA MODIFICACIÓN
+                
                     self.ventana_informacion.write(f"Haciendo consulta para: {item} con Volantetype {volantetype}...")
                     data = {
                         "SelectedDistr": f"-{item}",
@@ -198,7 +215,7 @@ class Volantes:
             "74389": "D2575.00015", "93894": "D2575.00016", "51180": "D1632.00001", "61972": "D1632.00002", 
             "63262": "D1632.00003", "69998": "D1632.00004", "71009": "D1632.00005", "80459": "D1632.00006", 
             "80858": "D1632.00007", "84342": "D1632.00008", "61409": "D1669.00001", "79134": "D1399.00001", 
-            "79988": "D1399.00002", "82315": "D1399.00003", "82403": "D1399.00004", "83071": "D1399.00005", 
+            "79988": "D1399.00002", "82315": "D1399.00003", "82403": "D1399.00004", "83071": "D1399.0De005", 
             "90226": "D1399.00006", "92343": "D1399.00007", "92785": "D1399.00008", "92861": "D1399.00010", 
             "96725": "D1399.00012", "96822": "D1399.00013", "75767": "D2731.00001", "75837": "D2731.00002", 
             "76113": "D2731.00003", "76877": "D2731.00004", "83123": "D2731.00005", "90868": "D2731.00006", 
