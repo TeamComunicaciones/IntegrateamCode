@@ -19,6 +19,16 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.edge.service import Service
 import random
 import traceback
+import threading # <-- 1. Importar threading
+
+# --- 2. Añadir un Lock global ---
+# Este "candado" se asegurará de que solo un hilo a la vez
+# pueda ejecutar la sección de "descargar driver".
+driver_lock = threading.Lock()
+
+# --- 3. NUEVO: Variable Caché ---
+# Guardará la ruta del driver una vez que el primer hilo la verifique.
+driver_path_cache = None
 
 
 class Web_Controller:
@@ -47,70 +57,118 @@ class Web_Controller:
 
     def get_edge_version(self):
         """Obtiene la versión de Microsoft Edge instalada"""
-        path = r"SOFTWARE\Microsoft\Edge\BLBeacon"
-        registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, path, 0, winreg.KEY_READ)
-        version, _ = winreg.QueryValueEx(registry_key, "version")
-        return version
+        # Intenta primero con HKEY_CURRENT_USER
+        try:
+            path = r"SOFTWARE\Microsoft\Edge\BLBeacon"
+            registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, path, 0, winreg.KEY_READ)
+            version, _ = winreg.QueryValueEx(registry_key, "version")
+            winreg.CloseKey(registry_key)
+            return version
+        except FileNotFoundError:
+            # Fallback a HKEY_LOCAL_MACHINE si la primera clave no existe
+            try:
+                path = r"SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}"
+                registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path, 0, winreg.KEY_READ)
+                version, _ = winreg.QueryValueEx(registry_key, "pv")
+                winreg.CloseKey(registry_key)
+                return version
+            except Exception as e:
+                print(f"[ERROR] No se pudo obtener la versión de Edge desde el registro: {e}")
+                return None
     
     def get_driver_version(self, driver_path):
         """Obtiene la versión del driver si ya existe"""
         try:
             result = subprocess.run([driver_path, "--version"], capture_output=True, text=True)
             if result.returncode == 0:
-                return result.stdout.split()[1]
+                 # La salida es algo como "Microsoft Edge WebDriver 120.0.2210.133 ..."
+                return result.stdout.split()[3]
         except Exception:
             return None
         return None
     
     def ensure_msedgedriver(self):
         """Verifica si el driver es compatible con Edge; si no, lo descarga"""
-        # --- Carpeta drivers en la raíz del proyecto ---
-        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        dest_folder = os.path.join(project_root, "drivers")
-        os.makedirs(dest_folder, exist_ok=True)
+        
+        # --- 4. Acceder a la variable caché global ---
+        global driver_path_cache
+        
+        # --- 5. Usar el Lock ---
+        # Solo un hilo puede "sostener el candado" a la vez.
+        with driver_lock:
+            # --- 6. Comprobar la caché PRIMERO ---
+            # Si el primer hilo ya verificó el driver, los otros hilos
+            # simplemente obtendrán la ruta y saldrán inmediatamente.
+            if driver_path_cache:
+                return driver_path_cache
 
-        edge_version = self.get_edge_version()
-        major_edge = edge_version.split(".")[0]
-        driver_path = os.path.join(dest_folder, "msedgedriver.exe")
+            # --- Si la caché está vacía, este es el PRIMER HILO ---
+            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+            dest_folder = os.path.join(project_root, "drivers")
+            os.makedirs(dest_folder, exist_ok=True)
 
-        # Si ya existe y es compatible
-        if os.path.exists(driver_path):
-            driver_version = self.get_driver_version(driver_path)
-            if driver_version and driver_version.split(".")[0] == major_edge:
-                return driver_path
-            else:
-                print("[INFO] Driver desactualizado, descargando nuevo...")
+            edge_version = self.get_edge_version()
+            if not edge_version:
+                 raise Exception("No se pudo detectar la versión de Microsoft Edge.")
+                 
+            major_edge = edge_version.split(".")[0]
+            driver_path = os.path.join(dest_folder, "msedgedriver.exe")
 
-        # Intentar descargar el driver de la misma versión de Edge
-        url = f"https://msedgedriver.microsoft.com/{edge_version}/edgedriver_win64.zip"
-        resp = requests.get(url, stream=True)
+            # Si ya existe y es compatible
+            if os.path.exists(driver_path):
+                driver_version = self.get_driver_version(driver_path)
+                if driver_version and driver_version.split(".")[0] == major_edge:
+                    # --- 7. Guardar en caché y retornar ---
+                    driver_path_cache = driver_path # Guardar en caché
+                    return driver_path
+                else:
+                    print(f"[INFO] Driver desactualizado (Driver: {driver_version}, Edge: {edge_version}), descargando nuevo...")
 
-        # Si no está disponible, descargar el último release del mismo major version
-        if resp.status_code != 200:
-            print(f"[WARN] No encontrado driver exacto {edge_version}, buscando LATEST_RELEASE_{major_edge}...")
-            latest_url = f"https://msedgedriver.microsoft.com/LATEST_RELEASE_{major_edge}"
-            latest_resp = requests.get(latest_url)
-            if latest_resp.status_code != 200:
-                raise Exception(f"No se pudo obtener driver para Edge {major_edge}")
-            driver_version = latest_resp.text.strip()
-            url = f"https://msedgedriver.microsoft.com/{driver_version}/edgedriver_win64.zip"
+            # (Lógica de descarga...)
+            url = f"https://msedgedriver.azureedge.net/{edge_version}/edgedriver_win64.zip"
             resp = requests.get(url, stream=True)
 
-        if resp.status_code != 200:
-            raise Exception(f"No se pudo descargar driver desde {url}")
+            if resp.status_code != 200:
+                print(f"[WARN] No se encontró el driver exacto {edge_version}, buscando LATEST_STABLE para {major_edge}...")
+                # URL alternativa para obtener la última versión estable del major
+                latest_url = f"https.msedgedriver.azureedge.net/LATEST_RELEASE_{major_edge}_WIN"
+                latest_resp = requests.get(latest_url)
+                
+                if latest_resp.status_code != 200:
+                     # Fallback aún más genérico si el major falla
+                     latest_url = "https.msedgedriver.azureedge.net/LATEST_STABLE"
+                     print(f"[WARN] No se encontró LATEST_RELEASE para {major_edge}, buscando LATEST_STABLE...")
+                     latest_resp = requests.get(latest_url)
+                     if latest_resp.status_code != 200:
+                         raise Exception(f"No se pudo obtener driver para Edge {major_edge}")
+                
+                # El contenido de la respuesta puede tener caracteres extra (BOM)
+                driver_version = latest_resp.content.decode('utf-16-le', errors='ignore').strip()
+                print(f"[INFO] Versión del driver a descargar: {driver_version}")
 
-        # Guardar zip temporal
-        zip_path = os.path.join(dest_folder, "edgedriver.zip")
-        with open(zip_path, "wb") as f:
-            for chunk in resp.iter_content(1024):
-                f.write(chunk)
+                url = f"https://msedgedriver.azureedge.net/{driver_version}/edgedriver_win64.zip"
+                resp = requests.get(url, stream=True)
 
-        # Extraer
-        with zipfile.ZipFile(zip_path, "r") as zip_ref:
-            zip_ref.extractall(dest_folder)
-        os.remove(zip_path)
+            if resp.status_code != 200:
+                raise Exception(f"No se pudo descargar driver desde {url}")
 
-        return driver_path
+            zip_path = os.path.join(dest_folder, "edgedriver.zip")
+            with open(zip_path, "wb") as f:
+                for chunk in resp.iter_content(1024):
+                    f.write(chunk)
+
+            try:
+                with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                    zip_ref.extractall(dest_folder)
+            except zipfile.BadZipFile:
+                 raise Exception(f"El archivo descargado de {url} está corrupto o no es un ZIP.")
+            
+            os.remove(zip_path)
+
+            # --- 8. Guardar en caché después de descargar y retornar ---
+            driver_path_cache = driver_path
+            return driver_path
+        # El "lock" se libera automáticamente aquí
     
     #def edgedriver(self):
     #     response = requests.get('https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/LATEST_STABLE')
@@ -140,7 +198,13 @@ class Web_Controller:
                         randomTime = round(random.uniform(-0.15,1.15),2)
                     else:
                         randomTime = 0
-                    time.sleep(int(float(sleep) + randomTime))
+                    
+                    # Asegurarnos de que sleep no sea negativo si randomTime es -0.15 y sleep es 0.1
+                    sleep_time = float(sleep) + randomTime
+                    if sleep_time < 0:
+                        sleep_time = 0
+                        
+                    time.sleep(sleep_time)
                     return data
                 except Exception as err:
                     if contador < 8:
@@ -148,7 +212,6 @@ class Web_Controller:
                         contador +=1
                     else:
                         print(f'Excedio los intentos para la funcion con argumentos: {args}')
-                        # <-- CAMBIO: Se corrige el 'raise' para lanzar una excepción válida.
                         raise err
         return execute
     
@@ -160,15 +223,14 @@ class Web_Controller:
                 try:
                     data = funcion(self,*args, **kwargs)
                     proof= False
-                    time.sleep(int(sleep))
+                    time.sleep(float(sleep)) # Usar float() para aceptar decimales
                     return data
-                except Exception as e: # <-- CAMBIO: Captura la excepción para poder relanzarla.
+                except Exception as e:
                     if contador < 5:
                         print(f'intento numero {contador}')
                         time.sleep(1)
                         contador +=1
                     else:
-                        # <-- CAMBIO: Se corrige el 'raise' para lanzar una excepción válida.
                         raise Exception('Excedio el numero de intentos (short)') from e
         return execute
     
@@ -180,15 +242,14 @@ class Web_Controller:
                 try:
                     data = funcion(self,*args, **kwargs)
                     proof= False
-                    time.sleep(int(sleep))
+                    time.sleep(float(sleep)) # Usar float() para aceptar decimales
                     return data
-                except Exception as e: # <-- CAMBIO: Captura la excepción para poder relanzarla.
+                except Exception as e:
                     if contador < 3:
                         print(f'intento numero {contador}')
                         time.sleep(1)
                         contador +=1
                     else:
-                        # <-- CAMBIO: Se corrige el 'raise' para lanzar una excepción válida.
                         raise Exception('Excedio el numero de intentos (short2)') from e
         return execute
     
@@ -217,10 +278,16 @@ class Web_Controller:
         options.use_chromium = True
         options.add_argument("start-maximized")
         options.add_argument("--disable-blink-features=AutomationControlled")
+        
+        # Evitar logs innecesarios en la consola
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
         if headless:
             options.add_argument("--headless=new")
             options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
+        
+        # Usar 'executable_path' que es lo que 'msedge.selenium_tools' espera
         self.browser = Edge(executable_path=driver_path, options=options)
         self.browserOriginal = self.browser
         return self.browser
@@ -229,6 +296,8 @@ class Web_Controller:
         ieOptions = webdriver.IeOptions()
         ieOptions.add_additional_option("ie.edgechromium", True)
         ieOptions.add_additional_option("ie.edgepath",'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe')
+        
+        # Usar 'executable_path' para IEDriverServer
         self.browser = webdriver.Ie(executable_path='IEDriverServer.exe', options=ieOptions)
         self.browserOriginal = self.browser
     
@@ -236,7 +305,10 @@ class Web_Controller:
         options = EdgeOptions()
         options.use_chromium = True
         options.add_argument("start-maximized")
-        return Edge(executable_path='msedgedriver.exe', options=options)
+        
+        # Usar 'executable_path'
+        driver_path = self.ensure_msedgedriver()
+        return Edge(executable_path=driver_path, options=options)
 
     @validateShort2
     def listarElemetos(self, byStr, by='xpath', click=None):
@@ -244,6 +316,8 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_elements_by_xpath(byStr)
         elif by == "id": find = self.browser.find_elements_by_id(byStr)
         elif by == "name": find = self.browser.find_elements_by_name(byStr)
+        else: find = [] # Asegurar que 'find' sea iterable
+            
         if find is not None:
             for item in find:
                 name = item.text
@@ -275,6 +349,24 @@ class Web_Controller:
             if enter:
                 find.send_keys(Keys.ENTER)
 
+    # --- CAMBIO IMPORTANTE: Disparar eventos de JS ---
+    @validate
+    def fast_insert(self, byStr, text, by='xpath'):
+        """Inserta texto instantáneamente usando JavaScript y dispara eventos."""
+        if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+        elif by == "id": find = self.browser.find_element_by_id(byStr)
+        elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+        
+        if find is not None:
+            # Establecer el valor
+            self.browser.execute_script("arguments[0].value = arguments[1];", find, text)
+            # Disparar evento 'input' para que la página (React/Angular) detecte el cambio
+            self.browser.execute_script("arguments[0].dispatchEvent(new Event('input', { 'bubbles': true }));", find)
+            # Disparar evento 'change' por si acaso
+            self.browser.execute_script("arguments[0].dispatchEvent(new Event('change', { 'bubbles': true }));", find)
+
+
     @validate
     def select(self, byStr, text, by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
@@ -294,7 +386,6 @@ class Web_Controller:
         if find is not None:
             find.click()
 
-    # <-- NUEVA FUNCIÓN: Se añade js_click para manejar clics interceptados.
     @validate
     def js_click(self, byStr, by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
@@ -314,10 +405,12 @@ class Web_Controller:
             ActionChains(self.browser).key_down(Keys.CONTROL).click(find).key_up(Keys.CONTROL).perform()
     
     def cambiar_pestaña(self):
-        self.browser.switch_to.window(self.browser.window_handles[-1])
+        if len(self.browser.window_handles) > 1:
+            self.browser.switch_to.window(self.browser.window_handles[-1])
     
     def volver_pestaña(self):
-        self.browser.switch_to.window(self.browser.window_handles[0])
+        if len(self.browser.window_handles) > 0:
+            self.browser.switch_to.window(self.browser.window_handles[0])
     
     def cerrar_pestaña(self):
         self.browser.close()
@@ -333,6 +426,8 @@ class Web_Controller:
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
         elif by == "class": find = self.browser.find_element_by_class_name(byStr)
+        else: find = None
+
         if find is not None:
             return find.text
         else: return "none"
@@ -342,6 +437,8 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+
         if find is not None:
             return find.text
         else: return "none"
@@ -352,6 +449,8 @@ class Web_Controller:
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
         elif by == "class": find = self.browser.find_element_by_class_name(byStr)
+        else: find = None
+
         if find is not None:
             return find.text
         else: return "none"
@@ -362,6 +461,8 @@ class Web_Controller:
         elif by == "id": find = self.browser.find_elements_by_id(byStr)
         elif by == "name": find = self.browser.find_elements_by_name(byStr)
         elif by == "class": find = self.browser.find_elements_by_class_name(byStr)
+        else: find = [] # Asegurar que 'find' sea iterable
+            
         if find is not None:
             return [i.text for i in find]
         else: return "none"
@@ -371,6 +472,8 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+
         if find is not None:
             return find.get_attribute('value')
         else: return "none"
@@ -380,6 +483,8 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+
         if find is not None:
             return find.get_attribute('style')
         else: return "none"
@@ -388,6 +493,8 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+
         if find is not None:
             return find.text
         else: return "none"
@@ -397,33 +504,54 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+            
         if find is not None:
             if write:
                 find.send_keys('')
             pass
-        else: raise('')
+        else: raise Exception(f"Elemento no encontrado: {byStr}") # Levantar excepción
 
     @validateShort
     def waitExist(self, byStr, by='xpath', write=False):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+            
         if find is not None:
             if write:
                 find.send_keys('')
             pass
-        else: raise('')
+        else: raise Exception(f"Elemento no encontrado: {byStr}") # Levantar excepción
+
+    @validate
+    def waitExistRobust(self, byStr, by='xpath', write=False):
+        """Versión de waitExist con el decorador @validate (más reintentos)."""
+        if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+        elif by == "id": find = self.browser.find_element_by_id(byStr)
+        elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+            
+        if find is not None:
+            if write:
+                find.send_keys('')
+            pass
+        else: raise Exception(f"Elemento no encontrado (Robust): {byStr}") # Levantar excepción
 
     @validate
     def wait(self, byStr, condition ,by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+            
         if find is not None:
             if find.text is not None:
                 if condition in find.text:
-                    raise('error')
+                    raise Exception(f"Condición de espera encontrada: {condition}") # Levantar excepción
     
+    # --- CAMBIO IMPORTANTE: Disparar eventos de JS ---
     @validate
     def erase(self, byStr, by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
@@ -431,7 +559,12 @@ class Web_Controller:
         elif by == "name": find = self.browser.find_element_by_name(byStr)
         else: find =None
         if find is not None:
-            find.clear()
+            #find.clear() <-- 'clear()' a veces no dispara eventos
+            # Usar la misma técnica que fast_insert para borrar
+            self.browser.execute_script("arguments[0].value = '';", find)
+            self.browser.execute_script("arguments[0].dispatchEvent(new Event('input', { 'bubbles': true }));", find)
+            self.browser.execute_script("arguments[0].dispatchEvent(new Event('change', { 'bubbles': true }));", find)
+
     
     @validate
     def eraseLetter(self, byStr, cantidad, by='xpath', move=False):
@@ -459,14 +592,17 @@ class Web_Controller:
         """Retorna la URL actual del navegador con validación"""
         if self.browser is not None:
             return self.browser.current_url
+        return None # Retornar None si el navegador no existe
     
     def readonly(self, byStr, by='xpath'):
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+            
         if find is not None:
             readonly_value = find.get_attribute('readonly')
-            if readonly_value == 'readonly':
+            if readonly_value == 'readonly' or readonly_value == 'true': # Ser más flexible
                 return True
             else:
                 return False
@@ -476,6 +612,8 @@ class Web_Controller:
         if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
         elif by == "id": find = self.browser.find_element_by_id(byStr)
         elif by == "name": find = self.browser.find_element_by_name(byStr)
+        else: find = None
+            
         if find is not None:
             find.send_keys(Keys.ARROW_DOWN)
             find.send_keys(Keys.ENTER)
@@ -508,5 +646,13 @@ class Web_Controller:
             return False
     
     def cerrar(self):
-        self.browser.close()
-        self.browser.quit()
+        # --- 9. Mejora de seguridad ---
+        # Verificar si el navegador existe antes de cerrarlo
+        if self.browser:
+            try:
+                self.browser.close()
+                self.browser.quit()
+            except WebDriverException as e:
+                print(f"[WARN] Excepción al cerrar el navegador (puede ser normal si ya estaba cerrado): {e}")
+            finally:
+                self.browser = None

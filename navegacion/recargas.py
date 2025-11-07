@@ -66,7 +66,7 @@ class Recargas:
         self.title_pin = label.Label().create_label(self.menu.submenu, 'Pin: ', 0.0, 0.83, 0.25,0.05, letterSize= 14)
         self.title_user = label.Label().create_label(self.menu.submenu, 'Usuario: ', 0.0, 0.89, 0.3,0.05, letterSize= 14)
         self.title_password = label.Label().create_label(self.menu.submenu, 'Clave: ', 0.0, 0.95, 0.25,0.05, letterSize= 14)
-  
+ 
         self.checkbox_tropas =  checkbox.Checkbox().create_checkbox(self.menu.submenu, '', self.on_checkbox_change_paquetes, self.paquetes, place=True, x=0.3, y= 0.47, widht=0.50, height=0.05, letterSize=14)
         self.grupo =  combobox.Combobox().create_combobox(self.menu.submenu, list(grupo.keys()), x=0.3, y= 0.53, widht=0.60, height=0.05, letterSize=14, textvariable=self.grupoSelect)
         self.servicio =  combobox.Combobox().create_combobox(self.menu.submenu, servicio, x=0.3, y= 0.59, widht=0.60, height=0.05, letterSize=14)
@@ -137,13 +137,13 @@ class Recargas:
             self.ventana_informacion.write('Cambiando modalidad a Paquetes')
         else:
             self.ventana_informacion.write('Cambiando modalidad a Estandar')
-        
+            
     def on_checkbox_change_visible(self):
         if self.visible.get():
             self.ventana_informacion.write('Cambiando modalidad a Invisible')
         else:
             self.ventana_informacion.write('Cambiando modalidad a Visible')
-        
+            
     def ejecuccion(self, i):
         self.abrirPagina(i)
     
@@ -151,99 +151,184 @@ class Recargas:
         ciclo = True
         contador = 0
         intentos = 0
-        self.ventana_informacion.write(f'Navegador {i+1} abierto')   
+        self.ventana_informacion.write(f'Navegador {i+1} abierto')  
         class Abrir_pagina1(web_controller.Web_Controller):pass
-        recargas = Abrir_pagina1(1)
+        
+        # --- CAMBIO 1: Reducir el sleep de 1 a 0.1 ---
+        recargas = Abrir_pagina1(0.1) 
+        
         try:
             recargas.openEdge(headless=self.visible.get())
             recargas.selectPage(self.link)
             recargas.insert('loginID', self.excel2.excel['cuenta'][i], 'id')
             recargas.insert('password', self.entry_password.get(), 'id')
             recargas.click('/html/body/form[2]/table[3]/tbody/tr/td/table[2]/tbody/tr[5]/td[2]/input[1]')
-            time.sleep(10)
-            try:
-                recargas.readShort2('login_id', 'id')
-                recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
-                recargas.insert('pwd', self.entry_password.get(), 'id')
-                recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
-                time.sleep(10)
-            except:
-                pass
-            # time.sleep(10)
+            
+            # --- CAMBIO 2: Lógica de Login Inteligente ---
+            self.ventana_informacion.write(f'Navegador {i+1}: Primer login enviado, verificando siguiente página...')
+
+            # Esperar a que CUALQUIERA de las dos páginas cargue
+            # Intentamos 10 veces (aprox 10 seg)
+            login_exitoso = False
+            for _ in range(10):
+                # Escenario A: Apareció el segundo login
+                if recargas.elementExists('login_id', 'id'):
+                    self.ventana_informacion.write(f'Navegador {i+1}: Segundo login detectado.')
+                    recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
+                    recargas.insert('pwd', self.entry_password.get(), 'id')
+                    recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
+                    
+                    # Esperar al dashboard DESPUÉS del segundo login
+                    recargas.waitExistRobust('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
+                    login_exitoso = True
+                    break
+                
+                # Escenario B: Se saltó el segundo login y ya está en el dashboard
+                if recargas.elementExists('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'):
+                    self.ventana_informacion.write(f'Navegador {i+1}: Login directo al dashboard detectado.')
+                    login_exitoso = True
+                    break
+                
+                time.sleep(1) # Esperar 1 seg antes de volver a comprobar
+
+            if not login_exitoso:
+                raise Exception("No se pudo detectar ni el segundo login ni el dashboard después de 10 seg.")
+
+            # --- FIN DE LA LÓGICA DE LOGIN ---
+
+            self.ventana_informacion.write(f'Navegador {i+1}: Dashboard cargado. Accediendo a recargas.')
+            
+            # Navegación al formulario de recargas
             recargas.click('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
             if self.paquetes.get():
                 recargas.click('/html/body/app-root/div/app-layout/section/claro-app-recharge/div/div/div[3]/div/claro-header-recharge/ul/div[2]/li/a')
-        except: pass
+        
+        except Exception as e:
+            self.ventana_informacion.write(f'Navegador {i+1}: Error grave durante el login o navegación inicial. {e}')
+            recargas.cerrar()
+            return # Termina el hilo si el login falla
+
+        # ==================================================================
+        # --- ESPERA EXPLÍCITA ANTES DEL BUCLE ---
+        # ==================================================================
+        try:
+            self.ventana_informacion.write(f'Navegador {i+1}: Esperando a que cargue el formulario de recarga...')
+            recargas.waitExist('msisdnInput', 'id') 
+            self.ventana_informacion.write(f'Navegador {i+1}: Formulario cargado. Iniciando recargas.')
+        except Exception as e:
+            self.ventana_informacion.write(f'Navegador {i+1}: ERROR. No se pudo encontrar el formulario (msisdnInput) después de esperar.')
+            self.ventana_informacion.write(f'Navegador {i+1}: El hilo se detendrá. Error: {e}')
+            recargas.cerrar()
+            return 
+        # ==================================================================
+        # --- FIN DE LA ESPERA ---
+        # ==================================================================
+
         while ciclo:
-                if contador == len(self.dfs[i]):
-                    ciclo = False
-                else:
-                    try:
-                        min =self.dfs[i]['linea'][contador]
-                        value =self.dfs[i]['valor'][contador]
-                        while True:
-                            if recargas.value('msisdnInput', 'id') == f'{min}':
-                                break
-                            recargas.eraseLetter('msisdnInput', 20, 'id')
-                            recargas.insert('msisdnInput', f'{min}', 'id')
-                        if self.paquetes.get():
-                            while True:
-                                if recargas.read('groupSelect', 'id') == self.grupo.get():
-                                    break
-                                recargas.click('groupSelect', 'id')
-                                recargas.click(f".//span[text()='{self.grupo.get()}']",)
-                            while True:
-                                if recargas.read('subServiceSelect', 'id') == self.servicio.get():
-                                    break
-                                recargas.click('subServiceSelect', 'id')
-                                recargas.click(f".//span[text()='{self.servicio.get()}']",)
-                        else:
-                            recargas.eraseLetter('amountInput', 20, 'id')
-                            recargas.insert('amountInput', f'{value}', 'id')
-                        recargas.click('recharge', 'id')
-                        contador += 1
-                        recargas.eraseLetter('no-partitioned', 20, 'id')
-                        recargas.insert('no-partitioned', self.entry_pin.get(), 'id')
-                        recargas.click('rechargebutton2', 'id')
-                        self.ventana_informacion.write(f'Pagina {i+1} {round(contador/len(self.dfs[i]) *100)}% completado')
-                        recargas.click('anotherRecharge', 'id')
-                        intentos = 0
+            if contador == len(self.dfs[i]):
+                ciclo = False
+            else:
+                try:
+                    min_str = str(self.dfs[i]['linea'][contador])
+                    value_str = str(self.dfs[i]['valor'][contador])
+                    
+                    # --- Usar métodos rápidos (con eventos JS) ---
+                    while True:
+                        if recargas.value('msisdnInput', 'id') == min_str:
+                            break
+                        recargas.erase('msisdnInput', 'id') 
+                        recargas.fast_insert('msisdnInput', min_str, 'id') 
                         
-                    except:
-                        intentos += 1
-                        if intentos > 20:
-                            ciclo = False
-                            self.ventana_informacion.write(f'Se detiene por exceso en intentos fallidos')
-                        try:
-                            recargas.cerrar()
-                            recargas = Abrir_pagina1(1)
-                            recargas.openEdge(headless=self.visible.get())
-                            recargas.selectPage(self.link)
-                            recargas.insert('loginID', self.excel2.excel['cuenta'][i], 'id')
-                            recargas.insert('password', self.entry_password.get(), 'id')
-                            recargas.click('/html/body/form[2]/table[3]/tbody/tr/td/table[2]/tbody/tr[5]/td[2]/input[1]')
-                            time.sleep(10)
-                            try:
-                                recargas.readShort2('login_id', 'id')
+                    if self.paquetes.get():
+                        while True:
+                            if recargas.read('groupSelect', 'id') == self.grupo.get():
+                                break
+                            recargas.click('groupSelect', 'id')
+                            recargas.click(f".//span[text()='{self.grupo.get()}']",)
+                        while True:
+                            if recargas.read('subServiceSelect', 'id') == self.servicio.get():
+                                break
+                            recargas.click('subServiceSelect', 'id')
+                            recargas.click(f".//span[text()='{self.servicio.get()}']",)
+                    else:
+                        recargas.erase('amountInput', 'id')
+                        recargas.fast_insert('amountInput', value_str, 'id')
+                        
+                    recargas.click('recharge', 'id')
+                    
+                    # Esperar a que aparezca el campo del PIN
+                    # Esto soluciona el error 'no-partitioned'
+                    recargas.waitExistRobust('no-partitioned', 'id') 
+                    
+                    contador += 1
+                    
+                    recargas.erase('no-partitioned', 'id')
+                    recargas.fast_insert('no-partitioned', self.entry_pin.get(), 'id')
+                    
+                    recargas.click('rechargebutton2', 'id')
+                    self.ventana_informacion.write(f'Pagina {i+1} {round(contador/len(self.dfs[i]) *100)}% completado')
+                    
+                    # Esperar a que el modal del PIN desaparezca y aparezca el botón de "otra recarga"
+                    recargas.waitExistRobust('anotherRecharge', 'id')
+                    recargas.click('anotherRecharge', 'id')
+                    intentos = 0
+                    
+                except Exception as e:
+                    intentos += 1
+                    self.ventana_informacion.write(f'Navegador {i+1}: Error en el bucle (intento {intentos}). Error: {e}')
+                    
+                    if intentos > 20: 
+                        ciclo = False
+                        self.ventana_informacion.write(f'Se detiene por exceso en intentos fallidos')
+                    
+                    # Lógica de recuperación (reiniciar el navegador)
+                    try:
+                        recargas.cerrar()
+                        recargas = Abrir_pagina1(0.1) 
+                        recargas.openEdge(headless=self.visible.get())
+                        recargas.selectPage(self.link)
+                        recargas.insert('loginID', self.excel2.excel['cuenta'][i], 'id')
+                        recargas.insert('password', self.entry_password.get(), 'id')
+                        recargas.click('/html/body/form[2]/table[3]/tbody/tr/td/table[2]/tbody/tr[5]/td[2]/input[1]')
+                        
+                        # --- Re-aplicar la Lógica de Login Inteligente ---
+                        login_exitoso_reinicio = False
+                        for _ in range(10):
+                            if recargas.elementExists('login_id', 'id'):
                                 recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
                                 recargas.insert('pwd', self.entry_password.get(), 'id')
                                 recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
-                                time.sleep(10)
-                            except:
-                                pass
-                            recargas.click('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
-                            if self.paquetes.get():
-                                recargas.click('/html/body/app-root/div/app-layout/section/claro-app-recharge/div/div/div[3]/div/claro-header-recharge/ul/div[2]/li/a')
-                        except: pass
+                                recargas.waitExistRobust('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
+                                login_exitoso_reinicio = True
+                                break
+                            if recargas.elementExists('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'):
+                                login_exitoso_reinicio = True
+                                break
+                            time.sleep(1)
+                        
+                        if not login_exitoso_reinicio:
+                            raise Exception("Fallo al reiniciar el login.")
+                        
+                        recargas.click('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
+                        if self.paquetes.get():
+                            recargas.click('/html/body/app-root/div/app-layout/section/claro-app-recharge/div/div/div[3]/div/claro-header-recharge/ul/div[2]/li/a')
+                        
+                        recargas.waitExist('msisdnInput', 'id')
+                        self.ventana_informacion.write(f'Navegador {i+1}: Reinicio completado.')
+                        
+                    except Exception as e_reinicio: 
+                        self.ventana_informacion.write(f'Navegador {i+1}: Fallo crítico durante el reinicio. {e_reinicio}')
+                        pass 
+                        
         self.ventana_informacion.write(f'Proceso terminado para navegador {i+1}')
-        
-        
+        try:
+            recargas.cerrar()
+        except:
+            pass
+
+    
     def enlistar_data(self):
         self.excel.leer_excel('src\\recargas\\recargas.xlsx','linea')
 
     def enlistar_cuentas(self):
         self.excel2.leer_excel('src\\recargas\\cuentas.xlsx','numero')
-
-
-
-    
