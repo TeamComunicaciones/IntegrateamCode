@@ -20,5 +20,5 @@ if __name__ == '__main__':
             driver.quit()
 
     app = applicacion.App
-    root = app('1080x720', 'Team Comunicaciones', 'version: 3.6.22', alertas)
+    root = app('1080x720', 'Team Comunicaciones', 'version: 3.6.26', alertas)
     root.start()

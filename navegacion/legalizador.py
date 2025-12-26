@@ -14,6 +14,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import re
 from funcionalidad import poliedro_login_service
 import random
+import os
+import shutil
 
 
 class Legalizador:
@@ -42,6 +44,11 @@ class Legalizador:
         self.transacciones_fallidas = 0
         self.recent_timeouts = 0
         self.ultimo_reporte_metricas = 0
+
+        # --- CONFIGURACIÓN EXCEL / CONTROL DE EJECUCIÓN ---
+        self.ruta_excel = r"src\legalizador\legalizador.xlsx"
+        self.ejecucion_activa = False  # Evita que se ejecuten dos hilos al tiempo
+
         self.titulo = label.Label().create_label(master, 'LEGALIZADOR', 0.2, 0.0, 0.5, 0.2, letterSize=25)
         self.ventana_informacion = ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master, 3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
@@ -181,74 +188,109 @@ class Legalizador:
             self.legalizador.script(f"window.open('{self.link_google_messages}', '_blank');")
     
     def ejecuccionHilo(self):
-        hilo_legalizador = threading.Thread(target=self.ejecuccion)
+        # Evita múltiples ejecuciones simultáneas pisándose el Excel
+        if self.ejecucion_activa:
+            self.ventana_informacion.write(
+                "⚠️ Ya hay un proceso de legalización en ejecución. "
+                "Espera a que termine antes de iniciar otro."
+            )
+            return
+
+        hilo_legalizador = threading.Thread(target=self.ejecuccion, daemon=True)
         hilo_legalizador.start()
     
     def ejecuccion(self):
+        # Marcar que hay una ejecución en curso
+        self.ejecucion_activa = True
         try:
-            self.poliedro.definirBrowser(self.legalizador)
-        except Exception as e:
-            self.log_error("definirBrowser", e)
-            return
-        
-        # Inicializar el servicio de login
-        self.poliedro_login_service = None
-        if not self.login():
-            self.ventana_informacion.write('Error en login, verifique sus credenciales')
-            self.on_of(True)
-            self.alertas('se detiene el programa error en login')
-            # Lanzar excepción para salir del bloque try y entrar al except final
-            raise Exception("Error crítico: Fallo en login de Poliedro")
-        time.sleep(2)
+            try:
+                self.poliedro.definirBrowser(self.legalizador)
+            except Exception as e:
+                self.log_error("definirBrowser", e)
+                return
+            
+            # Inicializar el servicio de login
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('Error en login, verifique sus credenciales')
+                self.on_of(True)
+                self.alertas('se detiene el programa error en login')
+                raise Exception("Error crítico: Fallo en login de Poliedro")
 
-        try:
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
-        except Exception as e:
-            self.log_error("click en menú", e)
-            return
-        
-        time.sleep(3)
-        self.poliedro.seleccionAcceso('362', start=True)
-        if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga")
+            # ANTES DE TOCAR EL EXCEL: comprobar bloqueo y hacer backup
+            if not self.excel_disponible_para_trabajar():
+                self.ventana_informacion.write(
+                    "❌ No se puede continuar porque el archivo legalizador.xlsx "
+                    "está siendo usado por otro programa. "
+                    "Ciérralo y vuelve a presionar START."
+                )
+                self.on_of(True)
+                return
 
-        try:
-            self.position(self.legalizador.retornarHtml(), 'paso1', True)
-        except Exception as e:
-            self.log_error("position paso1", e)
-            return
+            # Crear backup de seguridad del Excel
+            self.crear_backup_excel()
 
-        try:
-            for i in range(int(self.repeticiones)):
-                self.ciclo = True
-                self.contador = 0
-                self.inicio_proceso = time.time()  # INICIALIZAR MÉTRICAS
-                self.transacciones_exitosas = 0
-                self.transacciones_fallidas = 0
-                
-                # CONFIGURAR MODO PRODUCCIÓN PARA ALTO VOLUMEN
-                self.configurar_modo_produccion()
-                
-                self.excel.leer_excel('src\\legalizador\\legalizador.xlsx', 'iccid')
-                self.excel.quitarFormatoCientifico('iccid')
-                self.excel.quitarFormatoCientifico('imei')
-                self.ventana_informacion.write(f'🚀 Iniciando Ciclo {i+1} con {self.excel.cantidad} transacciones')
-                
-                # PROCESAMIENTO POR LOTES PARA MEJOR GESTIÓN DE MEMORIA
-                self.procesar_por_lotes()
-                
-                # REPORTE FINAL DEL CICLO
-                #self.reporte_final_ciclo(i+1)
-                self.ventana_informacion.write('✅ Proceso terminado exitosamente')
-                self.ventana_informacion.write(f'🏁 Ciclo {i+1} finalizado')
+            time.sleep(2)
+
             try:
                 self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
             except Exception as e:
                 self.log_error("click en menú", e)
-            self.on_of(True)
-        except Exception as e:
-            self.log_error("bloque principal", e)
-            self.alertas('se detiene el programa error')
+                return
+            
+            time.sleep(3)
+            self.poliedro.seleccionAcceso('362', start=True)
+            if not self.wait_for_loading(legalizador=False):
+                raise Exception("Timeout esperando carga")
+
+            try:
+                self.position(self.legalizador.retornarHtml(), 'paso1', True)
+            except Exception as e:
+                self.log_error("position paso1", e)
+                return
+
+            try:
+                for i in range(int(self.repeticiones)):
+                    self.ciclo = True
+                    self.contador = 0
+                    self.inicio_proceso = time.time()  # INICIALIZAR MÉTRICAS
+                    self.transacciones_exitosas = 0
+                    self.transacciones_fallidas = 0
+                    
+                    # CONFIGURAR MODO PRODUCCIÓN PARA ALTO VOLUMEN
+                    self.configurar_modo_produccion()
+                    
+                    # Leer Excel una vez por ciclo
+                    self.excel.leer_excel(self.ruta_excel, 'iccid')
+                    self.excel.quitarFormatoCientifico('iccid')
+                    self.excel.quitarFormatoCientifico('imei')
+
+                    self.ventana_informacion.write(
+                        f'🚀 Iniciando Ciclo {i+1} con {self.excel.cantidad} transacciones'
+                    )
+                    
+                    # PROCESAMIENTO POR LOTES PARA MEJOR GESTIÓN DE MEMORIA
+                    self.procesar_por_lotes()
+                    
+                    # REPORTE FINAL DEL CICLO
+                    # self.reporte_final_ciclo(i+1)
+                    self.ventana_informacion.write('✅ Proceso terminado exitosamente')
+                    self.ventana_informacion.write(f'🏁 Ciclo {i+1} finalizado')
+                try:
+                    self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                except Exception as e:
+                    self.log_error("click en menú", e)
+                self.on_of(True)
+            except Exception as e:
+                self.log_error("bloque principal", e)
+                self.alertas('se detiene el programa error')
+        finally:
+            # Pase lo que pase, marcamos que ya no hay ejecución y reactivamos la UI
+            self.ejecucion_activa = False
+            try:
+                self.on_of(True)
+            except Exception:
+                pass
     
     def inicializar_login_service(self):
         """
@@ -300,7 +342,111 @@ class Legalizador:
             f.write(f"\n[{contexto}] Error: {str(e)}\n")
             f.write(traceback.format_exc())
         self.ventana_informacion.write(f"Error en {contexto}: {str(e)}") 
-    
+
+    # ==========================
+    # MANEJO ROBUSTO DEL EXCEL
+    # ==========================
+    def _esta_excel_bloqueado(self, ruta):
+        """
+        Intenta detectar si el archivo está bloqueado (abierto en Excel u otro proceso).
+        En Windows usa msvcrt.locking; en otros SO hace un intento simple de apertura.
+        """
+        if not os.path.exists(ruta):
+            return False
+
+        try:
+            import msvcrt
+            with open(ruta, "r+b") as f:
+                try:
+                    # Intento de lock no bloqueante de 1 byte
+                    msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+                    # Si se pudo bloquear, lo liberamos y consideramos que NO está bloqueado
+                    msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+                    return False
+                except OSError:
+                    # Otro proceso lo tiene bloqueado
+                    return True
+        except ImportError:
+            # Fallback simple si no estamos en Windows
+            try:
+                with open(ruta, "a+b"):
+                    pass
+                return False
+            except PermissionError:
+                return True
+        except PermissionError:
+            return True
+        except Exception as e:
+            # En caso de duda, asumimos que está bloqueado y lo logueamos
+            self.log_error("_esta_excel_bloqueado", e)
+            return True
+
+    def excel_disponible_para_trabajar(self, reintentos=3, espera=1.5):
+        """
+        Verifica que el Excel no esté abierto en otro programa.
+        Hace varios reintentos antes de rendirse.
+        """
+        for i in range(reintentos):
+            if not self._esta_excel_bloqueado(self.ruta_excel):
+                return True
+            self.ventana_informacion.write(
+                f"⚠️ El archivo legalizador.xlsx parece estar abierto en Excel. "
+                f"Cierre el archivo y vuelva a intentarlo. (Intento {i+1}/{reintentos})"
+            )
+            time.sleep(espera)
+        return False
+
+    def crear_backup_excel(self):
+        """
+        Crea una copia de seguridad del Excel antes de empezar a escribir.
+        Así, si algo se corrompe, el usuario puede volver al backup.
+        """
+        try:
+            if not os.path.exists(self.ruta_excel):
+                self.ventana_informacion.write(
+                    f"⚠️ No se encontró el archivo {self.ruta_excel} para crear backup."
+                )
+                return
+            base, ext = os.path.splitext(self.ruta_excel)
+            timestamp = time.strftime("%Y%m%d_%H%M%S")
+            backup_path = f"{base}_backup_{timestamp}{ext}"
+            shutil.copy2(self.ruta_excel, backup_path)
+            self.ventana_informacion.write(
+                f"💾 Copia de seguridad creada: {os.path.basename(backup_path)}"
+            )
+        except Exception as e:
+            self.log_error("crear_backup_excel", e)
+            self.ventana_informacion.write(
+                "⚠️ No se pudo crear una copia de seguridad del Excel. "
+                "Se continuará sin backup."
+            )
+
+    def safe_guardar(self, fila, columna, valor):
+        """
+        Envoltura para self.excel.guardar que maneja errores típicos
+        (archivo abierto, permisos, etc.) para evitar crashear el proceso.
+        """
+        try:
+            # Usamos siempre la misma ruta que se usa al leer
+            self.excel.guardar(fila, columna, valor, destino=self.ruta_excel)
+        except PermissionError as e:
+            # Caso típico: Excel abierto y archivo bloqueado
+            self.log_error("excel_guardar_permiso", e)
+            self.ventana_informacion.write(
+                "❌ No se pudo escribir en el Excel porque está bloqueado "
+                "(normalmente por tenerlo abierto en Excel).\n"
+                "Cierre legalizador.xlsx y vuelva a ejecutar el proceso."
+            )
+            # Levantamos excepción para cortar el proceso y NO seguir dañando el archivo
+            raise
+        except Exception as e:
+            # Cualquier otro error se registra pero no rompe todo el flujo
+            self.log_error("excel_guardar", e)
+            self.ventana_informacion.write(
+                f"⚠️ No se pudo guardar en Excel (fila {fila+1}, columna '{columna}'): "
+                f"{str(e)[:120]}"
+            )
+
     def establecer_datos(self):
         self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
         
@@ -374,8 +520,8 @@ class Legalizador:
         # Si hay errores, guardarlos y retornar False
         if errores:
             mensaje_error = '; '.join(errores)
-            self.excel.guardar(self.contador, 'Mensaje', f"Validación: {mensaje_error}")
-            self.excel.guardar(self.contador, 'Min', 'error')
+            self.safe_guardar(self.contador, 'Mensaje', f"Validación: {mensaje_error}")
+            self.safe_guardar(self.contador, 'Min', 'error')
             self.ventana_informacion.write(f"❌ Datos inválidos en fila {self.contador+1}: {mensaje_error}")
             return False
         
@@ -391,13 +537,13 @@ class Legalizador:
             except:
                 message = self.legalizador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                 if message and message.strip():
-                    self.excel.guardar(self.contador, 'Mensaje', f'Error validación: {message}')
-                    self.excel.guardar(self.contador, 'Min', 'error')
+                    self.safe_guardar(self.contador, 'Mensaje', f'Error validación: {message}')
+                    self.safe_guardar(self.contador, 'Min', 'error')
                     self.ventana_informacion.write(f"{self.iccid} Error validación: {message}")
                     raise Exception(f'Error validación: {message}')
                 else:
-                    self.excel.guardar(self.contador, 'Mensaje', 'Error validación desconocido')
-                    self.excel.guardar(self.contador, 'Min', 'error')
+                    self.safe_guardar(self.contador, 'Mensaje', 'Error validación desconocido')
+                    self.safe_guardar(self.contador, 'Min', 'error')
                     self.ventana_informacion.write(f"{self.iccid} Error validación desconocido")
                     raise Exception('Error validación: mensaje no detectado')
 
@@ -418,8 +564,8 @@ class Legalizador:
                     self.legalizador.click('btnNext', 'id')
             else:
                 mensaje_error = f'Validación incorrecta: {validate}' if validate else 'Validación incorrecta: mensaje no detectado'
-                self.excel.guardar(self.contador, 'Mensaje', mensaje_error)
-                self.excel.guardar(self.contador, 'Min', 'error')
+                self.safe_guardar(self.contador, 'Mensaje', mensaje_error)
+                self.safe_guardar(self.contador, 'Min', 'error')
                 self.ventana_informacion.write(f"{self.iccid} {mensaje_error}")
                 raise Exception(mensaje_error)
         except Exception as e:
@@ -427,8 +573,8 @@ class Legalizador:
             try:
                 mensaje_actual = str(self.excel.excel['Mensaje'][self.contador])
                 if not mensaje_actual or mensaje_actual in ['nan', 'None', '']:
-                    self.excel.guardar(self.contador, 'Mensaje', f'Error en validate_data: {str(e)}')
-                    self.excel.guardar(self.contador, 'Min', 'error')
+                    self.safe_guardar(self.contador, 'Mensaje', f'Error en validate_data: {str(e)}')
+                    self.safe_guardar(self.contador, 'Min', 'error')
             except:
                 pass
             self.logs.append([e,traceback.format_exc()])
@@ -471,8 +617,8 @@ class Legalizador:
                     self.poliedro.seleccionAcceso('362', start=False)
             
             if intentos == 4:
-                self.excel.guardar(self.contador, 'Mensaje', 'No se pudo acceder al formulario 362')
-                self.excel.guardar(self.contador, 'Min', 'error')
+                self.safe_guardar(self.contador, 'Mensaje', 'No se pudo acceder al formulario 362')
+                self.safe_guardar(self.contador, 'Min', 'error')
                 self.ventana_informacion.write(f"{self.iccid} No se pudo acceder al formulario 362")
                 raise('error controlado en formulario demografico')
 
@@ -541,8 +687,8 @@ class Legalizador:
             time.sleep(2)
             errors = self.legalizador.read('viewErrors', 'id')
             if errors:
-                self.excel.guardar(self.contador, 'Mensaje', errors)
-                self.excel.guardar(self.contador, 'Min', 'error')
+                self.safe_guardar(self.contador, 'Mensaje', errors)
+                self.safe_guardar(self.contador, 'Min', 'error')
                 self.ventana_informacion.write(f"{self.iccid} {errors}")
                 raise('error controlado en formulario demografico')
             
@@ -567,8 +713,8 @@ class Legalizador:
                         raise Exception("Timeout esperando carga después de ingresar correo")
                     
             if contador == 4:
-                self.excel.guardar(self.contador, 'Mensaje', 'No se pudo llenar los datos demograficos ya que el formulario no cargó correctamente')
-                self.excel.guardar(self.contador, 'Min', 'error')
+                self.safe_guardar(self.contador, 'Mensaje', 'No se pudo llenar los datos demograficos ya que el formulario no cargó correctamente')
+                self.safe_guardar(self.contador, 'Min', 'error')
                 self.ventana_informacion.write(f"{self.iccid} {errors}")
                 raise('error controlado en formulario demografico')
 
@@ -673,8 +819,8 @@ class Legalizador:
             time.sleep(2)
             message_element = self.legalizador.readShort2('messageFormItem', 'class')
             # message_element = self.legalizador.browser.find_element(By.CLASS_NAME, 'messageFormItem')
-            self.excel.guardar(self.contador, 'Mensaje', message_element)
-            self.excel.guardar(self.contador, 'Min', 'Procesado')
+            self.safe_guardar(self.contador, 'Mensaje', message_element)
+            self.safe_guardar(self.contador, 'Min', 'Procesado')
             self.ventana_informacion.write(f"{self.iccid} {message_element}")
             try:
                 self.legalizador.click('btnPrev', 'id')
@@ -701,15 +847,15 @@ class Legalizador:
             
             # SOLO SOBRESCRIBIR SI NO HAY MENSAJE ESPECÍFICO O ES GENÉRICO
             if not mensaje_actual or mensaje_actual in ['nan', 'None', '', 'Error en procesamiento - transacción saltada']:
-                #self.excel.guardar(self.contador, 'Mensaje', 'Error en procesamiento - transacción saltada')
-                #self.ventana_informacion.write(f"Error genérico en transacción {self.contador+1}/{self.excel.cantidad}, continuando...")
+                # self.safe_guardar(self.contador, 'Mensaje', 'Error en procesamiento - transacción saltada')
+                # self.ventana_informacion.write(f"Error genérico en transacción {self.contador+1}/{self.excel.cantidad}, continuando...")
                 print(f"Error genérico en transacción {self.contador+1}/{self.excel.cantidad}, continuando...")
             else:
                 # Preservar el mensaje específico que ya se guardó
                 self.ventana_informacion.write(f"Error específico en transacción {self.contador+1}/{self.excel.cantidad}: {mensaje_actual[:100]}")
             
             # Siempre marcar el Min como error
-            self.excel.guardar(self.contador, 'Min', 'error')
+            self.safe_guardar(self.contador, 'Min', 'error')
             
             # Intentar resetear el estado del navegador para la siguiente transacción
             try:
@@ -779,8 +925,8 @@ class Legalizador:
                     try:
                         message_element = self.legalizador.readShort2('messageFormItem', 'class')
                         print(f'legalizada {self.contador} {message_element}')
-                        self.excel.guardar(self.contador, 'Mensaje', message_element)
-                        self.excel.guardar(self.contador, 'Min', 'Procesado')
+                        self.safe_guardar(self.contador, 'Mensaje', message_element)
+                        self.safe_guardar(self.contador, 'Min', 'Procesado')
                         self.ventana_informacion.write(f"{self.iccid} {message_element}")
                         time.sleep(1)
                         if not self.wait_for_loading():
@@ -1267,22 +1413,18 @@ class Legalizador:
             
             # Guardar progreso después de cada lote
             try:
-                #self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
+                # self.excel.guardar_archivo()  # Asegurar que se guarden los cambios
                 self.ventana_informacion.write(f"Lote {i+1} completado y guardado - Éxitos: {self.transacciones_exitosas}, Fallos: {self.transacciones_fallidas}")
             except Exception as e:
                 self.log_error("guardar_lote", e)
             
             # GENERAR REPORTE PERIÓDICO DETALLADO
             tiempo_actual = time.time()
-            if tiempo_actual - self.ultimo_reporte >= self.intervalo_reporte:
-                """ reporte = self.generar_reporte_estado()
-                self.ventana_informacion.write(f"REPORTE PERIÓDICO:")
-                self.ventana_informacion.write(f"   • Tiempo: {reporte['tiempo_transcurrido_min']} min")
-                self.ventana_informacion.write(f"   • Procesadas: {reporte['total_procesadas']}/{reporte['total_transacciones']}")
-                self.ventana_informacion.write(f"   • Tasa éxito: {reporte['tasa_exito']}%")
-                self.ventana_informacion.write(f"   • Velocidad: {reporte['velocidad_por_min']} trans/min")
-                self.ventana_informacion.write(f"   • ETA: {reporte['eta_minutos']} min") """
-                self.ultimo_reporte = tiempo_actual
+            if hasattr(self, "ultimo_reporte") and hasattr(self, "intervalo_reporte"):
+                if tiempo_actual - self.ultimo_reporte >= self.intervalo_reporte:
+                    # reporte = self.generar_reporte_estado()
+                    # self.ventana_informacion.write(f"REPORTE PERIÓDICO: ...")
+                    self.ultimo_reporte = tiempo_actual
             
             # Pausa entre lotes para estabilidad (excepto el último)
             if i < len(lotes) - 1 and self.ciclo:
