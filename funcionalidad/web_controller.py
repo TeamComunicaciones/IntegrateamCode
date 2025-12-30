@@ -20,6 +20,12 @@ from selenium.webdriver.edge.service import Service
 import random
 import traceback
 import threading # <-- 1. Importar threading
+import re
+import shutil
+import platform
+from pathlib import Path
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 # --- 2. Añadir un Lock global ---
 # Este "candado" se asegurará de que solo un hilo a la vez
@@ -88,87 +94,169 @@ class Web_Controller:
         return None
     
     def ensure_msedgedriver(self):
-        """Verifica si el driver es compatible con Edge; si no, lo descarga"""
-        
-        # --- 4. Acceder a la variable caché global ---
+        """Verifica si el driver es compatible con Edge; si no, lo descarga (robusto)."""
         global driver_path_cache
-        
-        # --- 5. Usar el Lock ---
-        # Solo un hilo puede "sostener el candado" a la vez.
+
         with driver_lock:
-            # --- 6. Comprobar la caché PRIMERO ---
-            # Si el primer hilo ya verificó el driver, los otros hilos
-            # simplemente obtendrán la ruta y saldrán inmediatamente.
-            if driver_path_cache:
+            # 0) Si ya lo resolvimos antes en este proceso
+            if driver_path_cache and os.path.exists(driver_path_cache):
                 return driver_path_cache
 
-            # --- Si la caché está vacía, este es el PRIMER HILO ---
+            # 1) Si el usuario quiere forzar un driver local (modo "offline")
+            env_driver_path = os.getenv("MSEDGEDRIVER_PATH", "").strip()
+            if env_driver_path and os.path.exists(env_driver_path):
+                driver_path_cache = env_driver_path
+                return driver_path_cache
+
             project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
             dest_folder = os.path.join(project_root, "drivers")
             os.makedirs(dest_folder, exist_ok=True)
 
             edge_version = self.get_edge_version()
             if not edge_version:
-                 raise Exception("No se pudo detectar la versión de Microsoft Edge.")
-                 
+                raise Exception("No se pudo detectar la versión de Microsoft Edge.")
+
             major_edge = edge_version.split(".")[0]
             driver_path = os.path.join(dest_folder, "msedgedriver.exe")
 
-            # Si ya existe y es compatible
+            # 2) Si ya existe y el major coincide, úsalo
             if os.path.exists(driver_path):
                 driver_version = self.get_driver_version(driver_path)
                 if driver_version and driver_version.split(".")[0] == major_edge:
-                    # --- 7. Guardar en caché y retornar ---
-                    driver_path_cache = driver_path # Guardar en caché
+                    driver_path_cache = driver_path
                     return driver_path
                 else:
                     print(f"[INFO] Driver desactualizado (Driver: {driver_version}, Edge: {edge_version}), descargando nuevo...")
+                    try:
+                        os.remove(driver_path)
+                    except OSError:
+                        pass
 
-            # (Lógica de descarga...)
-            url = f"https://msedgedriver.azureedge.net/{edge_version}/edgedriver_win64.zip"
-            resp = requests.get(url, stream=True)
+            # 3) Base URLs (mirror opcional + oficial actual)
+            mirrors = []
+            env_mirror = os.getenv("MSEDGEDRIVER_BASE_URL", "").strip()
+            if env_mirror:
+                mirrors.append(env_mirror.rstrip("/"))
+            mirrors.append("https://msedgedriver.microsoft.com")  # <-- URL correcta actual
 
-            if resp.status_code != 200:
-                print(f"[WARN] No se encontró el driver exacto {edge_version}, buscando LATEST_STABLE para {major_edge}...")
-                # URL alternativa para obtener la última versión estable del major
-                latest_url = f"https.msedgedriver.azureedge.net/LATEST_RELEASE_{major_edge}_WIN"
-                latest_resp = requests.get(latest_url)
-                
-                if latest_resp.status_code != 200:
-                     # Fallback aún más genérico si el major falla
-                     latest_url = "https.msedgedriver.azureedge.net/LATEST_STABLE"
-                     print(f"[WARN] No se encontró LATEST_RELEASE para {major_edge}, buscando LATEST_STABLE...")
-                     latest_resp = requests.get(latest_url)
-                     if latest_resp.status_code != 200:
-                         raise Exception(f"No se pudo obtener driver para Edge {major_edge}")
-                
-                # El contenido de la respuesta puede tener caracteres extra (BOM)
-                driver_version = latest_resp.content.decode('utf-16-le', errors='ignore').strip()
-                print(f"[INFO] Versión del driver a descargar: {driver_version}")
+            # 4) Session con retries
+            session = requests.Session()
+            session.headers.update({"User-Agent": "IntegrateamCode/1.0"})
+            retry = Retry(
+                total=4,
+                backoff_factor=0.6,
+                status_forcelist=(429, 500, 502, 503, 504),
+                allowed_methods=frozenset(["GET", "HEAD"]),
+            )
+            adapter = HTTPAdapter(max_retries=retry)
+            session.mount("https://", adapter)
+            session.mount("http://", adapter)
 
-                url = f"https://msedgedriver.azureedge.net/{driver_version}/edgedriver_win64.zip"
-                resp = requests.get(url, stream=True)
+            # 5) Detectar zip según arquitectura
+            is_64 = platform.machine().endswith("64")
+            zip_name = "edgedriver_win64.zip" if is_64 else "edgedriver_win32.zip"
 
-            if resp.status_code != 200:
-                raise Exception(f"No se pudo descargar driver desde {url}")
+            def fetch_text(url: str) -> str:
+                r = session.get(url, timeout=(5, 20))
+                r.raise_for_status()
+                txt = (r.text or "").strip()
+                # quitar BOM si viene
+                txt = txt.lstrip("\ufeff").strip()
+                return txt
 
-            zip_path = os.path.join(dest_folder, "edgedriver.zip")
-            with open(zip_path, "wb") as f:
-                for chunk in resp.iter_content(1024):
-                    f.write(chunk)
+            def download_file(url: str, out_path: str) -> None:
+                r = session.get(url, stream=True, timeout=(10, 120))
+                r.raise_for_status()
+                with open(out_path, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=1024 * 512):
+                        if chunk:
+                            f.write(chunk)
 
-            try:
-                with zipfile.ZipFile(zip_path, "r") as zip_ref:
-                    zip_ref.extractall(dest_folder)
-            except zipfile.BadZipFile:
-                 raise Exception(f"El archivo descargado de {url} está corrupto o no es un ZIP.")
-            
-            os.remove(zip_path)
+            def extract_and_place_driver(zip_path: str) -> str:
+                try:
+                    with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                        zip_ref.extractall(dest_folder)
+                except zipfile.BadZipFile:
+                    raise Exception(f"El archivo descargado está corrupto o no es ZIP: {zip_path}")
 
-            # --- 8. Guardar en caché después de descargar y retornar ---
-            driver_path_cache = driver_path
-            return driver_path
-        # El "lock" se libera automáticamente aquí
+                # buscar msedgedriver.exe incluso si viene en subcarpetas
+                candidates = list(Path(dest_folder).rglob("msedgedriver.exe"))
+                if not candidates:
+                    raise Exception(f"Zip descargado pero no encontré msedgedriver.exe dentro: {zip_path}")
+
+                found = str(candidates[0])
+
+                # mover al path estándar
+                if os.path.abspath(found) != os.path.abspath(driver_path):
+                    try:
+                        os.replace(found, driver_path)
+                    except OSError:
+                        shutil.copy2(found, driver_path)
+
+                return driver_path
+
+            def get_latest_for_major(base_url: str, major: str) -> str | None:
+                # Los reportes recientes muestran sufijo _WINDOWS
+                candidates = [
+                    f"{base_url}/LATEST_RELEASE_{major}_WINDOWS",
+                    f"{base_url}/LATEST_RELEASE_{major}_WIN",
+                    f"{base_url}/LATEST_RELEASE_{major}",
+                ]
+                for u in candidates:
+                    try:
+                        txt = fetch_text(u)
+                        # validar que sea versión tipo "143.0.3650.96"
+                        if re.match(rf"^{re.escape(major)}\.\d+\.\d+\.\d+$", txt):
+                            return txt
+                    except Exception:
+                        continue
+                return None
+
+            last_error = None
+
+            for base in mirrors:
+                zip_path = os.path.join(dest_folder, zip_name)
+                try:
+                    # 6) Intento 1: exact match (misma versión de Edge)
+                    url = f"{base}/{edge_version}/{zip_name}"
+                    download_file(url, zip_path)
+                    out = extract_and_place_driver(zip_path)
+                    try:
+                        os.remove(zip_path)
+                    except OSError:
+                        pass
+                    driver_path_cache = out
+                    return out
+                except Exception as e:
+                    last_error = e
+                    # 7) Intento 2: latest release del major
+                    try:
+                        latest = get_latest_for_major(base, major_edge)
+                        if not latest:
+                            continue
+                        url = f"{base}/{latest}/{zip_name}"
+                        download_file(url, zip_path)
+                        out = extract_and_place_driver(zip_path)
+                        try:
+                            os.remove(zip_path)
+                        except OSError:
+                            pass
+                        driver_path_cache = out
+                        return out
+                    except Exception as e2:
+                        last_error = e2
+                    finally:
+                        try:
+                            if os.path.exists(zip_path):
+                                os.remove(zip_path)
+                        except OSError:
+                            pass
+
+            raise Exception(
+                f"No pude descargar msedgedriver. Probé mirrors={mirrors} "
+                f"(edge_version={edge_version}, major={major_edge}). Último error: {last_error}"
+            )
+
     
     #def edgedriver(self):
     #     response = requests.get('https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/LATEST_STABLE')
@@ -185,6 +273,25 @@ class Web_Controller:
     #         opts.add_argument("--headless=new")
 
     #     return webdriver.Edge(options=opts)
+
+    def is_displayed(self, byStr, by='xpath'):
+        """
+        Retorna True si el elemento existe y está visible (displayed).
+        """
+        try:
+            if by == "xpath":
+                el = self.browser.find_element_by_xpath(byStr)
+            elif by == "id":
+                el = self.browser.find_element_by_id(byStr)
+            elif by == "name":
+                el = self.browser.find_element_by_name(byStr)
+            elif by == "class":
+                el = self.browser.find_element_by_class_name(byStr)
+            else:
+                return False
+            return el.is_displayed()
+        except Exception:
+            return False
 
     def validate(funcion):
         def execute(self,*args, **kwargs):

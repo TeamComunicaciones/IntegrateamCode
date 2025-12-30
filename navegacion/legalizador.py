@@ -17,6 +17,9 @@ import random
 import os
 import shutil
 
+class SessionExpiredError(Exception):
+    """Se usa para cortar el flujo cuando Poliedro devuelve al login (sesión expirada)."""
+    pass
 
 class Legalizador:
 
@@ -240,7 +243,7 @@ class Legalizador:
             
             time.sleep(3)
             self.poliedro.seleccionAcceso('362', start=True)
-            if not self.wait_for_loading(legalizador=False):
+            if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando carga")
 
             try:
@@ -875,26 +878,48 @@ class Legalizador:
         
     def verificar_urls(self):
         lista_ejecucion = {
-            'paso1' : self.captura_datos_optimized,
-            'validate' : self.validate_data,
-            'demographic' : self.captura_demografica_optimized,
-            'equipo plan' : self.datos_equipo_plan,
-            'activacion' : self.activacion,
+            'paso1': self.captura_datos_optimized,
+            'validate': self.validate_data,
+            'demographic': self.captura_demografica_optimized,
+            'equipo plan': self.datos_equipo_plan,
+            'activacion': self.activacion,
         }
 
         mode = 'on'
         intentos = 0
         max_intentos = 10
         procesado = False
+
         while intentos < max_intentos:
             intentos += 1
-            if not self.wait_for_loading(timeout=35, sleep_interval=0.3):
-                raise Exception("Timeout esperando carga después de seleccionar ciudad")
-            track = self.position_detect()
-            print(track, mode)
-            if track in ['login']:
-                raise Exception('session cerrada')
-            elif track == 'restart':
+
+            # 1) Bloque protegido: si la sesión se cayó, re-login y seguir
+            try:
+                ok = self.wait_for_loading(timeout=35, sleep_interval=0.3)
+
+                if not ok:
+                    # Aquí está el cambio clave: antes de asumir "timeout ciudad", revisa dónde estás
+                    track_tmp = self.position_detect()
+                    if track_tmp == 'login':
+                        raise SessionExpiredError("Sesión expirada: redirigido al login (detectado tras timeout)")
+                    raise Exception("Timeout esperando carga después de seleccionar ciudad")
+
+                track = self.position_detect()
+                print(track, mode)
+
+                if track == 'login':
+                    # En vez de tirar Exception genérica y morir, lo tratamos como sesión expirada
+                    raise SessionExpiredError("Sesión expirada: detectado login en position_detect()")
+
+            except SessionExpiredError as e:
+                self.ventana_informacion.write(f"🔐 {e}. Reintentando login...")
+
+                if not self.verificar_sesion_activa():
+                    raise Exception("Error crítico: Fallo en login de Poliedro")
+                continue
+
+            # --- A partir de aquí, tu lógica original SIN CAMBIOS ---
+            if track == 'restart':
                 try:
                     if not self.wait_for_loading():
                         raise Exception("Timeout esperando carga inicial")
@@ -903,14 +928,17 @@ class Legalizador:
                         raise Exception("Timeout esperando carga inicial")
                 except Exception as e:
                     self.log_error("Error en restart", e)
+
             elif track == 'paso1' and mode == 'off':
                 procesado = True
                 break
+
             elif mode == 'off':
-                try:                        
+                try:
                     self.legalizador.click('btnPrev', 'id')
                 except Exception as e:
                     print("btnPrev click en modo off", e)
+
             elif track == 'activacion':
                 try:
                     if self.legalizador.elementExists('btnPrev', 'id'):
@@ -919,8 +947,8 @@ class Legalizador:
                         nombre_boton = None
                 except Exception as e:
                     print("btnPrev value read en activacion", e)
-                    nombre_boton = None  # Valor por defecto si no se puede leer
-                    
+                    nombre_boton = None
+
                 if nombre_boton == 'Iniciar Nueva Activacion':
                     try:
                         message_element = self.legalizador.readShort2('messageFormItem', 'class')
@@ -931,16 +959,14 @@ class Legalizador:
                         time.sleep(1)
                         if not self.wait_for_loading():
                             raise Exception("Timeout esperando carga después de validación")
-                        try: 
+                        try:
                             self.legalizador.click('btnPrev', 'id')
-                        except Exception as e: 
+                        except Exception as e:
                             print("btnPrev click después de transacción exitosa", e)
-                            # Intentar métodos alternativos de navegación si btnPrev falla
                             try:
-                                self.position_detect()  # Detectar posición actual y navegar apropiadamente
+                                self.position_detect()
                             except:
                                 pass
-                        # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                         procesado = True
                         break
                     except Exception as e:
@@ -950,27 +976,24 @@ class Legalizador:
                                 self.legalizador.click('btnPrev', 'id')
                             except Exception as e:
                                 print("btnPrev click después de error", e)
-                            # self.legalizador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
                             procesado = True
                             break
                         except Exception as e:
                             self.log_error("verificar_urls - manejo de error", e)
-                  
+
                 else:
                     try:
                         time.sleep(2)
                         if not self.wait_for_loading():
                             raise Exception("Timeout esperando carga después de validación")
-                        # Verificar si el botón existe antes de hacer clic
                         if self.legalizador.elementExists('btnNext', 'id'):
                             self.legalizador.click('btnNext', 'id')
                         else:
-                            # El botón no existe, pero no es un error crítico
                             print("btnNext no disponible - continuando proceso")
                     except Exception as e:
-                        # Solo loggear si no es el error de btnNext
                         if "btnNext" not in str(e):
                             self.log_error("btnNext click en legalizador", e)
+
             else:
                 ejec = lista_ejecucion[track]
                 try:
@@ -979,13 +1002,13 @@ class Legalizador:
                 except Exception as e:
                     self.log_error("Error en ejecución de función", e)
                     mode = 'off'
+
         if not procesado:
             # Reintentar login y acceso desde cero
             self.poliedro_login_service = None
             if not self.login():
                 self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
                 self.on_of(True)
-                # Lanzar excepción para salir del bloque try y entrar al except final
                 raise Exception("Error crítico: Fallo en login de Poliedro")
             time.sleep(2)
             try:
@@ -1108,56 +1131,72 @@ class Legalizador:
                         
     def position_detect(self):
         position = {
-            'paso1' : [("h3", "iconoTituloCliente"),("h3", "iconoTituloInfoVenta"),("h3", "iconoTituloEquipo")],
-            'validate' : [ ("h3", "iconoTituloDatosDistribuidor")],
-            'demographic' : [ ("h3", "iconoTituloInfoPersonal")],
-            'equipo plan' : [ ("h3", "iconoTituloDatosEquipoyPlan")],
-            'activacion' : [ ("h3", "iconoTituloActivacionesCliente"),("h3", "iconoTituloActivacionesServicios"),("h3", "iconoTituloActivacionesProducto")],
+            'paso1': [("h3", "iconoTituloCliente"), ("h3", "iconoTituloInfoVenta"), ("h3", "iconoTituloEquipo")],
+            'validate': [("h3", "iconoTituloDatosDistribuidor")],
+            'demographic': [("h3", "iconoTituloInfoPersonal")],
+            'equipo plan': [("h3", "iconoTituloDatosEquipoyPlan")],
+            'activacion': [("h3", "iconoTituloActivacionesCliente"), ("h3", "iconoTituloActivacionesServicios"), ("h3", "iconoTituloActivacionesProducto")],
             'restart': [("h3", "iconoTituloProducto"), ("span", "select2-selection__rendered")],
-            'login': [("input", "botonLoginhomePoliedro")]
+            # OJO: este suele ser ID (no class)
+            'login': [("input", "botonLoginhomePoliedro")],
         }
-        
+
         count = 0
-        max_iterations = 20  # LÍMITE MÁXIMO DE ITERACIONES
-        
+        max_iterations = 20
+
         while count < max_iterations:
-            self.scrap = scraping.Scraping(self.legalizador.retornarHtml())
+            try:
+                html = self.legalizador.retornarHtml() or ""
+            except Exception:
+                html = ""
+
+            self.scrap = scraping.Scraping(html)
             soup = self.scrap.soup
-            pos = None
-            
-            for i, j in position.items():
-                if self.validate_position(j, soup, 'class'):
-                    pos = i
-                    print(f"Posición detectada: {pos}")
-                    return pos
-            
-            # SI NO ENCUENTRA NINGUNA POSICIÓN, ESPERAR Y REINTENTAR
+
+            # Detectar LOGIN primero y de forma correcta (por id)
+            try:
+                # Si tu validate_position soporta attr 'id'
+                if self.validate_position(position['login'], soup, 'id'):
+                    print("Posición detectada: login")
+                    return 'login'
+            except Exception:
+                # Fallback directo por BeautifulSoup por si validate_position no soporta 'id'
+                try:
+                    if soup.find("input", id="botonLoginhomePoliedro") is not None:
+                        print("Posición detectada: login")
+                        return 'login'
+                except Exception:
+                    pass
+
+            # Detectar el resto por class (como ya lo venías haciendo)
+            for key, selectors in position.items():
+                if key == 'login':
+                    continue
+                if self.validate_position(selectors, soup, 'class'):
+                    print(f"Posición detectada: {key}")
+                    return key
+
+            # No detectó posición: esperar y reintentar
             print(f"Posición no detectada. Intento {count + 1}/{max_iterations}")
-            time.sleep(1)  # Esperar antes de reintentar
+            time.sleep(1)
             count += 1
-        
-        # Acá se realiza el reintento login
-        self.poliedro_login_service = None
-        if not self.login():
-            self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
-            self.on_of(True)
-            # Lanzar excepción para salir del bloque try y entrar al except final
-            raise Exception("Error crítico: Fallo en login de Poliedro")
-        time.sleep(2)
+
+        # ✅No reloguear aquí: delegar recuperación al flujo central
+        raise SessionExpiredError(
+            f"No se pudo detectar posición después de {max_iterations} intentos "
+            f"(posible sesión expirada o navegación inesperada)"
+        )
+
+    def safe_wait_for_loading(self, timeout=120, sleep_interval=1):
         try:
-            self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
-        except Exception as e:
-            self.log_error("click en menú", e)
-            return
-        time.sleep(2)
-        self.poliedro.seleccionAcceso('362', start=True)
-        if not self.wait_for_loading(legalizador=False):
-            raise Exception("Timeout esperando carga")
-        # SI SE AGOTA EL LÍMITE, LANZAR EXCEPCIÓN ESPECÍFICA
-        raise Exception(f'No se pudo detectar posición después de {max_iterations} intentos')
+            return self.wait_for_loading(timeout=timeout, sleep_interval=sleep_interval)
+        except SessionExpiredError as e:
+            self.ventana_informacion.write(f"🔐 {e}. Recuperando sesión...")
+            if not self.verificar_sesion_activa():
+                raise Exception("Error crítico: Fallo en login de Poliedro")
+            # reintento después de recuperar sesión
+            return self.wait_for_loading(timeout=timeout, sleep_interval=sleep_interval)
 
-
-    
     def validate_position(self, elementos_requeridos, soup, type='id'):
         """
         Valida si los elementos están presentes Y visibles en la página
@@ -1175,46 +1214,31 @@ class Legalizador:
                 
         return True
 
-    def wait_for_loading(self, timeout=120, sleep_interval=1, legalizador=True):
-        """
-        Método reutilizable para esperar que termine la carga con timeout adaptativo.
-        
-        Args:
-            timeout (int): Tiempo máximo de espera en segundos
-            sleep_interval (float): Intervalo entre verificaciones
-            legalizador (bool): True para usar self.legalizador, False para self.poliedro
-            
-        Returns:
-            bool: True si terminó la carga, False si hubo timeout
-        """
-        # ✅ APLICAR TIMEOUT ADAPTATIVO
+    def wait_for_loading(self, timeout=120, sleep_interval=1, legalizador=None, **kwargs):
         adaptive_timeout = self.get_adaptive_timeout(timeout)
         start_time = time.time()
-        
+
         while time.time() - start_time < adaptive_timeout:
-            try:
-                if legalizador:
-                    try:
-                        loading_style = self.legalizador.style('loading', 'id')
-                    except Exception:
-                        loading_style = self.poliedro.style('loading', 'id')
-                else:
-                    loading_style = self.poliedro.style('loading', 'id')
-                if "display: none" in loading_style:
-                    return True
-                elif "display: block" in loading_style:
-                    print(f'Loading... ({time.time() - start_time:.1f}s)')
-            except Exception:
-                # Si no puede leer el estilo, asumir que terminó la carga
+            # 1) Si caíste al login, cortar YA
+            if self.poliedro_login_service and (not self.poliedro_login_service.validar_sesion_activa()):
+                raise SessionExpiredError("Sesión expirada: redirigido a login")
+
+            # 2) Si no existe el loading, no hay nada que esperar
+            if not self.legalizador.elementExists("loading", by="id"):
                 return True
-                
+
+            # 3) Si existe, mirar visibilidad REAL (no attribute style)
+            if not self.legalizador.is_displayed("loading", by="id"):
+                return True
+
             time.sleep(sleep_interval)
-        
-        # ✅ REGISTRAR TIMEOUT PARA MÉTRICAS ADAPTATIVAS
+
+        # Timeout real (NO sesión)
         self.recent_timeouts += 1
-        print(f"Timeout después de {adaptive_timeout} segundos esperando que termine la carga")
-        self.ventana_informacion.write(f"⚠️ Timeout detectado ({adaptive_timeout}s) - Total recientes: {self.recent_timeouts}")
-        return False  # Timeout
+        self.ventana_informacion.write(
+            f"⚠️ Timeout detectado ({adaptive_timeout}s) - Total recientes: {self.recent_timeouts}"
+        )
+        return False
     
     def actualizar_metricas(self):
         """
@@ -1318,17 +1342,20 @@ class Legalizador:
             self.ventana_informacion.write(f"Procesando {total_transacciones} transacciones en {len(lotes)} lotes de max {tamano_lote}")
         
         # Inicializar setup una sola vez
-        if not self.wait_for_loading():
+        if not self.safe_wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en demografica")
         try:
             self.legalizador.click('toggleProductBTN', 'id')
         except:
             pass
         
-        if not self.wait_for_loading():
+        if not self.safe_wait_for_loading():
             raise Exception("Timeout esperando carga inicial en procesar_por_lotes")
         
         self.cookie_header['Cookie'] = self.legalizador.getCookies()
+
+        self.last_session_check = time.time()
+        self.session_check_interval = 180
         
         for i, inicio_lote in enumerate(lotes):
             if not self.ciclo:  # Si el usuario detuvo el proceso
@@ -1371,6 +1398,17 @@ class Legalizador:
 
                     self.cookie_header['Cookie'] = self.legalizador.getCookies()
                     
+                    # Chequeo periódico de sesión en mitad del lote (cada X segundos)
+                    if time.time() - self.last_session_check >= self.session_check_interval:
+                        self.ventana_informacion.write("Chequeo periódico de sesión...")
+                        if not self.verificar_sesion_activa():
+                            self.ventana_informacion.write("❌ Error crítico: No se pudo restaurar la sesión durante el lote")
+                            self.on_of(True)
+                            raise Exception("Error crítico: Fallo en login de Poliedro")
+                        # refresca cookies por si el login renovó sesión
+                        self.cookie_header['Cookie'] = self.legalizador.getCookies()
+                        self.last_session_check = time.time()
+
                     # PROCESAR TRANSACCIÓN CON MÉTRICAS
                     try:
                         self.verificar_urls()
@@ -1530,7 +1568,7 @@ class Legalizador:
                         self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
                         time.sleep(3)
                         self.poliedro.seleccionAcceso('362', start=True)
-                        if not self.wait_for_loading(legalizador=False):
+                        if not self.safe_wait_for_loading():
                             return False
                     except Exception as e:
                         self.log_error("restaurar_navegacion", e)

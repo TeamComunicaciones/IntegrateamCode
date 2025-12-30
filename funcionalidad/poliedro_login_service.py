@@ -79,22 +79,22 @@ class LoginService:
                     return False
                     
                 # Paso 2: Obtener código OTP
-                codigo_otp = None
+                codigo_otp = 1220
 
-                if self.mysms_portal:
-                    codigo_otp = self._obtener_codigo_otp()
-                elif self.google_messages_portal:
-                    codigo_otp = self._obtener_codigo_otp_google()
-                else:
-                    self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
-                    return False
+                # if self.mysms_portal:
+                #     codigo_otp = self._obtener_codigo_otp()
+                # elif self.google_messages_portal:
+                #     codigo_otp = self._obtener_codigo_otp_google()
+                # else:
+                #     self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
+                #     return False
                 
-                if not codigo_otp:
-                    self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
-                        self._esperar_antes_reintentar()
-                        continue
-                    return False
+                # if not codigo_otp:
+                #     self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
+                #     if intento < self.max_login_attempts - 1:
+                #         self._esperar_antes_reintentar()
+                #         continue
+                #     return False
                     
                 # Paso 3: Ingresar código OTP
                 if not self._ingresar_codigo_otp(codigo_otp):
@@ -341,33 +341,27 @@ class LoginService:
     
     def validar_sesion_activa(self):
         """
-        Valida si la sesión sigue activa
-        
-        Returns:
-            bool: True si la sesión está activa, False en caso contrario
+        True = sesión activa, False = estás en login / sesión caída
         """
         try:
-            # Verificar elementos que indican sesión activa
-            # Esto deberías adaptarlo según los elementos específicos de tu aplicación
-            session_indicators = [
-                ("input", "botonLoginhomePoliedro")  # Si este elemento existe, no hay sesión
+            wc = self.web_controller
+
+            # Indicadores de LOGIN (si aparecen, NO hay sesión)
+            login_ids = [
+                "ctl00_ContentPlaceHolder1_txtUsuario",
+                "ctl00_ContentPlaceHolder1_txtContraseña",
+                "btnIngresarUsuarioContraseña",
+                "botonLoginhomePoliedro",
             ]
-            
-            html_content = self.web_controller.retornarHtml()
-            from funcionalidad import scraping
-            
-            scrap = scraping.Scraping(html_content)
-            soup = scrap.soup
-            
-            # Si encuentra elementos de login, la sesión no está activa
-            for tag, id_value in session_indicators:
-                if soup.find(tag, id=id_value):
+
+            for _id in login_ids:
+                if wc.elementExists(_id, by="id"):
                     return False
-                    
+
             return True
-            
         except Exception as e:
             self._log_error("validar_sesion_activa", e)
+            # Si no podemos verificar, mejor asumir que NO está activa para forzar recuperación
             return False
     
     def _esperar_antes_reintentar(self):
