@@ -19,6 +19,7 @@ from selenium.webdriver.support.ui import Select
 class Preactivador:
 
     def __init__(self,master, on_of, alertas):
+        self.traffic_base = "https://prod-md.azpol.claro.com.co"
         self.alertas = alertas
         self.min = ''
         self.etapa = 0
@@ -133,6 +134,17 @@ class Preactivador:
         self.modo_captura_datos = tk.BooleanVar()
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
        
+    def traffic_url(self, path: str) -> str:
+        return self.traffic_base.rstrip("/") + "/" + path.lstrip("/")
+    
+    def sync_traffic_base_from_browser(self):
+        from urllib.parse import urlparse
+        u = self.preactivador.browser.current_url
+        p = urlparse(u)
+        if p.scheme and p.netloc:
+            self.traffic_base = f"{p.scheme}://{p.netloc}"
+            self.ventana_informacion.write(f"✅ Traffic base detectada: {self.traffic_base}")
+    
     def guardar_tiempo_espera(self):
         self.valor = self.spinbox_tiempo_espera.get_value()
         self.ventana_informacion.write(f'Tiempo de espera configurado: {self.valor} segundos')
@@ -235,6 +247,7 @@ class Preactivador:
 
             # self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('195')
+            self.sync_traffic_base_from_browser()
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
             self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
@@ -258,7 +271,7 @@ class Preactivador:
                             self.EquiposInd()
                     except:
                         try:
-                            self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            self.preactivador.selectPage(self.traffic_url("/CaptureData"))
                             if not self.wait_for_loading():
                                 raise Exception("Timeout esperando que la página cargue")
                             self.poliedro.seleccionAcceso('195', start=False)
@@ -364,7 +377,7 @@ class Preactivador:
         # }
         # request_product_service = session.post(url_product_service, headers=headers, data=payload_product_service)
         # if request_product_service.status_code == 200:
-        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Activation')
+        self.preactivador.selectPage(self.traffic_url("/Activation"))
         self.preactivador.click('btnNext', 'id')
         try:
             find = self.preactivador.browser.find_element_by_id('btnNext')
@@ -382,8 +395,6 @@ class Preactivador:
         self.excel.guardar(self.contador, 'Min', message, destino='src\preactivador\preactivador.xlsx')
         self.ventana_informacion.write(f'Preactivado con min {message}')
         raise('sin error')
-        
-
 
         # try:
         #     self.validado()
@@ -425,7 +436,7 @@ class Preactivador:
 
 
     def captura_datos_api(self):
-        url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2'
+        url = self.traffic_url("/CaptureData/Index2")
         payload = {
             'ProductShortcutName': '195 - (GAWBE) - WelcomeBack',
             'Pospago': False,
@@ -482,7 +493,7 @@ class Preactivador:
         post_response = session.post(url, headers=headers, data=payload)
         if post_response.status_code != 200:
             raise('Error en la respuesta de CaptureData')
-        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        self.preactivador.selectPage(self.traffic_url("/Validation"))
 
 
     def datos_demograficos_web(self):
@@ -561,7 +572,7 @@ class Preactivador:
 
     
     def datos_demograficos_api(self):
-        demographic_url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1'
+        demographic_url = self.traffic_url("/Demographic/Index1")
         demographic_data = {
             "PersonalInfo.GreetingId": "O",
             "PersonalInfo.Name": self.nombre,
@@ -593,7 +604,7 @@ class Preactivador:
         demographic_response = session.post(demographic_url, headers=headers, data=demographic_data)
         if demographic_response.status_code != 200:
             raise('error demografic')
-        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+        self.preactivador.selectPage(self.traffic_url("/ProductService"))
             
     def validado(self):
         self.cookie_header['Cookie'] = self.preactivador.getCookies()
@@ -606,7 +617,7 @@ class Preactivador:
         for cookie in cookies:
             session.cookies.set(cookie['name'], cookie['value'])
             
-        demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
+        demographic_url = self.traffic_url("/Demographic/Index1")
         demographic_data = {               
             "PersonalInfo.GreetingId": "M",
             "PersonalInfo.Name": "",
@@ -628,7 +639,7 @@ class Preactivador:
             "PersonalInfo.ProductDonorOperator": "2"
         }
         
-        self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+        self.preactivador.selectPage(self.traffic_url("/Validation"))
         if not self.wait_for_loading(preactivador=False):
             raise Exception("Timeout esperando que la página cargue")
         try:
@@ -638,13 +649,13 @@ class Preactivador:
                 message = self.preactivador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                 if message == 'Porta ya registrada':
                     self.excel.guardar(self.contador, 'Mensaje', message)
-                    self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                    self.preactivador.selectPage(self.traffic_url("/CaptureData"))
                     self.poliedro.seleccionAcceso('195', start=False)
                     if not self.wait_for_loading():
                         raise Exception("Timeout esperando que la página cargue")
                     self.ventana_informacion.write(f"{self.cedula} Porta ya registrada'")
             except:
-                self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                self.preactivador.selectPage(self.traffic_url("/CaptureData"))
                 self.poliedro.seleccionAcceso('195', start=False)
                 if not self.wait_for_loading():
                     raise Exception("Timeout esperando que la página cargue")
@@ -653,7 +664,7 @@ class Preactivador:
         
         demographic_response = session.post(demographic_url, demographic_data, headers = headers)
         if demographic_response.status_code == 200:
-            self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+            self.preactivador.selectPage(self.traffic_url("/ProductService"))
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
             self.pagina = 4
@@ -789,13 +800,13 @@ class Preactivador:
                 message = self.preactivador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                 if message == 'Porta ya registrada':
                     self.excel.guardar(self.contador, 'Mensaje', message)
-                    self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    self.preactivador.selectPage(self.traffic_url("/"))
                     self.poliedro.seleccionAcceso('195', start=False)
                     if not self.wait_for_loading():
                         raise Exception("Timeout esperando que la página cargue")
                     self.ventana_informacion.write(f"{self.iccid} Sim ya registrada'")
             except:
-                self.preactivador.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                self.preactivador.selectPage(self.traffic_url("/"))
                 self.poliedro.seleccionAcceso('195', start=False)
                 if not self.wait_for_loading():
                     raise Exception("Timeout esperando que la página cargue")

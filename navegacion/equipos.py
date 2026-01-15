@@ -14,6 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
 import random
+from config.urls import traffic_url
 
 class Equipos:
 
@@ -223,7 +224,7 @@ class Equipos:
                                     continue
                             except:
                                 # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
-                                self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                                self.equipos.selectPage(traffic_url("/CaptureData"))
                                 try:
                                     self.poliedro.seleccionAcceso('194', start=False)
                                 except: 
@@ -256,7 +257,7 @@ class Equipos:
                             if "Error crítico: Fallo en login de Poliedro" in str(e):
                                 raise Exception("Error crítico: Fallo en login de Poliedro")
                             self.ventana_informacion.write(f"Error en la iteración {self.contador}: {e}")
-                            self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                            self.equipos.selectPage(traffic_url("/CaptureData"))
                             """ self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span/text()')
                             time.sleep(2)
                             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
@@ -376,7 +377,7 @@ class Equipos:
             raise Exception("Error validación WEB")
     
     def captura_datos_api(self):
-        url = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData/Index2'
+        url = traffic_url("/CaptureData/Index2")
         payload = {
             'ProductShortcutName': '194 - (GAKC) - Activación Kit Contado',
             'Pospago': False,
@@ -434,7 +435,7 @@ class Equipos:
                 self.ventana_informacion.write(post_response.json()['errores'][0])
                 raise('error validacion 1')
             else:
-                self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+                self.equipos.selectPage(traffic_url("/Validation"))
         else:
             raise('error validacion API')
 
@@ -454,11 +455,11 @@ class Equipos:
                     message = self.equipos.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Equipo procesado':
                         self.excel.guardar(self.contador, 'Mensaje', message)
-                        self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                        self.equipos.selectPage(traffic_url("/CaptureData"))
                         self.poliedro.seleccionAcceso('194', start=False)
                         self.ventana_informacion.write(f"{self.iccid} Equipo procesado'")
                 except:
-                    self.equipos.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/CaptureData')
+                    self.equipos.selectPage(traffic_url("/CaptureData"))
                     self.poliedro.seleccionAcceso('194', start=False)
                     self.ventana_informacion.write(f"{self.iccid} error no identificado")
                 raise('error controlado kit registrado')
