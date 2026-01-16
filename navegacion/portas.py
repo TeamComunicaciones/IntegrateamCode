@@ -13,6 +13,7 @@ from funcionalidad import poliedro_login_service
 import random
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
+from config.urls import traffic_url
 
 class Portas:
  
@@ -404,7 +405,7 @@ class Portas:
     
     def validado(self):
             
-            self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/Validation')
+            self.portas.selectPage(traffic_url("/Validation"))
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando carga inicial en captura_datos")
             try:
@@ -416,7 +417,7 @@ class Portas:
                     message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Porta ya registrada':
                         self.excel.guardar(self.contador, 'Mensaje', message)
-                        self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                        self.portas.selectPage(traffic_url("/"))
                         if not self.wait_for_loading():
                             raise Exception("Timeout esperando carga inicial en captura_datos")
                         self.poliedro.seleccionAcceso('290', start=False)
@@ -424,7 +425,7 @@ class Portas:
                             raise Exception("Timeout esperando carga inicial en captura_datos")
                         self.ventana_informacion.write(f"{self.idCliente} Porta ya registrada'")
                 except:
-                    self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/')
+                    self.portas.selectPage(traffic_url("/"))
                     if not self.wait_for_loading():
                         raise Exception("Timeout esperando carga inicial en captura_datos")
                     self.poliedro.seleccionAcceso('290', start=False)
@@ -537,7 +538,7 @@ class Portas:
 
     
     def validado_api(self):
-        demographic_url = "https://traffic-md-webapp-prd01.traffic.claro.com.co/Demographic/Index1"
+        demographic_url = traffic_url("/Demographic/Index1")
         demographic_data = {               
             "PersonalInfo.GreetingId": "M",
             "PersonalInfo.Name": self.nombre,
@@ -573,7 +574,7 @@ class Portas:
             self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1",destino="src\portas\portabilidad.xlsx")
             raise Exception("Error en la URL de Demographic/Index1")
         
-        self.portas.selectPage('https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService')
+        self.portas.selectPage(traffic_url("/ProductService"))
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga inicial en captura_datos")
         
