@@ -15,6 +15,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from config.urls import traffic_url
 
+
+class SessionExpiredError(Exception):
+    """Se lanza cuando detectamos que Poliedro devolvió al login (sesión expirada)."""
+    pass
+
 class Portas:
  
     def __init__(self, master, on_of, alertas):
@@ -257,7 +262,12 @@ class Portas:
                         continue
                     else:
                         self.start_time = time.time()
-                        self.rellenoPrimerFormulario()
+                        # Si la sesión expira a mitad del flujo, re-login y reintenta sin marcar error.
+                        self._run_with_relogin(
+                            self.rellenoPrimerFormulario,
+                            max_retries=2,
+                            context=f"registro {self.contador+1}",
+                        )
                     # self.copiarMin(i)
                     # elapsed_time = time.time() - start_time
                     # self.excel.guardar(i,'MENSAJE',str(round(elapsed_time,2)), destino='src\portas\portabilidad.xlsx')
@@ -780,6 +790,82 @@ class Portas:
                 mysms=self.mysms.get(),
                 google_messages=self.google_messages.get(),
             )
+
+    def _looks_like_login_page(self) -> bool:
+        """Heurística rápida por HTML para saber si nos devolvieron al login."""
+        try:
+            html = self.portas.retornarHtml()
+            return "botonLoginhomePoliedro" in str(html)
+        except Exception:
+            return False
+
+    def verificar_sesion_activa(self) -> bool:
+        """
+        Verifica si la sesión sigue viva; si expiró, hace re-login automático.
+
+        Importante: este método **sí** ejecuta el flujo normal de login (incluye OTP),
+        porque delega en LoginService.login_automatico().
+        """
+        try:
+            if not self.poliedro_login_service:
+                self.inicializar_login_service()
+
+            # 1) Si el servicio sabe validar sesión, úsalo
+            if self.poliedro_login_service and hasattr(self.poliedro_login_service, "validar_sesion_activa"):
+                try:
+                    if self.poliedro_login_service.validar_sesion_activa():
+                        return True
+                except Exception:
+                    # Si falla la validación, igual intentamos recuperar
+                    pass
+
+            # 2) Fallback por HTML
+            if not self._looks_like_login_page():
+                # No parece login; asumimos que la sesión está viva
+                return True
+
+            # 3) Re-login completo
+            self.poliedro_login_service = None
+            if not self.login():
+                return False
+
+            # 4) Volver al módulo Portabilidad (290)
+            time.sleep(1)
+            try:
+                if not self.tropas.get():
+                    try:
+                        self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                    except Exception:
+                        pass
+                self.poliedro.seleccionAcceso('290', start=False)
+                self.wait_for_loading()
+            except Exception:
+                # Si falla la navegación, el flujo principal lo manejará
+                pass
+
+            return True
+
+        except Exception:
+            return False
+
+    def _run_with_relogin(self, fn, *, max_retries=2, context: str = ""):
+        """Ejecuta fn() y si la sesión expiró, hace re-login y reintenta."""
+        intentos = 0
+        while True:
+            try:
+                return fn()
+            except SessionExpiredError as e:
+                intentos += 1
+                msg = f"🔐 {e}. Reintentando login automático"
+                if context:
+                    msg += f" ({context})"
+                msg += f"... ({intentos}/{max_retries})"
+                self.ventana_informacion.write(msg)
+
+                if intentos >= max_retries:
+                    raise
+                if not self.verificar_sesion_activa():
+                    raise Exception("Error crítico: Fallo en login de Poliedro")
     
     def wait_for_loading(self, timeout=120, sleep_interval=1, portas=True):
         """
@@ -797,6 +883,20 @@ class Portas:
         start_time = time.time()
         while time.time() - start_time < timeout:
             try:
+                # 0) Corte temprano: si nos devolvieron al login, no sigas esperando "loading"
+                if self.poliedro_login_service and hasattr(self.poliedro_login_service, "validar_sesion_activa"):
+                    try:
+                        if not self.poliedro_login_service.validar_sesion_activa():
+                            raise SessionExpiredError("Sesión expirada: redirigido al login")
+                    except SessionExpiredError:
+                        raise
+                    except Exception:
+                        # Si falla la validación, seguimos y dejamos que otras heurísticas detecten
+                        pass
+
+                if self._looks_like_login_page():
+                    raise SessionExpiredError("Sesión expirada: pantalla de login detectada")
+
                 if portas:
                     try:
                         loading_style = self.portas.style('loading', 'id')
@@ -811,6 +911,9 @@ class Portas:
                 else:
                     print(f'Loading style no reconocido: {loading_style}')
                     return True # Asumir que terminó si no se puede leer el estilo
+            except SessionExpiredError:
+                raise
+
             except Exception:
                 # Si no puede leer el estilo, asumir que terminó la carga
                 return True

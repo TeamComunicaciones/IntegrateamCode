@@ -869,3 +869,884 @@ Traceback (most recent call last):
 selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]"}
   (Session info: MicrosoftEdge=141.0.3537.57)
 
+
+[_ingresar_codigo_otp] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 224, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+[_ingresar_codigo_otp] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 224, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+[_limpiar_estado_login] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 503, in _limpiar_estado_login
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', '', 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+[_ingresar_credenciales] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 142, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+[detectar_login_valido] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]"}
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 250, in detectar_login_valido
+    textoInicio = self.web_controller.read('//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]', 'xpath')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 555, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]"}
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+[_detectar_pantalla_login] Error: Message: invalid session id
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 412, in validado
+    self.portas.click('btnNext', 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 490, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 417, in validado
+    message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 555, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 260, in iteraciones
+    self.rellenoPrimerFormulario()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 389, in rellenoPrimerFormulario
+    self.poliedro.detectOption(options, functionList, NoneFunc=self.errorGeneral)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 62, in detectOption
+    func()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 428, in validado
+    self.portas.selectPage(traffic_url("/"))
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 440, in selectPage
+    self.browser.get(link)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 333, in get
+    self.execute(Command.GET, {'url': url})
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 704, in reinicio
+    self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 712, in reinicio
+    self.poliedro.reinicio()
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 87, in reinicio
+    self.seleccionAcceso(self.opcion, start)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 25, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 715, in reinicio
+    texto_pantalla = self.portas.read('titlesHeaderMainContent', 'id')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 556, in read
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 470, in _detectar_pantalla_login
+    url_actual = self.web_controller.getCurrentUrl()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 701, in getCurrentUrl
+    return self.browser.current_url
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 669, in current_url
+    return self.execute(Command.GET_CURRENT_URL)['value']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+[_asegurar_pantalla_login] Error: Message: invalid session id
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 412, in validado
+    self.portas.click('btnNext', 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 490, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 417, in validado
+    message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 555, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 260, in iteraciones
+    self.rellenoPrimerFormulario()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 389, in rellenoPrimerFormulario
+    self.poliedro.detectOption(options, functionList, NoneFunc=self.errorGeneral)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 62, in detectOption
+    func()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 428, in validado
+    self.portas.selectPage(traffic_url("/"))
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 440, in selectPage
+    self.browser.get(link)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 333, in get
+    self.execute(Command.GET, {'url': url})
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 704, in reinicio
+    self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 712, in reinicio
+    self.poliedro.reinicio()
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 87, in reinicio
+    self.seleccionAcceso(self.opcion, start)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 25, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 715, in reinicio
+    texto_pantalla = self.portas.read('titlesHeaderMainContent', 'id')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 556, in read
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 432, in _asegurar_pantalla_login
+    url_actual = self.web_controller.getCurrentUrl()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 701, in getCurrentUrl
+    return self.browser.current_url
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 669, in current_url
+    return self.execute(Command.GET_CURRENT_URL)['value']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+[_detectar_pantalla_login] Error: Message: invalid session id
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 412, in validado
+    self.portas.click('btnNext', 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 490, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 417, in validado
+    message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 555, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 260, in iteraciones
+    self.rellenoPrimerFormulario()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 389, in rellenoPrimerFormulario
+    self.poliedro.detectOption(options, functionList, NoneFunc=self.errorGeneral)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 62, in detectOption
+    func()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 428, in validado
+    self.portas.selectPage(traffic_url("/"))
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 440, in selectPage
+    self.browser.get(link)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 333, in get
+    self.execute(Command.GET, {'url': url})
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 704, in reinicio
+    self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 712, in reinicio
+    self.poliedro.reinicio()
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 87, in reinicio
+    self.seleccionAcceso(self.opcion, start)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 25, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 715, in reinicio
+    texto_pantalla = self.portas.read('titlesHeaderMainContent', 'id')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 556, in read
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 470, in _detectar_pantalla_login
+    url_actual = self.web_controller.getCurrentUrl()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 701, in getCurrentUrl
+    return self.browser.current_url
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 669, in current_url
+    return self.execute(Command.GET_CURRENT_URL)['value']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+[_asegurar_pantalla_login] Error: Message: invalid session id
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 412, in validado
+    self.portas.click('btnNext', 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 490, in click
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 417, in validado
+    message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 555, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 260, in iteraciones
+    self.rellenoPrimerFormulario()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 389, in rellenoPrimerFormulario
+    self.poliedro.detectOption(options, functionList, NoneFunc=self.errorGeneral)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 62, in detectOption
+    func()
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 428, in validado
+    self.portas.selectPage(traffic_url("/"))
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 440, in selectPage
+    self.browser.get(link)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 333, in get
+    self.execute(Command.GET, {'url': url})
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 704, in reinicio
+    self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 712, in reinicio
+    self.poliedro.reinicio()
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 87, in reinicio
+    self.seleccionAcceso(self.opcion, start)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 25, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\portas.py", line 715, in reinicio
+    texto_pantalla = self.portas.read('titlesHeaderMainContent', 'id')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 556, in read
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 432, in _asegurar_pantalla_login
+    url_actual = self.web_controller.getCurrentUrl()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 701, in getCurrentUrl
+    return self.browser.current_url
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 669, in current_url
+    return self.execute(Command.GET_CURRENT_URL)['value']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+
