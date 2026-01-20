@@ -16,6 +16,11 @@ import random
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
+
+class SessionExpiredError(Exception):
+    """Excepción para indicar que la sesión expiró y el bot fue redirigido al login."""
+    pass
+
 class Preactivador:
 
     def __init__(self,master, on_of, alertas):
@@ -27,6 +32,7 @@ class Preactivador:
         self.on_of = on_of
         self.time2 = 3
         self.cookie_header = {}
+        self.poliedro_login_service = None  # servicio de login (OTP incluido)
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
         self.link= 'https://poliedrodist.comcel.com.co/'
@@ -248,7 +254,7 @@ class Preactivador:
             # self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[13]/a')
             self.poliedro.seleccionAcceso('195')
             self.sync_traffic_base_from_browser()
-            if not self.wait_for_loading():
+            if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
             self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
             self.excel.quitarFormatoCientifico('Iccid')
@@ -268,7 +274,7 @@ class Preactivador:
                         else:
                             self.mensaje = ''
                             self.min = ''
-                            self.EquiposInd()
+                            self._run_with_relogin(self.EquiposInd)
                     except:
                         try:
                             self.preactivador.selectPage(self.traffic_url("/CaptureData"))
@@ -665,7 +671,7 @@ class Preactivador:
         demographic_response = session.post(demographic_url, demographic_data, headers = headers)
         if demographic_response.status_code == 200:
             self.preactivador.selectPage(self.traffic_url("/ProductService"))
-            if not self.wait_for_loading():
+            if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
             self.pagina = 4
             self.poliedro.tipoDoc('al', '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
@@ -674,7 +680,7 @@ class Preactivador:
             self.preactivador.waitExist('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
             self.pagina = 5
             self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/strong/strong/div/input[2]')
-            if not self.wait_for_loading():
+            if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
             optionsFinal = [
                 ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/strong/strong/div/div/div/p/text()[2]'],
@@ -874,10 +880,10 @@ class Preactivador:
         if self.etapa == 5:
             time.sleep(self.time2)
             self.preactivador.click('btnPrev', 'id')
-            if not self.wait_for_loading():
+            if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
             self.poliedro.seleccionAcceso('195', start=False)
-            if not self.wait_for_loading():
+            if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
         else:
             for i in range(self.etapa):
@@ -888,66 +894,62 @@ class Preactivador:
         self.etapa == 0
     
     def position(self, html, paso=None, wait=False):
-        self.scrap = scraping.Scraping(html)
-        soup = self.scrap.soup
+        """Detecta en qué paso está la UI. Si cae al login, lanza SessionExpiredError.
 
-        if not self.wait_for_loading():
-            raise Exception("Timeout esperando que la página cargue")
-        
+        Nota: este método se usa para esperar la aparición de elementos.
+        """
+        if not self.safe_wait_for_loading():
+            raise Exception('Timeout esperando que la página cargue')
+
         intentos = 0
         max_intentos = 30
+
         while wait and intentos < max_intentos:
+            # Si caímos al login, cortar YA para que el caller haga relogin
+            try:
+                if self._looks_like_login_page(self.preactivador.retornarHtml() if self.preactivador else ''):
+                    raise SessionExpiredError('Sesión expirada: detectado login durante position()')
+            except SessionExpiredError:
+                raise
+            except Exception:
+                pass
+
+            self.scrap = scraping.Scraping(html)
+            soup = self.scrap.soup
+
             if paso == 'paso1':
                 elementos_requeridos = [
-                    ("h3", "iconoTituloCliente"),
-                    ("h3", "iconoTituloInfoVenta"),
-                    ("h3", "iconoTituloEquipo"),
+                    ('h3', 'iconoTituloCliente'),
+                    ('h3', 'iconoTituloInfoVenta'),
+                    ('h3', 'iconoTituloEquipo'),
                 ]
-                if self.validate_position(elementos_requeridos, soup):
-                    return 1
-                else:
-                    self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
-                    soup = self.scrap.soup
-                    intentos += 1
-
             elif paso == 'paso2':
                 elementos_requeridos = [
-                    ("h3", "iconoTituloValidacionesyRestricciones"),
-                    ("h3", "iconoTituloOtrasValidaciones"),
+                    ('h3', 'iconoTituloValidacionesyRestricciones'),
+                    ('h3', 'iconoTituloOtrasValidaciones'),
                 ]
-                if self.validate_position(elementos_requeridos, soup):
-                    return 1
-                else:
-                    self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
-                    soup = self.scrap.soup
-                    intentos += 1
-
             elif paso == 'paso3':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloInfoPersonal")
-                ]
-                if self.validate_position(elementos_requeridos, soup):
-                    return 1
-                else:
-                    self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
-                    soup = self.scrap.soup
-                    intentos += 1
-
+                elementos_requeridos = [('h3', 'iconoTituloInfoPersonal')]
             elif paso == 'paso4':
-                elementos_requeridos = [
-                    ("h3", "iconoTituloDatosEquipoyPlan")
-                ]
-                if self.validate_position(elementos_requeridos, soup):
-                    return 1
-                else:
-                    self.scrap = scraping.Scraping(self.preactivador.retornarHtml())
-                    soup = self.scrap.soup
-                    intentos += 1
-        
-        if intentos >= max_intentos:
-            raise Exception("Timeout esperando la posición de los elementos requeridos")
+                elementos_requeridos = [('h3', 'iconoTituloDatosEquipoyPlan')]
+            else:
+                elementos_requeridos = []
 
-    
+            if elementos_requeridos and self.validate_position(elementos_requeridos, soup):
+                return 1
+
+            # Reintentar con HTML fresco
+            time.sleep(0.5)
+            try:
+                html = self.preactivador.retornarHtml()
+            except Exception:
+                pass
+            intentos += 1
+
+        raise Exception('Timeout esperando la posición de los elementos requeridos')
+
+
+
     def validate_position(self, elementos_requeridos, soup, type='id'):
         for tag, id_value in elementos_requeridos:
             if type == 'id':
@@ -959,6 +961,110 @@ class Preactivador:
             else:
                 return False
         return True
+    # ---------------------------------------------------------------------
+    # Manejo robusto de sesión (auto re-login)
+    # ---------------------------------------------------------------------
+
+    def _looks_like_login_page(self, html: str | None = None) -> bool:
+        """Heurística rápida para detectar si el browser cayó al login."""
+        try:
+            if html is None:
+                html = self.preactivador.retornarHtml() if self.preactivador else ''
+        except Exception:
+            html = ''
+        return 'botonLoginhomePoliedro' in (html or '')
+
+    def verificar_sesion_activa(self) -> bool:
+        """Verifica sesión y, si expiró, re-loguea y vuelve al acceso 195."""
+        # 1) Si el login service existe y la sesión sigue viva, ok
+        try:
+            if self.poliedro_login_service and self.poliedro_login_service.validar_sesion_activa():
+                if not self._looks_like_login_page():
+                    return True
+        except Exception:
+            # Si falla la validación, forzamos recuperación
+            pass
+
+        # 2) Recuperación: login normal (incluye OTP según tu configuración)
+        self.poliedro_login_service = None
+        if not self.login():
+            return False
+
+        time.sleep(2)
+        # Intento de volver al menú y seleccionar el acceso de PREACTIVADOR (195)
+        try:
+            self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+        except Exception:
+            pass
+
+        time.sleep(2)
+        try:
+            self.poliedro.seleccionAcceso('195', start=True)
+        except Exception:
+            try:
+                self.poliedro.seleccionAcceso('195', start=False)
+            except Exception:
+                pass
+
+        # Mantener base URL sincronizada para los endpoints Traffic
+        try:
+            self.sync_traffic_base_from_browser()
+        except Exception:
+            pass
+
+        try:
+            return bool(self.wait_for_loading())
+        except SessionExpiredError:
+            return False
+        except Exception:
+            return True
+
+    def safe_wait_for_loading(self, timeout=120, sleep_interval=1, preactivador=True, max_retries=2):
+        """wait_for_loading que se recupera automáticamente si detecta sesión expirada."""
+        attempts = 0
+        while True:
+            try:
+                return self.wait_for_loading(timeout=timeout, sleep_interval=sleep_interval, preactivador=preactivador)
+            except SessionExpiredError as e:
+                attempts += 1
+                self.ventana_informacion.write(f'🔐 {e}. Reintentando login...')
+                if attempts > max_retries:
+                    raise
+                if not self.verificar_sesion_activa():
+                    raise Exception('Error crítico: Fallo en login de Poliedro')
+                # refrescar cookies si la sesión se renovó
+                try:
+                    self.cookie_header['Cookie'] = self.preactivador.getCookies()
+                except Exception:
+                    pass
+
+    def _run_with_relogin(self, fn, *args, max_retries=2, **kwargs):
+        """Ejecuta una acción y si la sesión expiró, re-loguea y reintenta."""
+        tries = 0
+        while True:
+            try:
+                return fn(*args, **kwargs)
+            except SessionExpiredError as e:
+                tries += 1
+                self.ventana_informacion.write(f'🔐 {e}. Reintentando login...')
+                if tries > max_retries:
+                    raise
+                if not self.verificar_sesion_activa():
+                    raise Exception('Error crítico: Fallo en login de Poliedro')
+                try:
+                    self.cookie_header['Cookie'] = self.preactivador.getCookies()
+                except Exception:
+                    pass
+
+    def log_error(self, context: str, error: Exception) -> None:
+        """Loggea el error de forma segura sin tumbar el proceso."""
+        try:
+            self.ventana_informacion.write(f"⚠️ {context}: {str(error)}")
+        except Exception:
+            try:
+                print(f"{context}: {error}")
+            except Exception:
+                pass
 
     def login(self):
         """
@@ -1004,22 +1110,36 @@ class Preactivador:
                 mysms=self.mysms.get(),
                 google_messages=self.google_messages.get(),
             )
-    
+            
     def wait_for_loading(self, timeout=120, sleep_interval=1, preactivador=True):
-        """
-        Método reutilizable para esperar que termine la carga.
-        
-        Args:
-            timeout (int): Tiempo máximo de espera en segundos
-            sleep_interval (float): Intervalo entre verificaciones
-            preactivador (bool): True para usar self.preactivador, False para self.poliedro
+        """Espera a que termine el loading.
 
-        Returns:
-            bool: True si terminó la carga, False si hubo timeout
+        Mejora clave: si la sesión expiró y el browser cayó al login, lanza SessionExpiredError
+        en vez de devolver True/False como si fuera un timeout normal.
         """
 
         start_time = time.time()
         while time.time() - start_time < timeout:
+            # 1) Detección de sesión expirada por LoginService (si está inicializado)
+            try:
+                if getattr(self, 'poliedro_login_service', None):
+                    if not self.poliedro_login_service.validar_sesion_activa():
+                        raise SessionExpiredError('Sesión expirada: validar_sesion_activa()=False')
+            except SessionExpiredError:
+                raise
+            except Exception:
+                # Si falla la validación, seguimos con heurística por HTML
+                pass
+
+            # 2) Heurística por HTML (por si el login service aún no está listo)
+            try:
+                if self._looks_like_login_page(self.preactivador.retornarHtml() if preactivador else ''):
+                    raise SessionExpiredError('Sesión expirada: detectado login en HTML')
+            except SessionExpiredError:
+                raise
+            except Exception:
+                pass
+
             try:
                 if preactivador:
                     try:
@@ -1028,17 +1148,29 @@ class Preactivador:
                         loading_style = self.poliedro.style('loading', 'id')
                 else:
                     loading_style = self.poliedro.style('loading', 'id')
-                if "display: none" in loading_style:
+
+                if 'display: none' in str(loading_style):
                     return True
-                elif "display: block" in loading_style:
-                    print(f'Loading... ({time.time() - start_time:.1f}s)')
+                if 'display: block' in str(loading_style):
+                    # Sigue cargando
+                    pass
                 else:
-                    print(f'Loading style no reconocido: {loading_style}')
-                    return True # Asumir que terminó si no se puede leer el estilo
+                    # Si no es reconocible, no nos bloqueamos
+                    return True
+
+            except SessionExpiredError:
+                raise
             except Exception:
-                # Si no puede leer el estilo, asumir que terminó la carga
+                # Antes: asumía que cargó. Ahora: solo asumimos si NO estamos en login
+                try:
+                    if self._looks_like_login_page(self.preactivador.retornarHtml() if preactivador else ''):
+                        raise SessionExpiredError('Sesión expirada: detectado login tras excepción en loading')
+                except SessionExpiredError:
+                    raise
+                except Exception:
+                    pass
                 return True
-                
+
             time.sleep(sleep_interval)
-        
+
         return False  # Timeout
