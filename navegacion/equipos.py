@@ -722,7 +722,7 @@ class Equipos:
                     self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
                 except Exception:
                     pass
-                self.poliedro.seleccionAcceso('194', start=False)
+                self.poliedro.seleccionAcceso('194')
                 self.wait_for_loading()
             except Exception:
                 pass

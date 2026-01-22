@@ -837,7 +837,7 @@ class Portas:
                         self.portas.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
                     except Exception:
                         pass
-                self.poliedro.seleccionAcceso('290', start=False)
+                self.poliedro.seleccionAcceso('290')
                 self.wait_for_loading()
             except Exception:
                 # Si falla la navegación, el flujo principal lo manejará
