@@ -78,31 +78,31 @@ class LoginService:
                         continue
                     return False
                     
-                # Paso 2: Obtener código OTP
-                codigo_otp = None
+                # # Paso 2: Obtener código OTP
+                # codigo_otp = None
 
-                if self.mysms_portal:
-                    codigo_otp = self._obtener_codigo_otp()
-                elif self.google_messages_portal:
-                    codigo_otp = self._obtener_codigo_otp_google()
-                else:
-                    self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
-                    return False
+                # if self.mysms_portal:
+                #     codigo_otp = self._obtener_codigo_otp()
+                # elif self.google_messages_portal:
+                #     codigo_otp = self._obtener_codigo_otp_google()
+                # else:
+                #     self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
+                #     return False
                 
-                if not codigo_otp:
-                    self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
-                        self._esperar_antes_reintentar()
-                        continue
-                    return False
+                # if not codigo_otp:
+                #     self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
+                #     if intento < self.max_login_attempts - 1:
+                #         self._esperar_antes_reintentar()
+                #         continue
+                #     return False
                     
-                # Paso 3: Ingresar código OTP
-                if not self._ingresar_codigo_otp(codigo_otp):
-                    self._log_message(f"Error ingresando código OTP en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
-                        self._esperar_antes_reintentar()
-                        continue
-                    return False
+                # # Paso 3: Ingresar código OTP
+                # if not self._ingresar_codigo_otp(codigo_otp):
+                #     self._log_message(f"Error ingresando código OTP en intento {intento + 1}")
+                #     if intento < self.max_login_attempts - 1:
+                #         self._esperar_antes_reintentar()
+                #         continue
+                #     return False
                 
                 # Paso 4: Validar login exitoso
                 if not self.detectar_login_valido():

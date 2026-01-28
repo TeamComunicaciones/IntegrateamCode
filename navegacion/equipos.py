@@ -14,6 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
 import random
+from urllib.parse import urlparse
 from config.urls import traffic_url
 
 
@@ -228,13 +229,17 @@ class Equipos:
                                         max_retries=2,
                                         context=f"registro {self.contador+1}",
                                     )
+                                    self.contador += 1
                                 else:
                                     self.ventana_informacion.write(f'ya procesada')
                                     self.contador += 1
                                     continue
-                            except:
+
+                            except SessionExpiredError as e:
+                                self.ventana_informacion.write(f"❌ Sesión no recuperable tras reintentos: {e}. Deteniendo proceso.")
+                                raise
+                            except Exception:
                                 # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
-                                self.equipos.selectPage(traffic_url("/CaptureData"))
                                 try:
                                     self.poliedro.seleccionAcceso('194', start=False)
                                 except: 
@@ -267,7 +272,6 @@ class Equipos:
                             if "Error crítico: Fallo en login de Poliedro" in str(e):
                                 raise Exception("Error crítico: Fallo en login de Poliedro")
                             self.ventana_informacion.write(f"Error en la iteración {self.contador}: {e}")
-                            self.equipos.selectPage(traffic_url("/CaptureData"))
                             """ self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span/text()')
                             time.sleep(2)
                             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
@@ -345,8 +349,7 @@ class Equipos:
         message = message[:10]
         self.excel.guardar(self.contador, 'Min', message, destino='src\equipos\equipos.xlsx')
         self.ventana_informacion.write(f'Preactivado con min {message}')
-        raise('sin error')
-
+        return
 
         # optionsList = [
         #     ['/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span'],
@@ -437,15 +440,31 @@ class Equipos:
             'Cookie': self.cookie_header['Cookie']
         }
 
-        post_response = session.post(url, headers=headers, data=payload)
+        post_response = session.post(url, headers=headers, data=payload, allow_redirects=False)
+        
+        # ✅ Si la sesión murió, Traffic suele responder redirect a POL_LOGIN (wpolps03)
+        if post_response.status_code in (301, 302, 303, 307, 308):
+            raise SessionExpiredError("Sesión expirada: captura_datos_api redirigió a POL_LOGIN")
+
+        # A veces devuelve 200 pero es HTML (login) y no JSON
+        try:
+            data = post_response.json()
+        except Exception:
+            body = (post_response.text or "")
+            if ("botonLoginhomePoliedro" in body) or ("/POL_LOGIN/" in body) or ("wpolps03" in body):
+                raise SessionExpiredError("Sesión expirada: captura_datos_api devolvió HTML de login")
+            raise Exception("captura_datos_api: respuesta no JSON")
+
         if post_response.status_code == 200:
-            if 'errores' in post_response.json():
-                self.excel.guardar(self.contador, 'Mensaje', post_response.json()['errores'][0], destino='src\equipos\equipos.xlsx')
+            if 'errores' in data:
+                self.excel.guardar(self.contador, 'Mensaje', data['errores'][0], destino='src\equipos\equipos.xlsx')
                 self.excel.guardar(self.contador, 'Min', 'error', destino='src\equipos\equipos.xlsx')
-                self.ventana_informacion.write(post_response.json()['errores'][0])
+                self.ventana_informacion.write(data['errores'][0])
                 raise('error validacion 1')
             else:
                 self.equipos.selectPage(traffic_url("/Validation"))
+                if self._looks_like_login_page():
+                    raise SessionExpiredError("Sesión expirada: redirigido al login al entrar a /Validation")
         else:
             raise('error validacion API')
 
@@ -465,11 +484,9 @@ class Equipos:
                     message = self.equipos.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Equipo procesado':
                         self.excel.guardar(self.contador, 'Mensaje', message)
-                        self.equipos.selectPage(traffic_url("/CaptureData"))
                         self.poliedro.seleccionAcceso('194', start=False)
                         self.ventana_informacion.write(f"{self.iccid} Equipo procesado'")
                 except:
-                    self.equipos.selectPage(traffic_url("/CaptureData"))
                     self.poliedro.seleccionAcceso('194', start=False)
                     self.ventana_informacion.write(f"{self.iccid} error no identificado")
                 raise('error controlado kit registrado')
@@ -548,8 +565,8 @@ class Equipos:
             except Exception:
                 pass
 
-            if soup.find(class_="botonLoginhomePoliedro") or soup.find(id="botonLoginhomePoliedro"):
-                raise SessionExpiredError("Sesión expirada: detectado login durante position()")
+            if self._looks_like_login_page() or soup.find(class_="botonLoginhomePoliedro") or soup.find(id="botonLoginhomePoliedro"):
+                raise SessionExpiredError("Sesión expirada: detectado login/redirect durante position()")
 
             if paso == 'paso1':
                 elementos_requeridos = [
@@ -681,11 +698,82 @@ class Equipos:
                 google_messages=self.google_messages.get(),
             )
 
-    def _looks_like_login_page(self) -> bool:
-        """Heurística rápida por HTML para saber si nos devolvieron al login."""
+    def _current_url_safe(self) -> str:
         try:
-            html = self.equipos.retornarHtml()
-            return "botonLoginhomePoliedro" in str(html)
+            return str(getattr(self.equipos, "browser", None).current_url or "")
+        except Exception:
+            return ""
+
+    def _is_pol_login_url(self, url: str) -> bool:
+        u = (url or "").lower()
+        return (
+            "/pol_login/" in u
+            or "/pol_login/login.aspx" in u
+            or "wpolps03" in u
+        )
+
+    def _looks_like_edge_dns_error(self, html: str) -> bool:
+        h = (html or "").lower()
+        # Edge/Chromium típicamente incluye estos tokens cuando hay NXDOMAIN
+        tokens = [
+            "dns_probe_finished_nxdomain",
+            "err_name_not_resolved",
+            "no se puede acceder",
+            "this site can't be reached",
+        ]
+        return any(t in h for t in tokens)
+
+    def _traffic_preflight_requires_login(self) -> bool:
+        """Chequeo rápido (SIN abrir el navegador) para detectar redirect a POL_LOGIN.
+
+        Si la sesión murió, Traffic suele responder 302 a /POL_LOGIN/Login.aspx (host wpolps03).
+        Usamos allow_redirects=False para NO seguir a wpolps03 y evitar el NXDOMAIN.
+        """
+        try:
+            cookie = self.equipos.getCookies()
+            if not cookie:
+                return False
+
+            r = requests.get(
+                traffic_url("/CaptureData"),
+                headers={"Cookie": cookie},
+                allow_redirects=False,
+                timeout=12,
+            )
+
+            if r.status_code in (301, 302, 303, 307, 308):
+                loc = (r.headers.get("Location") or "").lower()
+                if "/pol_login/" in loc or "wpolps03" in loc:
+                    return True
+
+            # a veces vuelve 200 pero ya es html de login
+            body = (r.text or "").lower()
+            if "botonloginhomepoliedro" in body or "/pol_login/" in body:
+                return True
+
+            return False
+        except Exception:
+            return False
+
+    def _looks_like_login_page(self) -> bool:
+        """Heurística rápida para detectar sesión expirada / redirect a POL_LOGIN."""
+        try:
+            url = self._current_url_safe()
+            if self._is_pol_login_url(url):
+                return True
+
+            html = str(self.equipos.retornarHtml() or "")
+            h = html.lower()
+
+            # Login propio de Poliedro
+            if "botonloginhomepoliedro" in h:
+                return True
+
+            # Edge error page cuando intentó ir a wpolps03 y no resolvió
+            if self._looks_like_edge_dns_error(html) and ("wpolps03" in url.lower() or "/pol_login/" in url.lower()):
+                return True
+
+            return False
         except Exception:
             return False
 
@@ -699,6 +787,28 @@ class Equipos:
         try:
             if not self.poliedro_login_service:
                 self.inicializar_login_service()
+
+            # ✅ Preflight (sin navegador): si Traffic ya está respondiendo 302 a POL_LOGIN,
+            # asumimos sesión muerta aunque el HTML actual no sea de login.
+            if self._traffic_preflight_requires_login():
+                self.ventana_informacion.write("🔐 Preflight: Traffic redirige a POL_LOGIN. Sesión expirada.")
+                self.poliedro_login_service = None
+                if not self.login():
+                    return False
+
+                # volver al módulo 194
+                time.sleep(1)
+                try:
+                    try:
+                        self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+                    except Exception:
+                        pass
+                    self.poliedro.seleccionAcceso('194')
+                    self.wait_for_loading()
+                except Exception:
+                    pass
+
+                return True
 
             if self.poliedro_login_service and hasattr(self.poliedro_login_service, "validar_sesion_activa"):
                 try:
@@ -750,7 +860,7 @@ class Equipos:
                     raise
                 if not self.verificar_sesion_activa():
                     raise Exception("Error crítico: Fallo en login de Poliedro")
-    
+
     def wait_for_loading(self, timeout=120, sleep_interval=1, equipos=True):
         """
         Método reutilizable para esperar que termine la carga.

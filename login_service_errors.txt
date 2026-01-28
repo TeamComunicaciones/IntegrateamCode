@@ -1750,3 +1750,278 @@ Traceback (most recent call last):
     raise exception_class(message, screen, stacktrace)
 selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
 
+
+[_ingresar_codigo_otp] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 226, in ejecuccion
+    self._run_with_relogin(
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 740, in _run_with_relogin
+    return fn()
+           ^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 295, in EquiposInd
+    self.codigo_distribuidor = self.equipos.read('userDataCodDistribuidor', 'id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 556, in read
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="userDataCodDistribuidor"]"}
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 239, in ejecuccion
+    self.poliedro.seleccionAcceso('194', start=False)
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro.py", line 27, in seleccionAcceso
+    self.browser.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 489, in click
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]"}
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 224, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.82)
+
+
+[detectar_login_valido] Error: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]"}
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 850, in _run_with_relogin
+    return fn()
+           ^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 334, in EquiposInd
+    self.position(self.equipos.retornarHtml(), 'paso3', True)
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 569, in position
+    raise SessionExpiredError("Sesión expirada: detectado login/redirect durante position()")
+navegacion.equipos.SessionExpiredError: Sesión expirada: detectado login/redirect durante position()
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 250, in detectar_login_valido
+    textoInicio = self.web_controller.read('//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]', 'xpath')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 555, in read
+    if by == "xpath": find = self.browser.find_element_by_xpath(byStr)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 394, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]"}
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+
+[_limpiar_estado_login] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 227, in ejecuccion
+    self._run_with_relogin(
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 850, in _run_with_relogin
+    return fn()
+           ^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 296, in EquiposInd
+    self.codigo_distribuidor = self.equipos.read('userDataCodDistribuidor', 'id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 556, in read
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="userDataCodDistribuidor"]"}
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 503, in _limpiar_estado_login
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', '', 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+
+[_ingresar_credenciales] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 227, in ejecuccion
+    self._run_with_relogin(
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 850, in _run_with_relogin
+    return fn()
+           ^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\equipos.py", line 296, in EquiposInd
+    self.codigo_distribuidor = self.equipos.read('userDataCodDistribuidor', 'id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 556, in read
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="userDataCodDistribuidor"]"}
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 142, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+
+[_ingresar_codigo_otp] Error: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="ctl00_ContentPlaceHolder1_txtTokenEntrust"]"}
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 224, in _ingresar_codigo_otp
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 691, in write
+    elif by == "id": find = self.browser.find_element_by_id(byStr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 360, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 976, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="ctl00_ContentPlaceHolder1_txtTokenEntrust"]"}
+  (Session info: MicrosoftEdge=144.0.3719.92)
+
