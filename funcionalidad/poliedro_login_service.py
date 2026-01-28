@@ -346,6 +346,28 @@ class LoginService:
         try:
             wc = self.web_controller
 
+            # ✅ Detectar trap por URL (si existe)
+            try:
+                url = str(getattr(wc, "browser", None).current_url or "").lower()
+                if ("wpolps03" in url) or ("/pol_login/" in url):
+                    return False
+                if url.startswith("chrome-error://") or url.startswith("edge://"):
+                    # si estamos en neterror, mejor forzar recuperación
+                    return False
+            except Exception:
+                pass
+
+            # ✅ Detectar trap por HTML
+            try:
+                html = str(wc.retornarHtml() or "")
+                h = html.lower()
+                if ("wpolps03" in h) or ("/pol_login/" in h) or ("pol_login" in h):
+                    return False
+                if ("dns_probe_finished_nxdomain" in h) or ("err_name_not_resolved" in h):
+                    return False
+            except Exception:
+                pass
+
             # Indicadores de LOGIN (si aparecen, NO hay sesión)
             login_ids = [
                 "ctl00_ContentPlaceHolder1_txtUsuario",
@@ -361,7 +383,6 @@ class LoginService:
             return True
         except Exception as e:
             self._log_error("validar_sesion_activa", e)
-            # Si no podemos verificar, mejor asumir que NO está activa para forzar recuperación
             return False
     
     def _esperar_antes_reintentar(self):

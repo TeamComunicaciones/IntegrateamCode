@@ -16,7 +16,7 @@ from funcionalidad import poliedro_login_service
 import random
 from urllib.parse import urlparse
 from config.urls import traffic_url
-
+from selenium.common.exceptions import WebDriverException
 
 class SessionExpiredError(Exception):
     """Se lanza cuando detectamos que Poliedro devolvió al login (sesión expirada)."""
@@ -240,6 +240,7 @@ class Equipos:
                                 raise
                             except Exception:
                                 # self.ventana_informacion.write(f'Activacion erronea de equipo {self.imei}')
+                                self.goto_traffic("/CaptureData", context="reset a CaptureData")
                                 try:
                                     self.poliedro.seleccionAcceso('194', start=False)
                                 except: 
@@ -272,6 +273,7 @@ class Equipos:
                             if "Error crítico: Fallo en login de Poliedro" in str(e):
                                 raise Exception("Error crítico: Fallo en login de Poliedro")
                             self.ventana_informacion.write(f"Error en la iteración {self.contador}: {e}")
+                            self.goto_traffic("/CaptureData", context="reset a CaptureData")
                             """ self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span/text()')
                             time.sleep(2)
                             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
@@ -462,7 +464,7 @@ class Equipos:
                 self.ventana_informacion.write(data['errores'][0])
                 raise('error validacion 1')
             else:
-                self.equipos.selectPage(traffic_url("/Validation"))
+                self.goto_traffic("/Validation", context="ir a Validation (API)")
                 if self._looks_like_login_page():
                     raise SessionExpiredError("Sesión expirada: redirigido al login al entrar a /Validation")
         else:
@@ -484,9 +486,11 @@ class Equipos:
                     message = self.equipos.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Equipo procesado':
                         self.excel.guardar(self.contador, 'Mensaje', message)
+                        self.goto_traffic("/CaptureData", context="reset a CaptureData")
                         self.poliedro.seleccionAcceso('194', start=False)
                         self.ventana_informacion.write(f"{self.iccid} Equipo procesado'")
                 except:
+                    self.goto_traffic("/CaptureData", context="reset a CaptureData")
                     self.poliedro.seleccionAcceso('194', start=False)
                     self.ventana_informacion.write(f"{self.iccid} error no identificado")
                 raise('error controlado kit registrado')
@@ -711,6 +715,75 @@ class Equipos:
             or "/pol_login/login.aspx" in u
             or "wpolps03" in u
         )
+    
+    def _escape_pol_login_trap(self):
+        """
+        Si el navegador cayó en wpolps03 o en neterror relacionado, forzamos salida a poliedrodist.
+        """
+        try:
+            url = self._current_url_safe().lower()
+            html = ""
+            try:
+                html = str(self.equipos.retornarHtml() or "")
+            except Exception:
+                pass
+            h = html.lower()
+
+            in_trap = (
+                "wpolps03" in url
+                or "/pol_login/" in url
+                or "wpolps03" in h
+                or "/pol_login/" in h
+                or ("pol_login" in h)
+            )
+
+            if in_trap:
+                self.ventana_informacion.write("🧯 Detectado POL_LOGIN / wpolps03. Saliendo a PoliedroDist...")
+                self.equipos.selectPage(self.link)  # https://poliedrodist.comcel.com.co/
+                time.sleep(3)
+        except Exception:
+            pass
+
+
+    def _goto_traffic_once(self, path: str):
+        """
+        Navega a Traffic de forma segura:
+        - preflight sin redirects
+        - si hay riesgo de POL_LOGIN, dispara SessionExpiredError para forzar relogin
+        """
+        self._escape_pol_login_trap()
+
+        # ✅ Preflight: si Traffic responde redirect a POL_LOGIN, NO navegamos
+        if self._traffic_preflight_requires_login():
+            raise SessionExpiredError("Preflight: Traffic redirige a POL_LOGIN (evitando navegación a wpolps03)")
+
+        url = traffic_url(path)
+
+        try:
+            self.equipos.selectPage(url)
+        except WebDriverException as e:
+            msg = str(e).lower()
+            # Si Selenium explota por ERR_NAME_NOT_RESOLVED / wpolps03, forzamos recuperación
+            if ("err_name_not_resolved" in msg) or ("dns" in msg) or ("wpolps03" in msg):
+                self._escape_pol_login_trap()
+                raise SessionExpiredError(f"Navegación a Traffic cayó en DNS/wpolps03: {e}")
+            raise
+
+        # ✅ Si igual cayó en login/trap, forzamos relogin
+        if self._looks_like_login_page():
+            self._escape_pol_login_trap()
+            raise SessionExpiredError(f"Redirigido a login/trap al entrar a {path}")
+
+
+    def goto_traffic(self, path: str, *, context: str = "", max_retries: int = 2):
+        """
+        Wrapper con re-login automático usando tu _run_with_relogin existente.
+        """
+        return self._run_with_relogin(
+            lambda: self._goto_traffic_once(path),
+            max_retries=max_retries,
+            context=context or f"goto_traffic({path})",
+        )
 
     def _looks_like_edge_dns_error(self, html: str) -> bool:
         h = (html or "").lower()
@@ -732,7 +805,7 @@ class Equipos:
         try:
             cookie = self.equipos.getCookies()
             if not cookie:
-                return False
+                return True
 
             r = requests.get(
                 traffic_url("/CaptureData"),
@@ -758,7 +831,7 @@ class Equipos:
     def _looks_like_login_page(self) -> bool:
         """Heurística rápida para detectar sesión expirada / redirect a POL_LOGIN."""
         try:
-            url = self._current_url_safe()
+            url = self._current_url_safe().lower()
             if self._is_pol_login_url(url):
                 return True
 
@@ -770,8 +843,14 @@ class Equipos:
                 return True
 
             # Edge error page cuando intentó ir a wpolps03 y no resolvió
-            if self._looks_like_edge_dns_error(html) and ("wpolps03" in url.lower() or "/pol_login/" in url.lower()):
+            if ("wpolps03" in h) or ("/pol_login/" in h) or ("pol_login" in h):
                 return True
+
+            # ✅ Error page (NXDOMAIN / name not resolved), incluso si el URL es chrome-error://...
+            if self._looks_like_edge_dns_error(html):
+                # Si el HTML menciona wpolps03 o POL_LOGIN, lo tratamos como sesión muerta
+                if ("wpolps03" in h) or ("/pol_login/" in h) or ("pol_login" in h):
+                    return True
 
             return False
         except Exception:
