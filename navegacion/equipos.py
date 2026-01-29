@@ -230,6 +230,7 @@ class Equipos:
                                         context=f"registro {self.contador+1}",
                                     )
                                     self.contador += 1
+                                    continue
                                 else:
                                     self.ventana_informacion.write(f'ya procesada')
                                     self.contador += 1
