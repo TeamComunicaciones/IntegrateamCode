@@ -177,6 +177,13 @@ class Equipos:
     def ejecuccionHilo(self):
         hilo_equipos = threading.Thread(target=self.ejecuccion)
         hilo_equipos.start()
+    
+    def _anti_bot_pause(self):
+        base = int(float(self.valor))
+        variacion = random.randint(1, 3)
+        tiempo_pausa = random.randint(max(0, base - variacion), base + variacion)
+        self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
+        time.sleep(tiempo_pausa)
         
     def ejecuccion(self):
         try:
@@ -280,11 +287,8 @@ class Equipos:
                             self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[12]/a/span')
                             self.ventana_informacion.write("Redirigido para reintentar.")
                             time.sleep(3) """
-                        base = self.valor
-                        variacion = random.randint(1,3)
-                        tiempo_pausa = random.randint(base - variacion, base + variacion)
-                        self.ventana_informacion.write(f"⏳ Pausa anti-bot: {tiempo_pausa}s entre transacciones...")
-                        time.sleep(tiempo_pausa)
+                        finally:
+                            self._anti_bot_pause()
                     
                 self.ventana_informacion.write(f'ciclo {i} terminado')
             self.ventana_informacion.write('Proceso terminado')
@@ -352,6 +356,12 @@ class Equipos:
         message = message[:10]
         self.excel.guardar(self.contador, 'Min', message, destino='src\equipos\equipos.xlsx')
         self.ventana_informacion.write(f'Preactivado con min {message}')
+        self.goto_traffic("/CaptureData", context="reset post-success a CaptureData")
+        try:
+            self.poliedro.seleccionAcceso('194', start=False)
+            self.wait_for_loading()
+        except Exception:
+            pass
         return
 
         # optionsList = [
