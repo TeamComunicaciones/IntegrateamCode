@@ -2291,3 +2291,107 @@ Traceback (most recent call last):
 selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="titlesHeaderMainContent"]/small/span[contains(text(),"Si va a dejar")]"}
   (Session info: MicrosoftEdge=144.0.3719.92)
 
+
+[_forzar_expiracion_por_credenciales_incorrectas] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 624, in _forzar_expiracion_por_credenciales_incorrectas
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', wrong_user, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+
+
+[_limpiar_estado_login] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 541, in _limpiar_estado_login
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', '', 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+
+
+[_ingresar_credenciales] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 143, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+
+
+[_ingresar_credenciales] Error: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+
+Traceback (most recent call last):
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\poliedro_login_service.py", line 159, in _ingresar_credenciales
+    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 322, in execute
+    raise err
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 302, in execute
+    data = funcion(self,*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\funcionalidad\web_controller.py", line 695, in write
+    find.send_keys(keys)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 477, in send_keys
+    self._execute(Command.SEND_KEYS_TO_ELEMENT,
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\corte\poliedro\IntegrateamCode\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=144.0.3719.115)
+

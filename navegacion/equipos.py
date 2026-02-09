@@ -109,6 +109,17 @@ class Equipos:
         self.modo_captura_datos = tk.BooleanVar()
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
     
+    def _dbg(self, msg: str):
+        try:
+            ts = datetime.datetime.now().strftime("%H:%M:%S")
+            self.ventana_informacion.write(f"[{ts}] {msg}")
+        except Exception:
+            pass
+
+    def _raise_session_expired(self, where: str, reason: str):
+        self._dbg(f"🔐 Sesión expirada detectada en {where}: {reason}")
+        raise SessionExpiredError(f"{where}: {reason}")
+    
     def abrir_pagina(self):
         if not self.mysms.get() and not self.google_messages.get():
             self.ventana_informacion.write('Seleccione un método para recibir el OTP')
@@ -225,6 +236,7 @@ class Equipos:
                     if self.contador == self.excel.cantidad:
                         self.ciclo = False
                     else:
+                        debe_pausar = True
                         try:    
                             try:
                                 min = str(self.excel.excel['Min'][self.contador])
@@ -241,6 +253,7 @@ class Equipos:
                                 else:
                                     self.ventana_informacion.write(f'ya procesada')
                                     self.contador += 1
+                                    debe_pausar = False
                                     continue
 
                             except SessionExpiredError as e:
@@ -288,7 +301,8 @@ class Equipos:
                             self.ventana_informacion.write("Redirigido para reintentar.")
                             time.sleep(3) """
                         finally:
-                            self._anti_bot_pause()
+                            if debe_pausar:
+                                self._anti_bot_pause()
                     
                 self.ventana_informacion.write(f'ciclo {i} terminado')
             self.ventana_informacion.write('Proceso terminado')
@@ -457,7 +471,7 @@ class Equipos:
         
         # ✅ Si la sesión murió, Traffic suele responder redirect a POL_LOGIN (wpolps03)
         if post_response.status_code in (301, 302, 303, 307, 308):
-            raise SessionExpiredError("Sesión expirada: captura_datos_api redirigió a POL_LOGIN")
+            self._raise_session_expired("captura_datos_api", "redirect HTTP a POL_LOGIN")
 
         # A veces devuelve 200 pero es HTML (login) y no JSON
         try:
@@ -465,7 +479,7 @@ class Equipos:
         except Exception:
             body = (post_response.text or "")
             if ("botonLoginhomePoliedro" in body) or ("/POL_LOGIN/" in body) or ("wpolps03" in body):
-                raise SessionExpiredError("Sesión expirada: captura_datos_api devolvió HTML de login")
+                self._raise_session_expired("captura_datos_api", "devolvió HTML de login (no JSON)")
             raise Exception("captura_datos_api: respuesta no JSON")
 
         if post_response.status_code == 200:
@@ -477,7 +491,7 @@ class Equipos:
             else:
                 self.goto_traffic("/Validation", context="ir a Validation (API)")
                 if self._looks_like_login_page():
-                    raise SessionExpiredError("Sesión expirada: redirigido al login al entrar a /Validation")
+                    self._raise_session_expired("captura_datos_api", "al entrar a /Validation cayó en login")
         else:
             raise('error validacion API')
 
@@ -581,7 +595,7 @@ class Equipos:
                 pass
 
             if self._looks_like_login_page() or soup.find(class_="botonLoginhomePoliedro") or soup.find(id="botonLoginhomePoliedro"):
-                raise SessionExpiredError("Sesión expirada: detectado login/redirect durante position()")
+                self._raise_session_expired(f"position({paso})", "detectado login/redirect durante espera")
 
             if paso == 'paso1':
                 elementos_requeridos = [
@@ -766,7 +780,7 @@ class Equipos:
 
         # ✅ Preflight: si Traffic responde redirect a POL_LOGIN, NO navegamos
         if self._traffic_preflight_requires_login():
-            raise SessionExpiredError("Preflight: Traffic redirige a POL_LOGIN (evitando navegación a wpolps03)")
+            self._raise_session_expired(f"goto_traffic({path})", "preflight redirige a POL_LOGIN")
 
         url = traffic_url(path)
 
@@ -777,13 +791,13 @@ class Equipos:
             # Si Selenium explota por ERR_NAME_NOT_RESOLVED / wpolps03, forzamos recuperación
             if ("err_name_not_resolved" in msg) or ("dns" in msg) or ("wpolps03" in msg):
                 self._escape_pol_login_trap()
-                raise SessionExpiredError(f"Navegación a Traffic cayó en DNS/wpolps03: {e}")
+                self._raise_session_expired(f"goto_traffic({path})", "redirigido a login/trap al entrar")
             raise
 
         # ✅ Si igual cayó en login/trap, forzamos relogin
         if self._looks_like_login_page():
             self._escape_pol_login_trap()
-            raise SessionExpiredError(f"Redirigido a login/trap al entrar a {path}")
+            self._raise_session_expired(f"goto_traffic({path})", "redirigido a login/trap al entrar")
 
 
     def goto_traffic(self, path: str, *, context: str = "", max_retries: int = 2):
@@ -971,14 +985,14 @@ class Equipos:
                 if self.poliedro_login_service and hasattr(self.poliedro_login_service, "validar_sesion_activa"):
                     try:
                         if not self.poliedro_login_service.validar_sesion_activa():
-                            raise SessionExpiredError("Sesión expirada: redirigido al login")
+                            self._raise_session_expired("wait_for_loading", "validar_sesion_activa devolvió False (redirigido al login)")
                     except SessionExpiredError:
                         raise
                     except Exception:
                         pass
 
                 if self._looks_like_login_page():
-                    raise SessionExpiredError("Sesión expirada: pantalla de login detectada")
+                    self._raise_session_expired("wait_for_loading", "pantalla de login detectada")
 
                 if equipos:
                     try:

@@ -79,22 +79,22 @@ class LoginService:
                     return False
                     
                 # Paso 2: Obtener código OTP
-                codigo_otp = None
+                codigo_otp = 123
 
-                if self.mysms_portal:
-                    codigo_otp = self._obtener_codigo_otp()
-                elif self.google_messages_portal:
-                    codigo_otp = self._obtener_codigo_otp_google()
-                else:
-                    self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
-                    return False
+                # if self.mysms_portal:
+                #     codigo_otp = self._obtener_codigo_otp()
+                # elif self.google_messages_portal:
+                #     codigo_otp = self._obtener_codigo_otp_google()
+                # else:
+                #     self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
+                #     return False
                 
-                if not codigo_otp:
-                    self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
-                        self._esperar_antes_reintentar()
-                        continue
-                    return False
+                # if not codigo_otp:
+                #     self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
+                #     if intento < self.max_login_attempts - 1:
+                #         self._esperar_antes_reintentar()
+                #         continue
+                #     return False
                     
                 # Paso 3: Ingresar código OTP
                 if not self._ingresar_codigo_otp(codigo_otp):
@@ -130,31 +130,48 @@ class LoginService:
     
     def _ingresar_credenciales(self):
         """
-        Ingresa usuario y contraseña en el formulario de login
-        
-        Returns:
-            bool: True si fue exitoso, False en caso contrario
+        Ingresa usuario y contraseña en el formulario de login.
+
+        Si aparece el mensaje:
+        'Actualmente existe un usuario en el sistema. Por favor verifique'
+        aplica workaround (1 intento con credenciales incorrectas) y reintenta login normal.
         """
         try:
             self._log_message("Ingresando credenciales...")
-            
-            # Ingresar usuario
+
+            # Ingresar usuario/contraseña (IDs fijos)
             self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
-            
-            # Ingresar contraseña
             self.web_controller.write('ctl00_ContentPlaceHolder1_txtContraseña', self.password, 'id')
-            
-            # Esperar un momento antes de hacer clic
             time.sleep(2)
-            
-            # Hacer clic en el botón de login
+
+            # Clic en ingresar
             self.web_controller.click('btnIngresarUsuarioContraseña', 'id')
-            
-            # Esperar a que aparezca el formulario de OTP
+            time.sleep(2)
+
+            # ✅ Si el sistema responde "usuario en el sistema", aplicar workaround
+            if self._usuario_en_sistema_detectado():
+                self._log_message("⚠️ Login bloqueado: 'Actualmente existe un usuario en el sistema...'")
+
+                if self._forzar_expiracion_por_credenciales_incorrectas():
+                    self._log_message("🔁 Reintentando login normal después del workaround...")
+
+                    # reingresar credenciales correctas
+                    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
+                    self.web_controller.write('ctl00_ContentPlaceHolder1_txtContraseña', self.password, 'id')
+                    time.sleep(2)
+
+                    self.web_controller.click('btnIngresarUsuarioContraseña', 'id')
+                    time.sleep(2)
+                else:
+                    self._log_message("❌ Workaround falló. No pude forzar expiración.")
+                    return False
+
+            # Esperar a que aparezca el formulario OTP
+            self._log_message("Esperando formulario OTP...")
             time.sleep(7)
-            
+
             return True
-            
+
         except Exception as e:
             self._log_error("_ingresar_credenciales", e)
             return False
@@ -578,3 +595,58 @@ class LoginService:
         except Exception as e:
             self._log_error("_obtener_codigo_otp", e)
             return None
+
+    def _page_contains_text(self, text: str) -> bool:
+        try:
+            html = str(self.web_controller.retornarHtml() or "")
+            return text.lower() in html.lower()
+        except Exception:
+            return False
+
+
+    def _usuario_en_sistema_detectado(self) -> bool:
+        # Texto EXACTO / estable que me diste
+        return self._page_contains_text("Actualmente existe un usuario en el sistema")
+
+    def _credenciales_no_corresponden_detectado(self) -> bool:
+        return self._page_contains_text("Las credenciales no corresponden")
+
+    def _forzar_expiracion_por_credenciales_incorrectas(self) -> bool:
+        """
+        Workaround:
+        Si aparece 'Actualmente existe un usuario en el sistema...', primero volvemos al login con "Regresar",
+        luego hacemos 1 intento con credenciales incorrectas, y cuando salga "Las credenciales no corresponden",
+        volvemos a dar "Regresar" para quedar listos para el login normal.
+        """
+        try:
+            self._log_message(
+                "Detectado 'usuario en el sistema'. Forzando expiración con credenciales incorrectas (1 intento)..."
+            )
+
+            # 0) Pantalla 1: "Actualmente existe un usuario..." -> Regresar
+            if self._usuario_en_sistema_detectado():
+                self.web_controller.click("ctl00_ContentPlaceHolder1_BtnRegresarMensaje", "id")
+                time.sleep(2)
+
+            # 1) En login: credenciales incorrectas
+            wrong_user = f"{self.usuario}a"
+            wrong_pass = f"{self.password}a"
+
+            self.web_controller.write("ctl00_ContentPlaceHolder1_txtUsuario", wrong_user, "id")
+            self.web_controller.write("ctl00_ContentPlaceHolder1_txtContraseña", wrong_pass, "id")
+            time.sleep(2)
+
+            self.web_controller.click("btnIngresarUsuarioContraseña", "id")
+            time.sleep(2)
+
+            # 2) Pantalla 2: "Las credenciales no corresponden" -> Regresar
+            if self._credenciales_no_corresponden_detectado():
+                self.web_controller.click("ctl00_ContentPlaceHolder1_BtnRegresarMensaje", "id")
+                time.sleep(2)
+
+            self._log_message("✅ Workaround aplicado: listo para reintentar login normal.")
+            return True
+
+        except Exception as e:
+            self._log_error("_forzar_expiracion_por_credenciales_incorrectas", e)
+            return False
