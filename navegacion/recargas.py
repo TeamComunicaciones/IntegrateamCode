@@ -24,26 +24,13 @@ class Recargas:
 
         # Mapa de grupos de paquetes
         grupo = {
-            'Paquetes Todo Incluido': 'a0c6d71e0b4f-0',
-            'Paquetes de datos': 'a0c6d71e0b4f-1',
-            'Paquete de Bienvenida Prepago': 'a0c6d71e0b4f-2',
-            'Reventa ': 'a0c6d71e0b4f-3',
-            'Aplicaciones y Redes': 'a0c6d71e0b4f-4',
-            'Paquetes de Voz': 'a0c6d71e0b4f-5',
             'Paquetes de LDI': 'a0c6d71e0b4f-6',
-            'Paquetes GAMERS': 'a0c6d71e0b4f-7',
-            'Paquetes Salud en Linea': 'a0c6d71e0b4f-8',
         }
 
         servicio = [
-            'VZ - Paq 300 Min - 1 Dia - $2,000',
-            'VZ - Paq 1000 Min - 20 Dias - $16,500',
-            'VZ - Paq 300 Min - 2 Dias - $2,500',
-            'Paq Instagram 1 Dia $3,000',
-            'Paq WAZE 1 dia $1,500',
-            'Paq Youtube 1 hora $3,500',
-            'Chat WhatsApp 15 Dias $9,500',
-            'Chat WhatsApp 30 Dias $18,500',
+            'LDI- Paq LDI 7 Min Venezuela - $2,000',
+            'LDI- Paq 10 Min USA CAN PR MEX-$2,000',
+            
         ]
 
         self.paquetes = tk.BooleanVar()
