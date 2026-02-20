@@ -190,7 +190,7 @@ class LoginService:
             self.web_controller.cambiar_pestaña()
             
             # Esperar a que llegue el SMS
-            time.sleep(3)
+            time.sleep(10)
             
             # Intentar obtener el código OTP
             for intento in range(self.max_otp_attempts):
@@ -566,7 +566,7 @@ class LoginService:
             self.web_controller.cambiar_pestaña()
             
             # Esperar a que llegue el SMS
-            time.sleep(3)
+            time.sleep(10)
             
             # Intentar obtener el código OTP
             for intento in range(self.max_otp_attempts):
