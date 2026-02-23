@@ -291,7 +291,8 @@ class LoginService:
                 'Las credenciales no corresponden',
                 'Actualmente existe un usuario en el sistema. Por favor verifique',
                 'El usuario se encuentra actualmente en el sistema.',
-                'Token inválido'
+                'Token inválido',
+                '-'
             ]
             # Intentar leer el mensaje de error
             try:
