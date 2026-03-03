@@ -337,19 +337,31 @@ class Preactivador:
         
         try:
             errors = self.preactivador.readMulty('errorFormItem', 'class')
-        except:
-            pass
-        if 'ICC_ID - Identificación Tarjeta de Circuito Integrada. = v' in errors:
-            self.excel.guardar(self.contador, 'Mensaje', 'ICC_ID - Identificación Tarjeta de Circuito Integrada.', destino='src\preactivador\preactivador.xlsx')
-            self.excel.guardar(self.contador, 'Min', 'error', destino='src\preactivador\preactivador.xlsx')
-            self.ventana_informacion.write('ICC_ID - Identificación Tarjeta de Circuito Integrada.')
-            raise('error validacion 2')
-        
-        if 'Validacion Causal Desactivacion IccId = Falso' in errors:
-            self.excel.guardar(self.contador, 'Mensaje', 'Validacion Causal Desactivacion IccId = Falso', destino='src\preactivador\preactivador.xlsx')
-            self.excel.guardar(self.contador, 'Min', 'error', destino='src\preactivador\preactivador.xlsx')
-            self.ventana_informacion.write('Validacion Causal Desactivacion IccId = Falso')
-            raise('error validacion 2')
+        except Exception:
+            errors = ''
+
+        # 2) Catálogo de errores a detecta  r (en el orden que quieres priorizar)
+        ERROR_MAP = [
+            (
+                "ICC_ID - Identificación Tarjeta de Circuito Integrada. = v",
+                "ICC_ID - Identificación Tarjeta de Circuito Integrada.",
+            ),
+            (
+                "Validacion Causal Desactivacion IccId = Falso",
+                "Validacion Causal Desactivacion IccId = Falso",
+            ),
+            (
+                "Documentos invalidos = Falso",
+                "Documentos invalidos",
+            ),
+        ]
+
+        for needle, msg in ERROR_MAP:
+            if needle in errors:
+                self.excel.guardar(self.contador, 'Mensaje', msg, destino=r'src\preactivador\preactivador.xlsx')
+                self.excel.guardar(self.contador, 'Min', 'error', destino=r'src\preactivador\preactivador.xlsx')
+                self.ventana_informacion.write(msg)
+                raise('error validacion 2')
 
         validate = self.preactivador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
         if validate != 'Validación Correcta':
