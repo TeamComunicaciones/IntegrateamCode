@@ -978,23 +978,20 @@ class Preactivador:
     # ---------------------------------------------------------------------
 
     def _looks_like_login_page(self, html: str | None = None) -> bool:
-        """Heurística rápida para detectar si el browser cayó al login."""
         try:
-            if html is None:
-                html = self.preactivador.retornarHtml() if self.preactivador else ''
+            if self.poliedro_login_service:
+                return self.poliedro_login_service._looks_like_login_page(html)
         except Exception:
-            html = ''
-        return 'botonLoginhomePoliedro' in (html or '')
+            pass
+        return False
 
     def verificar_sesion_activa(self) -> bool:
         """Verifica sesión y, si expiró, re-loguea y vuelve al acceso 195."""
         # 1) Si el login service existe y la sesión sigue viva, ok
         try:
             if self.poliedro_login_service and self.poliedro_login_service.validar_sesion_activa():
-                if not self._looks_like_login_page():
-                    return True
+                return True
         except Exception:
-            # Si falla la validación, forzamos recuperación
             pass
 
         # 2) Recuperación: login normal (incluye OTP según tu configuración)
@@ -1126,34 +1123,28 @@ class Preactivador:
     def wait_for_loading(self, timeout=120, sleep_interval=1, preactivador=True):
         """Espera a que termine el loading.
 
-        Mejora clave: si la sesión expiró y el browser cayó al login, lanza SessionExpiredError
-        en vez de devolver True/False como si fuera un timeout normal.
+        Si detecta sesión expirada real, lanza SessionExpiredError.
+        Usa una sola fuente de verdad para la sesión:
+        - LoginService.validar_sesion_activa() si existe
+        - _looks_like_login_page() solo como fallback
         """
-
         start_time = time.time()
+
         while time.time() - start_time < timeout:
-            # 1) Detección de sesión expirada por LoginService (si está inicializado)
+            # 1) Verificar sesión UNA sola vez por iteración
             try:
-                if getattr(self, 'poliedro_login_service', None):
-                    if not self.poliedro_login_service.validar_sesion_activa():
-                        raise SessionExpiredError('Sesión expirada: validar_sesion_activa()=False')
+                service = getattr(self, 'poliedro_login_service', None)
+                if service and not service.validar_sesion_activa():
+                    raise SessionExpiredError('Sesión expirada')
             except SessionExpiredError:
                 raise
             except Exception:
-                # Si falla la validación, seguimos con heurística por HTML
+                # Si falla la validación, no forces relogin todavía
                 pass
 
-            # 2) Heurística por HTML (por si el login service aún no está listo)
+            # 2) Revisar loading
             try:
-                if self._looks_like_login_page(self.preactivador.retornarHtml() if preactivador else ''):
-                    raise SessionExpiredError('Sesión expirada: detectado login en HTML')
-            except SessionExpiredError:
-                raise
-            except Exception:
-                pass
-
-            try:
-                if preactivador:
+                if preactivador and self.preactivador:
                     try:
                         loading_style = self.preactivador.style('loading', 'id')
                     except Exception:
@@ -1161,28 +1152,21 @@ class Preactivador:
                 else:
                     loading_style = self.poliedro.style('loading', 'id')
 
-                if 'display: none' in str(loading_style):
+                loading_style = str(loading_style)
+
+                if 'display: none' in loading_style:
                     return True
-                if 'display: block' in str(loading_style):
-                    # Sigue cargando
-                    pass
-                else:
-                    # Si no es reconocible, no nos bloqueamos
-                    return True
+
+                if 'display: block' in loading_style:
+                    time.sleep(sleep_interval)
+                    continue
+
+                # Si el estado no es reconocible, no bloqueamos
+                return True
 
             except SessionExpiredError:
                 raise
             except Exception:
-                # Antes: asumía que cargó. Ahora: solo asumimos si NO estamos en login
-                try:
-                    if self._looks_like_login_page(self.preactivador.retornarHtml() if preactivador else ''):
-                        raise SessionExpiredError('Sesión expirada: detectado login tras excepción en loading')
-                except SessionExpiredError:
-                    raise
-                except Exception:
-                    pass
                 return True
 
-            time.sleep(sleep_interval)
-
-        return False  # Timeout
+        return False # Timeout

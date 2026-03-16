@@ -357,46 +357,74 @@ class LoginService:
             f.write(f"\n[{contexto}] Error: {str(error)}\n")
             f.write(traceback.format_exc())
     
+    def _looks_like_login_page(self, html: str | None = None) -> bool:
+        try:
+            wc = self.web_controller
+
+            if html is None:
+                html = str(wc.retornarHtml() or "")
+            h = html.lower()
+
+            try:
+                current_url = str(getattr(wc.browser, "current_url", "") or "").lower()
+            except Exception:
+                current_url = ""
+
+            # señales fuertes por URL
+            if ("wpolps03" in current_url) or ("/pol_login/" in current_url):
+                return True
+
+            # si seguimos dentro de traffic, no marcar login solo por una pista débil
+            in_traffic = "prod-md.azpol.claro.com.co" in current_url
+
+            # señales HTML
+            login_ids = [
+                "ctl00_ContentPlaceHolder1_txtUsuario",
+                "ctl00_ContentPlaceHolder1_txtContraseña",
+                "btnIngresarUsuarioContraseña",
+            ]
+
+            found_login_marker = False
+            for _id in login_ids:
+                if wc.elementExists(_id, by="id"):
+                    found_login_marker = True
+                    break
+
+            if found_login_marker and not in_traffic:
+                return True
+
+            if (("wpolps03" in h) or ("/pol_login/" in h) or ("pol_login" in h)) and not in_traffic:
+                return True
+
+            return False
+        except Exception:
+            return False
+    
     def validar_sesion_activa(self):
         """
-        True = sesión activa, False = estás en login / sesión caída
+        True = parece que seguimos dentro de la app
+        False = login, red caída o estado no confiable
         """
         try:
             wc = self.web_controller
 
-            # ✅ Detectar trap por URL (si existe)
             try:
                 url = str(getattr(wc, "browser", None).current_url or "").lower()
-                if ("wpolps03" in url) or ("/pol_login/" in url):
-                    return False
                 if url.startswith("chrome-error://") or url.startswith("edge://"):
-                    # si estamos en neterror, mejor forzar recuperación
                     return False
             except Exception:
                 pass
 
-            # ✅ Detectar trap por HTML
             try:
                 html = str(wc.retornarHtml() or "")
                 h = html.lower()
-                if ("wpolps03" in h) or ("/pol_login/" in h) or ("pol_login" in h):
-                    return False
                 if ("dns_probe_finished_nxdomain" in h) or ("err_name_not_resolved" in h):
                     return False
             except Exception:
                 pass
 
-            # Indicadores de LOGIN (si aparecen, NO hay sesión)
-            login_ids = [
-                "ctl00_ContentPlaceHolder1_txtUsuario",
-                "ctl00_ContentPlaceHolder1_txtContraseña",
-                "btnIngresarUsuarioContraseña",
-                "botonLoginhomePoliedro",
-            ]
-
-            for _id in login_ids:
-                if wc.elementExists(_id, by="id"):
-                    return False
+            if self._looks_like_login_page():
+                return False
 
             return True
         except Exception as e:

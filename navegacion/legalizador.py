@@ -340,6 +340,15 @@ class Legalizador:
             self.log_error("login", e)
             return False
 
+    def _looks_like_login_page(self, html: str | None = None) -> bool:
+        try:
+            service = getattr(self, "poliedro_login_service", None)
+            if service:
+                return service._looks_like_login_page(html)
+        except Exception:
+            pass
+        return False
+
     def log_error(self, contexto, e):
         with open("error_log.txt", "a", encoding="utf-8") as f:
             f.write(f"\n[{contexto}] Error: {str(e)}\n")
@@ -898,22 +907,23 @@ class Legalizador:
                 ok = self.wait_for_loading(timeout=35, sleep_interval=0.3)
 
                 if not ok:
-                    # Aquí está el cambio clave: antes de asumir "timeout ciudad", revisa dónde estás
-                    track_tmp = self.position_detect()
+                    try:
+                        track_tmp = self.position_detect()
+                    except Exception:
+                        raise Exception("Timeout esperando carga / navegación inesperada")
+
                     if track_tmp == 'login':
                         raise SessionExpiredError("Sesión expirada: redirigido al login (detectado tras timeout)")
+
                     raise Exception("Timeout esperando carga después de seleccionar ciudad")
 
                 track = self.position_detect()
-                print(track, mode)
 
                 if track == 'login':
-                    # En vez de tirar Exception genérica y morir, lo tratamos como sesión expirada
                     raise SessionExpiredError("Sesión expirada: detectado login en position_detect()")
 
             except SessionExpiredError as e:
                 self.ventana_informacion.write(f"🔐 {e}. Reintentando login...")
-
                 if not self.verificar_sesion_activa():
                     raise Exception("Error crítico: Fallo en login de Poliedro")
                 continue
@@ -1137,8 +1147,6 @@ class Legalizador:
             'equipo plan': [("h3", "iconoTituloDatosEquipoyPlan")],
             'activacion': [("h3", "iconoTituloActivacionesCliente"), ("h3", "iconoTituloActivacionesServicios"), ("h3", "iconoTituloActivacionesProducto")],
             'restart': [("h3", "iconoTituloProducto"), ("span", "select2-selection__rendered")],
-            # OJO: este suele ser ID (no class)
-            'login': [("input", "botonLoginhomePoliedro")],
         }
 
         count = 0
@@ -1150,41 +1158,26 @@ class Legalizador:
             except Exception:
                 html = ""
 
+            # Login: usar la lógica centralizada del servicio
+            if self._looks_like_login_page(html):
+                print("Posición detectada: login")
+                return 'login'
+
             self.scrap = scraping.Scraping(html)
             soup = self.scrap.soup
 
-            # Detectar LOGIN primero y de forma correcta (por id)
-            try:
-                # Si tu validate_position soporta attr 'id'
-                if self.validate_position(position['login'], soup, 'id'):
-                    print("Posición detectada: login")
-                    return 'login'
-            except Exception:
-                # Fallback directo por BeautifulSoup por si validate_position no soporta 'id'
-                try:
-                    if soup.find("input", id="botonLoginhomePoliedro") is not None:
-                        print("Posición detectada: login")
-                        return 'login'
-                except Exception:
-                    pass
-
-            # Detectar el resto por class (como ya lo venías haciendo)
             for key, selectors in position.items():
-                if key == 'login':
-                    continue
                 if self.validate_position(selectors, soup, 'class'):
                     print(f"Posición detectada: {key}")
                     return key
 
-            # No detectó posición: esperar y reintentar
             print(f"Posición no detectada. Intento {count + 1}/{max_iterations}")
             time.sleep(1)
             count += 1
 
-        # ✅No reloguear aquí: delegar recuperación al flujo central
-        raise SessionExpiredError(
+        raise Exception(
             f"No se pudo detectar posición después de {max_iterations} intentos "
-            f"(posible sesión expirada o navegación inesperada)"
+            f"(navegación inesperada o timeout)"
         )
 
     def safe_wait_for_loading(self, timeout=120, sleep_interval=1):
@@ -1219,21 +1212,28 @@ class Legalizador:
         start_time = time.time()
 
         while time.time() - start_time < adaptive_timeout:
-            # 1) Si caíste al login, cortar YA
-            if self.poliedro_login_service and (not self.poliedro_login_service.validar_sesion_activa()):
-                raise SessionExpiredError("Sesión expirada: redirigido a login")
+            try:
+                service = getattr(self, "poliedro_login_service", None)
+                if service and not service.validar_sesion_activa():
+                    raise SessionExpiredError("Sesión expirada: redirigido a login")
+            except SessionExpiredError:
+                raise
+            except Exception:
+                pass
 
-            # 2) Si no existe el loading, no hay nada que esperar
-            if not self.legalizador.elementExists("loading", by="id"):
-                return True
+            try:
+                if not self.legalizador.elementExists("loading", by="id"):
+                    return True
 
-            # 3) Si existe, mirar visibilidad REAL (no attribute style)
-            if not self.legalizador.is_displayed("loading", by="id"):
+                if not self.legalizador.is_displayed("loading", by="id"):
+                    return True
+            except SessionExpiredError:
+                raise
+            except Exception:
                 return True
 
             time.sleep(sleep_interval)
 
-        # Timeout real (NO sesión)
         self.recent_timeouts += 1
         self.ventana_informacion.write(
             f"⚠️ Timeout detectado ({adaptive_timeout}s) - Total recientes: {self.recent_timeouts}"
@@ -1532,58 +1532,59 @@ class Legalizador:
         self.log_detallado = True
     
     def verificar_sesion_activa(self):
-        """
-        Verifica si la sesión está activa y la renueva si es necesario
-        
-        Returns:
-            bool: True si la sesión está activa o se renovó exitosamente, False en caso contrario
-        """
         try:
-            # Si ya estamos en estado crítico, no intentar más
             if self.error_critico_sesion:
                 self.ventana_informacion.write("Se presenta un error crítico para iniciar sesión en Poliedro")
                 return False
-                
-            # Inicializar el servicio si no existe
+
             if not self.poliedro_login_service:
                 self.inicializar_login_service()
-                
-            # Verificar si la sesión está activa
-            if not self.poliedro_login_service.validar_sesion_activa():
-                self.ventana_informacion.write("Sesión expirada, reintentando login...")
-                self.intentos_recuperacion += 1
-                
-                if not self.login():
-                    self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
-                    self.on_of(True)
-                    # Lanzar excepción para salir del bloque try y entrar al except final
-                    raise Exception("Error crítico: Fallo en login de Poliedro")
-                else:
-                    # Sesión recuperada exitosamente
-                    self.intentos_recuperacion = 0  # Reset contador
-                    self.ventana_informacion.write("Sesión renovada exitosamente")
-                    
-                    # Navegar al formulario principal después de renovar sesión
-                    try:
-                        self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
-                        time.sleep(3)
-                        self.poliedro.seleccionAcceso('362', start=True)
-                        if not self.safe_wait_for_loading():
-                            return False
-                    except Exception as e:
-                        self.log_error("restaurar_navegacion", e)
-                        self.intentos_recuperacion += 1
-                        return False
+
+            if self.poliedro_login_service.validar_sesion_activa():
+                return True
+
+            self.ventana_informacion.write("Sesión expirada, reintentando login...")
+            self.intentos_recuperacion += 1
+
+            self.poliedro_login_service = None
+            if not self.login():
+                self.ventana_informacion.write('❌ Error en login, verifique sus credenciales')
+                self.on_of(True)
+                raise Exception("Error crítico: Fallo en login de Poliedro")
+
+            self.intentos_recuperacion = 0
+            self.ventana_informacion.write("Sesión renovada exitosamente")
+
+            try:
+                self.legalizador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
+            except Exception:
+                pass
+
+            time.sleep(3)
+            try:
+                self.poliedro.seleccionAcceso('362', start=True)
+            except Exception:
+                pass
+
+            if not self.wait_for_loading():
+                return False
+
+            try:
+                self.cookie_header['Cookie'] = self.legalizador.getCookies()
+            except Exception:
+                pass
+
             return True
+
         except Exception as e:
             if "Error crítico: Fallo en login de Poliedro" in str(e):
                 raise Exception("Error crítico: Fallo en login de Poliedro")
+
             self.log_error("verificar_sesion_activa", e)
             self.intentos_recuperacion += 1
-            
-            # Si alcanzamos el máximo de intentos con excepciones, marcar error crítico
+
             if self.intentos_recuperacion >= self.max_intentos_recuperacion:
                 self.error_critico_sesion = True
                 self.ventana_informacion.write("ERROR CRÍTICO: Múltiples fallos al verificar sesión")
-                
+
             return False
