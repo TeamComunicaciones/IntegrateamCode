@@ -25,12 +25,14 @@ class Recargas:
         # Mapa de grupos de paquetes
         grupo = {
             'Paquetes de LDI': 'a0c6d71e0b4f-6',
+            'Paquetes de datos': 'a5d01d17775a-1'
         }
 
         servicio = [
             'LDI- Paq LDI 7 Min Venezuela - $2,000',
             'LDI- Paq 10 Min USA CAN PR MEX-$2,000',
-            
+            'DT - Paq 200 MB WP - 1 Dia - $2,000',
+            'DT-Paq 400 MB WTF - 1 Dia - $3,000',
         ]
 
         self.paquetes = tk.BooleanVar()
