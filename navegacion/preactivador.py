@@ -411,6 +411,7 @@ class Preactivador:
         message = message.replace('* Su Solicitud fue enviada satisfactoriamente para el producto 195 y el MSISDN asignado es ', '')
         message = message[:10]
         self.excel.guardar(self.contador, 'Min', message, destino='src\preactivador\preactivador.xlsx')
+        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, destino='src\preactivador\preactivador.xlsx')
         self.ventana_informacion.write(f'Preactivado con min {message}')
         raise('sin error')
 

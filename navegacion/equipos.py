@@ -369,6 +369,7 @@ class Equipos:
         message = message.replace('* Su Solicitud fue enviada satisfactoriamente para el producto 194 y el MSISDN asignado es ', '')
         message = message[:10]
         self.excel.guardar(self.contador, 'Min', message, destino='src\equipos\equipos.xlsx')
+        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, destino='src\equipos\equipos.xlsx')
         self.ventana_informacion.write(f'Preactivado con min {message}')
         self.goto_traffic("/CaptureData", context="reset post-success a CaptureData")
         try:
