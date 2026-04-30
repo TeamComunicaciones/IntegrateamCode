@@ -13,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
 import random
+import os
+import shutil
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
@@ -35,6 +37,11 @@ class Preactivador:
         self.poliedro_login_service = None  # servicio de login (OTP incluido)
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
+        _carpeta = os.path.join(os.path.expanduser("~"), "Documents", "TeamComunicaciones", "preactivador")
+        os.makedirs(_carpeta, exist_ok=True)
+        self.excel_path = os.path.join(_carpeta, "preactivador.xlsx")
+        if not os.path.exists(self.excel_path):
+            shutil.copy2(r'src\preactivador\preactivador.xlsx', self.excel_path)
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         self.link_google_messages = 'https://messages.google.com/web/conversations'
@@ -171,8 +178,7 @@ class Preactivador:
     
     def abrir_excel(self):
         self.ventana_informacion.write('excel preactivador abierto recuerde cerrar antes de iniciar')
-        p = Popen("src\preactivador\openExcel.bat")
-        stdout, stderr = p.communicate()
+        os.startfile(self.excel_path)
     
     # def cambioCedula(self):
     #     self.cedula = self.cedulaEdit.get()
@@ -256,7 +262,7 @@ class Preactivador:
             self.sync_traffic_base_from_browser()
             if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
-            self.excel.leer_excel('src\preactivador\preactivador.xlsx','Iccid')
+            self.excel.leer_excel(self.excel_path,'Iccid')
             self.excel.quitarFormatoCientifico('Iccid')
             self.ciclo = True
             self.contador = 0
@@ -358,8 +364,8 @@ class Preactivador:
 
         for needle, msg in ERROR_MAP:
             if needle in errors:
-                self.excel.guardar(self.contador, 'Mensaje', msg, destino=r'src\preactivador\preactivador.xlsx')
-                self.excel.guardar(self.contador, 'Min', 'error', destino=r'src\preactivador\preactivador.xlsx')
+                self.excel.guardar(self.contador, 'Mensaje', msg, destino=self.excel_path)
+                self.excel.guardar(self.contador, 'Min', 'error', destino=self.excel_path)
                 self.ventana_informacion.write(msg)
                 raise('error validacion 2')
 
@@ -410,8 +416,8 @@ class Preactivador:
         message = self.preactivador.read('messageFormItem', 'class')
         message = message.replace('* Su Solicitud fue enviada satisfactoriamente para el producto 195 y el MSISDN asignado es ', '')
         message = message[:10]
-        self.excel.guardar(self.contador, 'Min', message, destino='src\preactivador\preactivador.xlsx')
-        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, destino='src\preactivador\preactivador.xlsx')
+        self.excel.guardar(self.contador, 'Min', message, destino=self.excel_path)
+        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, destino=self.excel_path)
         self.ventana_informacion.write(f'Preactivado con min {message}')
         raise('sin error')
 
@@ -884,8 +890,8 @@ class Preactivador:
 
 
     def guardarData(self):
-        self.excel.guardar(self.contador, 'Min', self.min, 'src\preactivador\preactivador.xlsx')
-        self.excel.guardar(self.contador, 'Mensaje', self.mensaje, 'src\preactivador\preactivador.xlsx')
+        self.excel.guardar(self.contador, 'Min', self.min, self.excel_path)
+        self.excel.guardar(self.contador, 'Mensaje', self.mensaje, self.excel_path)
 
     def reinicio(self):
         if self.etapa == 0:

@@ -1,7 +1,6 @@
 from navegacion import sub_menu as sm, ventana_informacion
 from recursos import  label, botones, colors, checkbox, spinbox
 from funcionalidad import  web_controller, poliedro, excel, scraping
-from subprocess import Popen
 import threading
 import tkinter as tk
 import customtkinter as ctk
@@ -14,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
 import random
+import os
+import shutil
 from urllib.parse import urlparse
 from config.urls import traffic_url
 from selenium.common.exceptions import WebDriverException
@@ -30,6 +31,11 @@ class Equipos:
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
         self.cookie_header = {}
+        _carpeta = os.path.join(os.path.expanduser("~"), "Documents", "TeamComunicaciones", "equipos")
+        os.makedirs(_carpeta, exist_ok=True)
+        self.excel_path = os.path.join(_carpeta, "equipos.xlsx")
+        if not os.path.exists(self.excel_path):
+            shutil.copy2(r'src\equipos\equipos.xlsx', self.excel_path)
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         self.link_google_messages = 'https://messages.google.com/web/conversations'
@@ -150,8 +156,7 @@ class Equipos:
     
     def abrir_excel(self):
         self.ventana_informacion.write('excel equipos abierto recuerde cerrar antes de iniciar')
-        p = Popen("src\equipos\openExcel.bat")
-        stdout, stderr = p.communicate()
+        os.startfile(self.excel_path)
     
     def cambioIntervalo(self):
         self.equipos.actualizarIntervalo(self.time.get())
@@ -227,7 +232,7 @@ class Equipos:
             for i in range(int(self.repeticiones)):
                 self.contador = 0
                 self.ciclo = True
-                self.excel.leer_excel('src\equipos\equipos.xlsx','Iccid', dtype={'Iccid': str, 'Imei':str})
+                self.excel.leer_excel(self.excel_path,'Iccid', dtype={'Iccid': str, 'Imei':str})
                 self.excel.quitarFormatoCientifico('Iccid')
                 self.excel.quitarFormatoCientifico('Imei')
                 self.ventana_informacion.write(f'Inicio ciclo {i}')
@@ -368,8 +373,8 @@ class Equipos:
         message = self.equipos.read('messageFormItem', 'class')
         message = message.replace('* Su Solicitud fue enviada satisfactoriamente para el producto 194 y el MSISDN asignado es ', '')
         message = message[:10]
-        self.excel.guardar(self.contador, 'Min', message, destino='src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, destino='src\equipos\equipos.xlsx')
+        self.excel.guardar(self.contador, 'Min', message, destino=self.excel_path)
+        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, destino=self.excel_path)
         self.ventana_informacion.write(f'Preactivado con min {message}')
         self.goto_traffic("/CaptureData", context="reset post-success a CaptureData")
         try:
@@ -412,8 +417,8 @@ class Equipos:
         errores = self.equipos.readMulty("errorFormItem", "class")
         if errores and errores != "none":  
             # guardar primer error (o concatenar todos si quieres)
-            self.excel.guardar(self.contador, "Mensaje", errores[0], destino="src\equipos\equipos.xlsx")
-            self.excel.guardar(self.contador, "Min", "error", destino="src\equipos\equipos.xlsx")
+            self.excel.guardar(self.contador, "Mensaje", errores[0], destino=self.excel_path)
+            self.excel.guardar(self.contador, "Min", "error", destino=self.excel_path)
             self.ventana_informacion.write(f"Error detectado en web: {errores[0]}")
             raise Exception("Error validación WEB")
     
@@ -485,8 +490,8 @@ class Equipos:
 
         if post_response.status_code == 200:
             if 'errores' in data:
-                self.excel.guardar(self.contador, 'Mensaje', data['errores'][0], destino='src\equipos\equipos.xlsx')
-                self.excel.guardar(self.contador, 'Min', 'error', destino='src\equipos\equipos.xlsx')
+                self.excel.guardar(self.contador, 'Mensaje', data['errores'][0], destino=self.excel_path)
+                self.excel.guardar(self.contador, 'Min', 'error', destino=self.excel_path)
                 self.ventana_informacion.write(data['errores'][0])
                 raise('error validacion 1')
             else:
@@ -570,16 +575,16 @@ class Equipos:
         self.equipos.click('btnPrev', 'id')
 
     def guardarData(self):
-        self.excel.guardar(self.contador, 'Min', self.min, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Mensaje', self.mensaje, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'ICC_ID_Identificacion_Tarjeta_de_Circuito_Integrada', self.iccid2, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'IMEI_Identificacion_Internacional_del_Equipo_Movil', self.imei2, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Validacion_Tecnologia', self.vTecnologia, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Validacion_Kit_Prepago', self.vKit, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Validacion_Region_ICCID_Distribuidor', self.vRegion, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Validacion_Equipo', self.vEquipo, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Validacion_Lista', self.vLista, 'src\equipos\equipos.xlsx')
-        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, 'src\equipos\equipos.xlsx')
+        self.excel.guardar(self.contador, 'Min', self.min, self.excel_path)
+        self.excel.guardar(self.contador, 'Mensaje', self.mensaje, self.excel_path)
+        self.excel.guardar(self.contador, 'ICC_ID_Identificacion_Tarjeta_de_Circuito_Integrada', self.iccid2, self.excel_path)
+        self.excel.guardar(self.contador, 'IMEI_Identificacion_Internacional_del_Equipo_Movil', self.imei2, self.excel_path)
+        self.excel.guardar(self.contador, 'Validacion_Tecnologia', self.vTecnologia, self.excel_path)
+        self.excel.guardar(self.contador, 'Validacion_Kit_Prepago', self.vKit, self.excel_path)
+        self.excel.guardar(self.contador, 'Validacion_Region_ICCID_Distribuidor', self.vRegion, self.excel_path)
+        self.excel.guardar(self.contador, 'Validacion_Equipo', self.vEquipo, self.excel_path)
+        self.excel.guardar(self.contador, 'Validacion_Lista', self.vLista, self.excel_path)
+        self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, self.excel_path)
 
     def position(self, html, paso=None, wait=False):
         self.scrap = scraping.Scraping(html)
