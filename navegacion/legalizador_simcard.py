@@ -12,6 +12,8 @@ import traceback
 from funcionalidad import poliedro_login_service
 from selenium.webdriver.common.keys import Keys
 import random
+import os
+import shutil
 from selenium.webdriver.support.ui import Select
 
 class Legalizador_sims:
@@ -21,6 +23,11 @@ class Legalizador_sims:
         self.master = master
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
+        _carpeta = os.path.join(os.path.expanduser("~"), "Documents", "TeamComunicaciones", "legalizador_sims")
+        os.makedirs(_carpeta, exist_ok=True)
+        self.excel_path = os.path.join(_carpeta, "legalizador_sims.xlsx")
+        if not os.path.exists(self.excel_path):
+            shutil.copy2(r'src\legalizador_sims\legalizador_sims.xlsx', self.excel_path)
 
         #Enlaces: poliedro, mysms y google messages
         self.link= 'https://poliedrodist.comcel.com.co/'
@@ -148,7 +155,7 @@ class Legalizador_sims:
     
     def abrir_excel(self):
         self.ventana_informacion.write('Abriendo Excel legalizador_sims, recuerde cerrar antes de iniciar')
-        p = Popen("src\legalizador_sims\openExcel.bat")
+        os.startfile(self.excel_path)
         stdout, stderr = p.communicate()
     
     def ejecuccionHilo(self):
@@ -197,7 +204,7 @@ class Legalizador_sims:
         try:
             for i in range(int(self.repeticiones)):
                 self.contador = 0
-                self.excel.leer_excel('src\\legalizador_sims\\legalizador_sims.xlsx', 'serial')
+                self.excel.leer_excel(self.excel_path, 'serial')
                 self.excel.quitarFormatoCientifico('serial')
                 
                 for self.contador in range(self.excel.cantidad):
@@ -218,8 +225,8 @@ class Legalizador_sims:
                         time.sleep(tiempo_pausa)
 
                     except Exception as e:
-                        self.excel.guardar(self.contador, 'Min', 'error', destino="src\\legalizador_sims\\legalizador_sims.xlsx")
-                        self.excel.guardar(self.contador, 'Mensaje', str(e), destino="src\\legalizador_sims\\legalizador_sims.xlsx") # Corregir
+                        self.excel.guardar(self.contador, 'Min', 'error', destino=self.excel_path)
+                        self.excel.guardar(self.contador, 'Mensaje', str(e), destino=self.excel_path) # Corregir
                         self.ventana_informacion.write(f"❌ Error en fila {self.contador+1}")
                         self.log_error(f"fila {self.contador+1}", e)
                         continue
@@ -322,11 +329,11 @@ class Legalizador_sims:
                 mensaje_error = "; ".join(errores)
                 self.excel.guardar(
                     self.contador, "Mensaje", mensaje_error,
-                    destino="src\\legalizador_sims\\legalizador_sims.xlsx"
+                    destino=self.excel_path
                 )
                 self.excel.guardar(
                     self.contador, "Min", "error",
-                    destino="src\\legalizador_sims\\legalizador_sims.xlsx"
+                    destino=self.excel_path
                 )
                 raise Exception(f"Error en validación web: {mensaje_error}")
             else:
@@ -427,8 +434,8 @@ class Legalizador_sims:
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente en ProductService")
         
         message_element = self.legalizador_sims.readShort2('messageFormItem', 'class')
-        self.excel.guardar(self.contador, 'Mensaje', message_element, destino="src\\legalizador_sims\\legalizador_sims.xlsx")
-        self.excel.guardar(self.contador, 'Min', 'Procesado', destino="src\\legalizador_sims\\legalizador_sims.xlsx")
+        self.excel.guardar(self.contador, 'Mensaje', message_element, destino=self.excel_path)
+        self.excel.guardar(self.contador, 'Min', 'Procesado', destino=self.excel_path)
         self.ventana_informacion.write(f"{self.iccid} {message_element}")
         
         time.sleep(2)

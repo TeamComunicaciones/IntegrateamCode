@@ -49,7 +49,11 @@ class Legalizador:
         self.ultimo_reporte_metricas = 0
 
         # --- CONFIGURACIÓN EXCEL / CONTROL DE EJECUCIÓN ---
-        self.ruta_excel = r"src\legalizador\legalizador.xlsx"
+        _carpeta = os.path.join(os.path.expanduser("~"), "Documents", "TeamComunicaciones", "legalizador")
+        os.makedirs(_carpeta, exist_ok=True)
+        self.ruta_excel = os.path.join(_carpeta, "legalizador.xlsx")
+        if not os.path.exists(self.ruta_excel):
+            shutil.copy2(r'src\legalizador\legalizador.xlsx', self.ruta_excel)
         self.ejecucion_activa = False  # Evita que se ejecuten dos hilos al tiempo
 
         self.titulo = label.Label().create_label(master, 'LEGALIZADOR', 0.2, 0.0, 0.5, 0.2, letterSize=25)
@@ -137,8 +141,7 @@ class Legalizador:
 
     def abrir_excel(self):
         self.ventana_informacion.write('excel legalizador abierto recuerde cerrar antes de iniciar')
-        p = Popen("src\\legalizador\\openExcel.bat")
-        stdout, stderr = p.communicate()
+        os.startfile(self.ruta_excel)
     
     def cambioCiclos(self):
         self.repeticiones = self.repeticionesEdit.get()

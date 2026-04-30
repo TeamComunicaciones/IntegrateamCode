@@ -11,6 +11,8 @@ import customtkinter as ctk
 import requests
 from funcionalidad import poliedro_login_service
 import random
+import os
+import shutil
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from config.urls import traffic_url
@@ -30,6 +32,11 @@ class Portas:
         self.master = master
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
+        _carpeta = os.path.join(os.path.expanduser("~"), "Documents", "TeamComunicaciones", "portas")
+        os.makedirs(_carpeta, exist_ok=True)
+        self.excel_path = os.path.join(_carpeta, "portabilidad.xlsx")
+        if not os.path.exists(self.excel_path):
+            shutil.copy2(r'src\portas\portabilidad.xlsx', self.excel_path)
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         self.link_google_messages = 'https://messages.google.com/web/conversations'
@@ -143,7 +150,7 @@ class Portas:
     
     def abrir_excel(self):
         self.ventana_informacion.write('excel portabilidad abierto recuerde cerrar antes de iniciar')
-        p = Popen("src\portas\openExcel.bat")
+        os.startfile(self.excel_path)
         stdout, stderr = p.communicate()
 
     def cambioIntervalo(self):
@@ -226,7 +233,7 @@ class Portas:
             self.poliedro.seleccionAcceso('290')
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
-            self.excel.leer_excel('src\\portas\\portabilidad.xlsx', 'CC CLIENTE')
+            self.excel.leer_excel(self.excel_path, 'CC CLIENTE')
             self.excel.quitarFormatoCientifico('SERIAL')
 
             for i in range(int(self.repeticiones)):
@@ -270,11 +277,11 @@ class Portas:
                         )
                     # self.copiarMin(i)
                     # elapsed_time = time.time() - start_time
-                    # self.excel.guardar(i,'MENSAJE',str(round(elapsed_time,2)), destino='src\portas\portabilidad.xlsx')
+                    # self.excel.guardar(i,'MENSAJE',str(round(elapsed_time,2)), destino=self.excel_path)
                     # self.reinicio()
                 except:
                     self.ventana_informacion.write(f'Siguiente por error en portabilidad de {self.min}')
-                    self.excel.guardar(self.contador, 'MENSAJE', 'error', destino='src\portas\portabilidad.xlsx')
+                    self.excel.guardar(self.contador, 'MENSAJE', 'error', destino=self.excel_path)
                     self.reinicio()
                     self.contador += 1
                 
@@ -581,7 +588,7 @@ class Portas:
         demographic_response = session.post(demographic_url, data=demographic_data, headers = headers)
 
         if demographic_response.status_code != 200:
-            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1",destino="src\portas\portabilidad.xlsx")
+            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1",destino=self.excel_path)
             raise Exception("Error en la URL de Demographic/Index1")
         
         self.portas.selectPage(traffic_url("/ProductService"))
@@ -641,9 +648,9 @@ class Portas:
             raise Exception("Timeout esperando carga inicial en captura_datos")
         self.msisdn = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/div/div/div/div/fieldset[3]/div/div/strong')
         print(self.msisdn)
-        self.excel.guardar(self.contador,'MSISDN',self.msisdn, destino='src\portas\portabilidad.xlsx')
+        self.excel.guardar(self.contador,'MSISDN',self.msisdn, destino=self.excel_path)
         elapsed_time = time.time() - self.start_time
-        self.excel.guardar(self.contador,'MENSAJE',str(round(elapsed_time,2)), destino='src\portas\portabilidad.xlsx')
+        self.excel.guardar(self.contador,'MENSAJE',str(round(elapsed_time,2)), destino=self.excel_path)
         self.reinicio()
         self.contador += 1
 
@@ -656,8 +663,8 @@ class Portas:
         else:
             validado = mensaje
         self.ventana_informacion.write(f'{self.min} {validado}')
-        self.excel.guardar(self.contador, 'MENSAJE', validado, destino='src\portas\portabilidad.xlsx')
-        self.excel.guardar(self.contador,'MSISDN','error', destino='src\portas\portabilidad.xlsx')
+        self.excel.guardar(self.contador, 'MENSAJE', validado, destino=self.excel_path)
+        self.excel.guardar(self.contador,'MSISDN','error', destino=self.excel_path)
         self.reinicio()
         self.contador += 1
     
