@@ -15,7 +15,7 @@ class Recargas:
         self.prueba = 'prueba'
         self.on_of = on_of
         self.titulo = label.Label().create_label(master, 'RECARGAS', 0.2, 0.0, 0.5, 0.2, letterSize=25)
-        self.link = 'https://atiendo.claro.com.co/pretups/'
+        self.link = 'https://atiendo.claro.com.co/pretups-ui'
         self.menu = sm.Sub_menu(master, 3,
                                 boton1=['ARCHIVO', self.abrir_excel],
                                 boton2=['CUENTAS', self.abrir_excel2],
@@ -229,47 +229,17 @@ class Recargas:
         try:
             recargas.openEdge(headless=self.visible.get())
             recargas.selectPage(self.link)
-            recargas.insert('loginID', self.excel2.excel['cuenta'][i], 'id')
-            recargas.insert('password', self.entry_password.get(), 'id')
-            recargas.click('/html/body/form[2]/table[3]/tbody/tr/td/table[2]/tbody/tr[5]/td[2]/input[1]')
 
-            # --- CAMBIO 2: Lógica de Login Inteligente ---
-            self.ventana_informacion.write(
-                f'Navegador {i+1}: Primer login enviado, verificando siguiente página...'
+            # Esperar y completar el formulario de login
+            recargas.waitExist('login_id', 'id')
+            recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
+            recargas.insert('pwd', self.entry_password.get(), 'id')
+            recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
+
+            # Esperar al dashboard
+            recargas.waitExistRobust(
+                '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
             )
-
-            login_exitoso = False
-            for _ in range(10):
-                # Escenario A: Apareció el segundo login
-                if recargas.elementExists('login_id', 'id'):
-                    self.ventana_informacion.write(f'Navegador {i+1}: Segundo login detectado.')
-                    recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
-                    recargas.insert('pwd', self.entry_password.get(), 'id')
-                    recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
-
-                    # Esperar al dashboard DESPUÉS del segundo login
-                    recargas.waitExistRobust(
-                        '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
-                    )
-                    login_exitoso = True
-                    break
-
-                # Escenario B: Se saltó el segundo login y ya está en el dashboard
-                if recargas.elementExists(
-                    '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
-                ):
-                    self.ventana_informacion.write(
-                        f'Navegador {i+1}: Login directo al dashboard detectado.'
-                    )
-                    login_exitoso = True
-                    break
-
-                time.sleep(1)  # Esperar 1 seg antes de volver a comprobar
-
-            if not login_exitoso:
-                raise Exception(
-                    "No se pudo detectar ni el segundo login ni el dashboard después de 10 seg."
-                )
 
             self.ventana_informacion.write(
                 f'Navegador {i+1}: Dashboard cargado. Accediendo a recargas.'
@@ -415,37 +385,19 @@ class Recargas:
                     recargas = Abrir_pagina1(0.1)
                     recargas.openEdge(headless=self.visible.get())
                     recargas.selectPage(self.link)
-                    recargas.insert('loginID', self.excel2.excel['cuenta'][i], 'id')
-                    recargas.insert('password', self.entry_password.get(), 'id')
+
+                    # Esperar y completar el formulario de login
+                    recargas.waitExist('login_id', 'id')
+                    recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
+                    recargas.insert('pwd', self.entry_password.get(), 'id')
                     recargas.click(
-                        '/html/body/form[2]/table[3]/tbody/tr/td/table[2]/tbody/tr[5]/td[2]/input[1]'
+                        '/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button'
                     )
 
-                    # Re-aplicar la Lógica de Login Inteligente
-                    login_exitoso_reinicio = False
-                    for _ in range(10):
-                        if recargas.elementExists('login_id', 'id'):
-                            recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
-                            recargas.insert('pwd', self.entry_password.get(), 'id')
-                            recargas.click(
-                                '/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button'
-                            )
-                            recargas.waitExistRobust(
-                                '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
-                            )
-                            login_exitoso_reinicio = True
-                            break
-
-                        if recargas.elementExists(
-                            '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
-                        ):
-                            login_exitoso_reinicio = True
-                            break
-
-                        time.sleep(1)
-
-                    if not login_exitoso_reinicio:
-                        raise Exception("Fallo al reiniciar el login.")
+                    # Esperar al dashboard
+                    recargas.waitExistRobust(
+                        '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
+                    )
 
                     recargas.click(
                         '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
