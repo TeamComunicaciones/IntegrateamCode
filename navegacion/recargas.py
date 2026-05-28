@@ -7,6 +7,9 @@ import tkinter as tk
 import customtkinter as ctk
 import time
 from datetime import datetime
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class Recargas:
@@ -230,15 +233,19 @@ class Recargas:
             recargas.openEdge(headless=self.visible.get())
             recargas.selectPage(self.link)
 
-            # Esperar y completar el formulario de login
-            recargas.waitExist('login_id', 'id')
+            # Esperar hasta 30s a que el formulario de login esté listo (clickable)
+            WebDriverWait(recargas.browser, 30).until(
+                EC.element_to_be_clickable((By.ID, 'login_id'))
+            )
             recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
             recargas.insert('pwd', self.entry_password.get(), 'id')
             recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
 
-            # Esperar al dashboard
-            recargas.waitExistRobust(
-                '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
+            # Esperar hasta 30s al dashboard
+            WebDriverWait(recargas.browser, 30).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
+                )
             )
 
             self.ventana_informacion.write(
@@ -271,7 +278,9 @@ class Recargas:
             self.ventana_informacion.write(
                 f'Navegador {i+1}: Esperando a que cargue el formulario de recarga...'
             )
-            recargas.waitExist('msisdnInput', 'id')
+            WebDriverWait(recargas.browser, 30).until(
+                EC.presence_of_element_located((By.ID, 'msisdnInput'))
+            )
             self.ventana_informacion.write(
                 f'Navegador {i+1}: Formulario cargado. Iniciando recargas.'
             )
@@ -386,17 +395,21 @@ class Recargas:
                     recargas.openEdge(headless=self.visible.get())
                     recargas.selectPage(self.link)
 
-                    # Esperar y completar el formulario de login
-                    recargas.waitExist('login_id', 'id')
+                    # Esperar hasta 30s a que el formulario de login esté listo (clickable)
+                    WebDriverWait(recargas.browser, 30).until(
+                        EC.element_to_be_clickable((By.ID, 'login_id'))
+                    )
                     recargas.insert('login_id', self.excel2.excel['cuenta'][i], 'id')
                     recargas.insert('pwd', self.entry_password.get(), 'id')
                     recargas.click(
                         '/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button'
                     )
 
-                    # Esperar al dashboard
-                    recargas.waitExistRobust(
-                        '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]'
+                    # Esperar hasta 30s al dashboard
+                    WebDriverWait(recargas.browser, 30).until(
+                        EC.presence_of_element_located(
+                            (By.XPATH, '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
+                        )
                     )
 
                     recargas.click(
@@ -408,7 +421,9 @@ class Recargas:
                             '/claro-header-recharge/ul/div[2]/li/a'
                         )
 
-                    recargas.waitExist('msisdnInput', 'id')
+                    WebDriverWait(recargas.browser, 30).until(
+                EC.presence_of_element_located((By.ID, 'msisdnInput'))
+            )
                     self.ventana_informacion.write(
                         f'Navegador {i+1}: Reinicio de navegador completado.'
                     )
