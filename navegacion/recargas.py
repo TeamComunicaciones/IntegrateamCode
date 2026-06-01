@@ -445,4 +445,4 @@ class Recargas:
         self.excel.leer_excel('src\\recargas\\recargas.xlsx', 'linea')
 
     def enlistar_cuentas(self):
-        self.excel2.leer_excel('src\\recargas\\cuentas.xlsx', 'numero')
+        self.excel2.leer_excel('src\\recargas\\cuentas.xlsx', 'numero', dtype={'cuenta': str})
