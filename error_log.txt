@@ -44375,3 +44375,10 @@ Traceback (most recent call last):
   File "C:\Users\corte\poliedro\IntegrateamCode\navegacion\legalizador.py", line 877, in restart_new
     raise Exception('Error en transacción - continuando con siguiente')
 Exception: Error en transacción - continuando con siguiente
+
+[login] Error: 'NoneType' object has no attribute 'configurar_credenciales'
+Traceback (most recent call last):
+  File "c:\Users\corte\poliedro\IntegrateamCode\navegacion\legalizador.py", line 334, in login
+    self.poliedro_login_service.configurar_credenciales(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'configurar_credenciales'
