@@ -36,7 +36,7 @@ class Recargas:
             'LDI- Paq LDI 7 Min Venezuela - $2,000',
             'LDI- Paq 10 Min USA CAN PR MEX-$2,000',
             'DT - Paq 200 MB WP - 1 Dia - $2,000',
-            'DT-Paq 400 MB WTF - 1 Dia - $3,000',
+            'DT-Paq 200 MB WA - 1 Dias - $3,000',
             'VZ - Reventa Ilim 15 dias - $17,500',
         ]
 
