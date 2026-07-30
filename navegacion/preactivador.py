@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
+from funcionalidad.mixin_validacion_codigos import ValidacionCodigosMixin
 import random
 import os
 import shutil
@@ -23,7 +24,7 @@ class SessionExpiredError(Exception):
     """Excepción para indicar que la sesión expiró y el bot fue redirigido al login."""
     pass
 
-class Preactivador:
+class Preactivador(ValidacionCodigosMixin):
 
     def __init__(self,master, on_of, alertas):
         self.traffic_base = "https://prod-md.azpol.claro.com.co"
@@ -146,7 +147,10 @@ class Preactivador:
         self.checkbox_modo_captura_datos = checkbox.Checkbox()
         self.modo_captura_datos = tk.BooleanVar()
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
-       
+
+        # Validación de códigos de distribuidor (lista independiente para PRE-SIM)
+        self._crear_checkbox_validacion(self.menu.submenu, 'pre-sim')
+
     def traffic_url(self, path: str) -> str:
         return self.traffic_base.rstrip("/") + "/" + path.lstrip("/")
     
@@ -262,6 +266,12 @@ class Preactivador:
             self.sync_traffic_base_from_browser()
             if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
+
+            # Validación de códigos de distribuidor (una sola vez: el código es de la sesión).
+            if not self._codigo_distribuidor_permitido(self.preactivador):
+                self.on_of(True)
+                return
+
             self.excel.leer_excel(self.excel_path,'Iccid')
             self.excel.quitarFormatoCientifico('Iccid')
             self.ciclo = True

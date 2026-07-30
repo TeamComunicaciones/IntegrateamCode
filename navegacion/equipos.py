@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from funcionalidad import poliedro_login_service
+from funcionalidad.mixin_validacion_codigos import ValidacionCodigosMixin
 import random
 import os
 import shutil
@@ -23,7 +24,7 @@ class SessionExpiredError(Exception):
     """Se lanza cuando detectamos que Poliedro devolvió al login (sesión expirada)."""
     pass
 
-class Equipos:
+class Equipos(ValidacionCodigosMixin):
 
     def __init__(self,master, on_of, alertas):
         self.alertas = alertas
@@ -114,7 +115,10 @@ class Equipos:
         self.checkbox_modo_captura_datos = checkbox.Checkbox()
         self.modo_captura_datos = tk.BooleanVar()
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
-    
+
+        # Validación de códigos de distribuidor (lista independiente para PRE-EQUIPOS)
+        self._crear_checkbox_validacion(self.menu.submenu, 'pre-equipos')
+
     def _dbg(self, msg: str):
         try:
             ts = datetime.datetime.now().strftime("%H:%M:%S")
@@ -228,7 +232,12 @@ class Equipos:
             self.poliedro.seleccionAcceso('194')
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que cargue la página")
-            
+
+            # Validación de códigos de distribuidor (una sola vez: el código es de la sesión).
+            if not self._codigo_distribuidor_permitido(self.equipos):
+                self.on_of(True)
+                return
+
             for i in range(int(self.repeticiones)):
                 self.contador = 0
                 self.ciclo = True
