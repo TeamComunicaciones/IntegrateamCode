@@ -221,6 +221,13 @@ class Equipos(ValidacionCodigosMixin):
                 raise Exception("Error crítico: Fallo en login de Poliedro")
             time.sleep(2)
 
+            # Validación de códigos de distribuidor: se hace apenas termina el login
+            # (el código de distribuidor está en el header, presente tras login) para
+            # abortar antes de navegar al módulo si el código está bloqueado.
+            if not self._codigo_distribuidor_permitido(self.equipos):
+                self.on_of(True)
+                return
+
             try:
                 self.equipos.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
             except Exception as e:
@@ -232,11 +239,6 @@ class Equipos(ValidacionCodigosMixin):
             self.poliedro.seleccionAcceso('194')
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que cargue la página")
-
-            # Validación de códigos de distribuidor (una sola vez: el código es de la sesión).
-            if not self._codigo_distribuidor_permitido(self.equipos):
-                self.on_of(True)
-                return
 
             for i in range(int(self.repeticiones)):
                 self.contador = 0

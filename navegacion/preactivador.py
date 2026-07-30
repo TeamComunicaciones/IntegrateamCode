@@ -258,6 +258,13 @@ class Preactivador(ValidacionCodigosMixin):
                 self.on_of(True)
             time.sleep(2)
 
+            # Validación de códigos de distribuidor: se hace apenas termina el login
+            # (el código de distribuidor está en el header, presente tras login) para
+            # abortar antes de navegar al módulo si el código está bloqueado.
+            if not self._codigo_distribuidor_permitido(self.preactivador):
+                self.on_of(True)
+                return
+
             try:
                 self.preactivador.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a')
             except:
@@ -268,11 +275,6 @@ class Preactivador(ValidacionCodigosMixin):
             self.sync_traffic_base_from_browser()
             if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
-
-            # Validación de códigos de distribuidor (una sola vez: el código es de la sesión).
-            if not self._codigo_distribuidor_permitido(self.preactivador):
-                self.on_of(True)
-                return
 
             self.excel.leer_excel(self.excel_path,'Iccid')
             self.excel.quitarFormatoCientifico('Iccid')
