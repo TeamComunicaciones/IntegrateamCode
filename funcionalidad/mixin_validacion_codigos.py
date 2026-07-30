@@ -35,20 +35,25 @@ class ValidacionCodigosMixin:
         - self._codigo_distribuidor_permitido(codigo)       antes del bucle
     """
 
-    def _crear_checkbox_validacion(self, master, proceso, texto='Validar códigos distribuidor'):
+    def _crear_checkbox_validacion(self, master, proceso, texto='Validar códigos distribuidor',
+                                   place=False, x=None, y=None, widht=None, height=None):
         """
         Crea el checkbox on/off y prepara el validador para `proceso`.
 
         Args:
             master: contenedor tkinter donde va el checkbox (self.menu.submenu).
-            proceso (str): clave en config.codigos_bloqueados.FUENTES (p.ej. 'pre-sim').
+            proceso (str): clave en config.codigos_bloqueados.COLUMNAS (p.ej. 'pre-sim').
+            place/x/y/widht/height: si place=True, posiciona el checkbox con
+                coordenadas relativas (evita que quede apilado con pack y tape
+                otros campos). Si place=False, usa el pack por defecto.
         """
         import tkinter as tk
 
         self._proceso_validacion = proceso
         self.validar_codigos = tk.BooleanVar(value=cfg.VALIDACION_ACTIVA_DEFAULT)
         self.checkbox_validar_codigos = checkbox.Checkbox().create_checkbox(
-            master, texto, self._on_checkbox_change_validar_codigos, self.validar_codigos
+            master, texto, self._on_checkbox_change_validar_codigos, self.validar_codigos,
+            place=place, x=x, y=y, widht=widht, height=height,
         )
 
         # Archivo único compartido; cada proceso lee su propia columna.

@@ -1,6 +1,8 @@
 from navegacion import sub_menu as sm, ventana_informacion
 from recursos import  label, botones, colors, checkbox, combobox
 from funcionalidad import  web_controller, excel, scraping
+from funcionalidad import catalogo_recargas
+from funcionalidad.scraper_catalogo_recargas import ScraperCatalogoRecargas
 from subprocess import Popen
 import threading
 import tkinter as tk
@@ -19,26 +21,16 @@ class Recargas:
         self.on_of = on_of
         self.titulo = label.Label().create_label(master, 'RECARGAS', 0.2, 0.0, 0.5, 0.2, letterSize=25)
         self.link = 'https://atiendo.claro.com.co/pretups-ui'
-        self.menu = sm.Sub_menu(master, 3,
+        self.menu = sm.Sub_menu(master, 4,
                                 boton1=['ARCHIVO', self.abrir_excel],
                                 boton2=['CUENTAS', self.abrir_excel2],
-                                boton3=['START', self.ejecuccionHilo])
+                                boton3=['ACTUALIZAR LISTAS', self.actualizar_listas_hilo],
+                                boton4=['START', self.ejecuccionHilo])
         self.recargas = ''
 
-        # Mapa de grupos de paquetes
-        grupo = {
-            'Paquetes de LDI': 'a0c6d71e0b4f-6',
-            'Paquetes de datos': 'a5d01d17775a-1',
-            'Reventa': 'a7d7c6332f37-3'
-        }
-
-        servicio = [
-            'LDI- Paq LDI 7 Min Venezuela - $2,000',
-            'LDI- Paq 10 Min USA CAN PR MEX-$2,000',
-            'DT - Paq 200 MB WP - 1 Dia - $2,000',
-            'DT-Paq 200 MB WA - 1 Dias - $3,000',
-            'VZ - Reventa Ilim 15 dias - $17,500',
-        ]
+        # Catálogo dinámico grupo -> servicios (se obtiene por scraping y se
+        # guarda en catalogo.xlsx; ya no hay listas hardcodeadas).
+        self._catalogo = catalogo_recargas.leer_mapa()
 
         self.paquetes = tk.BooleanVar()
         self.grupoSelect = tk.StringVar()
@@ -75,13 +67,16 @@ class Recargas:
             self.menu.submenu, '', self.on_checkbox_change_paquetes, self.paquetes,
             place=True, x=0.3, y=0.47, widht=0.50, height=0.05, letterSize=14
         )
+        grupos = catalogo_recargas.leer_grupos()
         self.grupo = combobox.Combobox().create_combobox(
-            self.menu.submenu, list(grupo.keys()),
+            self.menu.submenu, grupos,
             x=0.3, y=0.53, widht=0.60, height=0.05,
-            letterSize=14, textvariable=self.grupoSelect
+            letterSize=14, textvariable=self.grupoSelect,
+            command=self._on_grupo_cambiado,
         )
+        servicios_iniciales = self._catalogo.get(grupos[0], []) if grupos else []
         self.servicio = combobox.Combobox().create_combobox(
-            self.menu.submenu, servicio,
+            self.menu.submenu, servicios_iniciales,
             x=0.3, y=0.59, widht=0.60, height=0.05, letterSize=14
         )
         input_paginas = ctk.CTkEntry(self.menu.submenu, textvariable=self.entry_paginas)
@@ -165,6 +160,99 @@ class Recargas:
         self.ventana_informacion.write('excel cuentas abierto recuerde cerrar antes de iniciar')
         p = Popen("src\\recargas\\openExcel2.bat")
         stdout, stderr = p.communicate()
+
+    # =========================
+    # Catálogo dinámico grupo -> servicio
+    # =========================
+    def _on_grupo_cambiado(self, grupo_seleccionado):
+        """Al cambiar el grupo, recarga el combo de servicios (dependencia)."""
+        servicios = self._catalogo.get(grupo_seleccionado, [])
+        self.servicio.configure(values=servicios)
+        # Posicionar el combo de servicio en el primer valor del nuevo grupo.
+        self.servicio.set(servicios[0] if servicios else '')
+
+    def _recargar_combos_desde_catalogo(self):
+        """Relee catalogo.xlsx y actualiza ambos combos (tras 'Actualizar listas')."""
+        self._catalogo = catalogo_recargas.leer_mapa()
+        grupos = list(self._catalogo.keys())
+        self.grupo.configure(values=grupos)
+        if grupos:
+            self.grupo.set(grupos[0])
+            self._on_grupo_cambiado(grupos[0])
+        else:
+            self.grupo.set('')
+            self.servicio.configure(values=[])
+            self.servicio.set('')
+
+    def actualizar_listas_hilo(self):
+        threading.Thread(target=self.actualizar_listas, daemon=True).start()
+
+    def actualizar_listas(self):
+        """
+        Scrapea grupos y servicios del portal y regenera catalogo.xlsx.
+        Usa la primera cuenta de cuentas.xlsx + la Clave de la UI. Navegador visible.
+        """
+        self.ventana_informacion.write('🔄 Actualizando listas de grupos y servicios...')
+
+        # Cargar la primera cuenta disponible.
+        try:
+            self.enlistar_cuentas()
+            cuenta = str(self.excel2.excel['cuenta'][0])
+        except Exception as e:
+            self.ventana_informacion.write(f'❌ No se pudo leer la cuenta de cuentas.xlsx: {e}')
+            return
+
+        clave = self.entry_password.get()
+        if not clave:
+            self.ventana_informacion.write('❌ Ingrese la Clave antes de actualizar listas.')
+            return
+
+        class Abrir_pagina1(web_controller.Web_Controller):
+            pass
+
+        recargas = Abrir_pagina1(0.1)
+        try:
+            # Scraping siempre visible (headless=False) para poder diagnosticar.
+            recargas.openEdge(headless=False)
+            recargas.selectPage(self.link)
+
+            WebDriverWait(recargas.browser, 30).until(
+                EC.element_to_be_clickable((By.ID, 'login_id'))
+            )
+            recargas.insert('login_id', cuenta, 'id')
+            recargas.insert('pwd', clave, 'id')
+            recargas.click('/html/body/app-root/div/app-login/div/div/div[2]/form/div[9]/button')
+
+            WebDriverWait(recargas.browser, 30).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, '/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
+                )
+            )
+
+            # Ir al formulario de recargas y a la pestaña de paquetes.
+            recargas.click('/html/body/app-root/div/app-layout/app-sidebar/nav/div/div[2]/a[2]')
+            recargas.click(
+                '/html/body/app-root/div/app-layout/section/claro-app-recharge/div/div/div[3]/div'
+                '/claro-header-recharge/ul/div[2]/li/a'
+            )
+            WebDriverWait(recargas.browser, 30).until(
+                EC.presence_of_element_located((By.ID, 'msisdnInput'))
+            )
+
+            scraper = ScraperCatalogoRecargas(recargas, logger=self.ventana_informacion.write)
+            pares = scraper.scrape()
+
+            cantidad = catalogo_recargas.guardar_catalogo(pares)
+            self.ventana_informacion.write(f'💾 Catálogo guardado ({cantidad} pares).')
+            self._recargar_combos_desde_catalogo()
+            self.ventana_informacion.write('✅ Listas actualizadas. Ya puede elegir grupo y servicio.')
+        except Exception as e:
+            self.ventana_informacion.write(f'❌ Error actualizando listas: {e}')
+        finally:
+            try:
+                recargas.cerrar()
+            except Exception:
+                pass
 
     def on_checkbox_change_paquetes(self):
         if self.paquetes.get():

@@ -14,7 +14,8 @@ class Sub_menu:
                  boton4=['BOTON4',None],
                  boton5=['BOTON5',None],
                  boton6=['BOTON6',None],
-                 agrandar = False
+                 agrandar = False,
+                 height = 0.74
                 ):
         self.boton1 = boton1
         self.boton2 = boton2
@@ -24,10 +25,11 @@ class Sub_menu:
         self.boton6 = boton6
         self.cantidad = cantidad
         self.master = master
+        self.height = height
         self.colors = colors.Colors()
         self.button = botones.Buttons()
         self.create_frame = create_frame.Frames()
-        self.submenu = self.create_frame.create_frame(master, height=0.74, width=0.25, x=0.75, y=0.17)
+        self.submenu = self.create_frame.create_frame(master, height=self.height, width=0.25, x=0.75, y=0.17)
         self.button_name = [
             [self.boton1[0]],
             [self.boton2[0]],
@@ -62,16 +64,17 @@ class Sub_menu:
             for frame in self.master.winfo_children():
                 frame.destroy()
             self.__init__(self.master,
-                          self.cantidad, 
+                          self.cantidad,
                           boton1=self.boton1,
                           boton2=self.boton2,
                           boton3=self.boton3,
                           boton4=self.boton4,
                           boton5=self.boton5,
                           boton6=self.boton6,
+                          height=self.height,
                          )
-            
-    
+
+
     def submenu_boton(self,boton,func):
         self.indicator()
         self.create_frame.list_botones[boton].configure(fg_color= self.colors.team, text_color= 'white')
@@ -81,13 +84,14 @@ class Sub_menu:
     
     def ejecuteInit(self):
         self.__init__(self.master,
-                          self.cantidad, 
+                          self.cantidad,
                           boton1=self.boton1,
                           boton2=self.boton2,
                           boton3=self.boton3,
                           boton4=self.boton4,
                           boton5=self.boton5,
                           boton6=self.boton6,
+                          height=self.height,
                          )
 
 

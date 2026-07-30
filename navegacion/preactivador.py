@@ -54,12 +54,12 @@ class Preactivador(ValidacionCodigosMixin):
         self.preactivador = ''
         self.time = tk.StringVar()
         self.time.set('0')
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.04, 0.61, 0.5, 0.2, letterSize=16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.04, 0.65, 0.5, 0.05, letterSize=16)
         input_widget = ctk.CTkEntry(self.menu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.45, rely=0.68, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.45, rely=0.65, relheight=0.05, relwidth=0.2)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.68, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.65, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color= color.team, text_color= 'white')
         # self.correo = 'correo'
         # self.correoEdit = tk.StringVar()
@@ -81,8 +81,8 @@ class Preactivador(ValidacionCodigosMixin):
         self.correoEdit = tk.StringVar()
         self.correoEdit.set(self.correo) 
         input_widget2 = ctk.CTkEntry(self.menu.submenu, textvariable=self.correoEdit)
-        input_widget2.place(relx=0.1, rely=0.75, relheight=0.05, relwidth=0.5)
-        self.okBotton2 = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.75, 0.15, 0.05, self.cambioCorreo)
+        input_widget2.place(relx=0.1, rely=0.72, relheight=0.05, relwidth=0.5)
+        self.okBotton2 = boton.create_button(self.menu.submenu, 'OK', 0.65, 0.72, 0.15, 0.05, self.cambioCorreo)
         self.okBotton2.configure(fg_color= color.team, text_color= 'white')
 
         # self.nit = 'nit o cc'
@@ -97,21 +97,21 @@ class Preactivador(ValidacionCodigosMixin):
         self.checkbox_tropas =  checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Tropas.', self.on_checkbox_change_tropas, self.tropas)
 
         # Configuracion para tiempo de espera
-        self.tiempo_espera_label = label.Label().create_label(self.menu.submenu, 'Tiempo de espera', 0.10, 0.36, 0.6, 0.04, letterSize=16)
+        self.tiempo_espera_label = label.Label().create_label(self.menu.submenu, 'Tiempo de espera', 0.10, 0.35, 0.6, 0.04, letterSize=16)
 
         self.spinbox_tiempo_espera = spinbox.CTkSpinbox(self.menu.submenu, from_=5, to=60, default=5)
-        self.spinbox_tiempo_espera.place(relx=0.10, rely=0.40, relheight=0.06, relwidth=0.55)
+        self.spinbox_tiempo_espera.place(relx=0.10, rely=0.39, relheight=0.06, relwidth=0.55)
 
         # Si el usuario no presiona OK, toma el valor por defecto
         self.valor = self.spinbox_tiempo_espera.get_value()
 
-        self.tiempo_espera_okbutton = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.40, 0.15, 0.05, self.guardar_tiempo_espera)
+        self.tiempo_espera_okbutton = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.39, 0.15, 0.05, self.guardar_tiempo_espera)
         self.tiempo_espera_okbutton.configure(fg_color=color.team, text_color='white')
 
         # Configuraciones para campo de usuario y contrasena poliedro
         # Etiquetas
-        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.47, 0.5, 0.04, letterSize=16)
-        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.57, 0.5, 0.04, letterSize=16)
+        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.45, 0.5, 0.04, letterSize=16)
+        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.54, 0.5, 0.04, letterSize=16)
 
         # Variables
         self.poliedro_user = ''
@@ -123,16 +123,16 @@ class Preactivador(ValidacionCodigosMixin):
 
         # Entradas (más angostas, alineadas a la izquierda)
         input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
-        input_widget4.place(relx=0.10, rely=0.51, relheight=0.05, relwidth=0.55)
+        input_widget4.place(relx=0.10, rely=0.49, relheight=0.05, relwidth=0.55)
 
         input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
-        input_widget5.place(relx=0.10, rely=0.61, relheight=0.05, relwidth=0.55)
+        input_widget5.place(relx=0.10, rely=0.58, relheight=0.05, relwidth=0.55)
 
         # Botones OK a la derecha de cada entrada
-        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.51, 0.15, 0.05, self.cambioPoliedroUser)
+        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.49, 0.15, 0.05, self.cambioPoliedroUser)
         self.okBotton4.configure(fg_color=color.team, text_color='white')
 
-        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.61, 0.15, 0.05, self.cambioPoliedroPass)
+        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.58, 0.15, 0.05, self.cambioPoliedroPass)
         self.okBotton5.configure(fg_color=color.team, text_color='white')
 
         # Elegir si se usa MySMS o Google Messages para obtener el OTP
@@ -149,6 +149,8 @@ class Preactivador(ValidacionCodigosMixin):
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
 
         # Validación de códigos de distribuidor (lista independiente para PRE-SIM)
+        # Sin place: se apila con pack junto a los demás checkboxes (Tropas, MySMS,
+        # Google Messages, API) para que el layout no se encime.
         self._crear_checkbox_validacion(self.menu.submenu, 'pre-sim')
 
     def traffic_url(self, path: str) -> str:
