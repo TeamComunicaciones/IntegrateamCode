@@ -36,6 +36,15 @@ import os
 # Modo de acceso a la fuente: "directo" | "graph".
 MODO_ACCESO = "graph"
 
+# Enlace "humano" al archivo en SharePoint, para que el usuario lo abra en SU
+# navegador (donde ya tiene sesión M365) y edite los códigos. Es SOLO informativo
+# (se muestra al activar la validación); no lo usa la descarga por Graph.
+URL_ARCHIVO_HUMANO = (
+    "https://teamcommunicationsa.sharepoint.com/sites/Auditoria/"
+    "Documentos%20compartidos/Forms/AllItems.aspx?"
+    "id=%2Fsites%2FAuditoria%2FDocumentos%20compartidos%2FCODIGOS%20INTEGRATEAM"
+)
+
 # --- Modo "directo": enlace público de descarga directa ---------------------
 # (Se usa solo si MODO_ACCESO == "directo".)
 URL_FUENTE = "REEMPLAZAR_CON_ENLACE_DIRECTO_SHAREPOINT"

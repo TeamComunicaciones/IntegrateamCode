@@ -77,6 +77,10 @@ class ValidacionCodigosMixin:
     def _on_checkbox_change_validar_codigos(self):
         if self.validar_codigos.get():
             self.ventana_informacion.write('✅ Validación de códigos de distribuidor ACTIVADA')
+            url = getattr(cfg, 'URL_ARCHIVO_HUMANO', '')
+            if url:
+                self.ventana_informacion.write('📄 Edite los códigos bloqueados aquí:')
+                self.ventana_informacion.write(url)
         else:
             self.ventana_informacion.write('⛔ Validación de códigos de distribuidor DESACTIVADA')
 

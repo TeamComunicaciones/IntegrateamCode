@@ -41,7 +41,6 @@ class Recargas:
         self.entry_tiempo = tk.StringVar()
         self.entry_tiempo.set('0')
         self.entry_pin = tk.StringVar()
-        self.entry_user = tk.StringVar()
         self.entry_password = tk.StringVar()
 
         self.title_paquetes = label.Label().create_label(self.menu.submenu, 'Paquetes: ', 0.0, 0.47, 0.30, 0.05,
@@ -58,9 +57,7 @@ class Recargas:
                                                     letterSize=14)
         self.title_pin = label.Label().create_label(self.menu.submenu, 'Pin: ', 0.0, 0.83, 0.25, 0.05,
                                                     letterSize=14)
-        self.title_user = label.Label().create_label(self.menu.submenu, 'Usuario: ', 0.0, 0.89, 0.3, 0.05,
-                                                     letterSize=14)
-        self.title_password = label.Label().create_label(self.menu.submenu, 'Clave: ', 0.0, 0.95, 0.25, 0.05,
+        self.title_password = label.Label().create_label(self.menu.submenu, 'Clave: ', 0.0, 0.89, 0.25, 0.05,
                                                          letterSize=14)
 
         self.checkbox_tropas = checkbox.Checkbox().create_checkbox(
@@ -92,11 +89,8 @@ class Recargas:
         input_pin = ctk.CTkEntry(self.menu.submenu, textvariable=self.entry_pin)
         input_pin.place(relx=0.3, rely=0.83, relheight=0.05, relwidth=0.6)
 
-        input_user = ctk.CTkEntry(self.menu.submenu, textvariable=self.entry_user)
-        input_user.place(relx=0.3, rely=0.89, relheight=0.05, relwidth=0.6)
-
         input_password = ctk.CTkEntry(self.menu.submenu, textvariable=self.entry_password)
-        input_password.place(relx=0.3, rely=0.95, relheight=0.05, relwidth=0.6)
+        input_password.place(relx=0.3, rely=0.89, relheight=0.05, relwidth=0.6)
 
         self.ventana_informacion = ventana_informacion.Ventana_informacion(master)
         self.excel = excel.Excel_controller()
