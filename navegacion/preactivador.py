@@ -148,10 +148,8 @@ class Preactivador(ValidacionCodigosMixin):
         self.modo_captura_datos = tk.BooleanVar()
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
 
-        # Validación de códigos de distribuidor (lista independiente para PRE-SIM)
-        # Sin place: se apila con pack junto a los demás checkboxes (Tropas, MySMS,
-        # Google Messages, API) para que el layout no se encime.
-        self._crear_checkbox_validacion(self.menu.submenu, 'pre-sim')
+        # Validación de códigos de distribuidor (siempre activa; lista independiente para PRE-SIM)
+        self._init_validacion_codigos('pre-sim')
 
     def traffic_url(self, path: str) -> str:
         return self.traffic_base.rstrip("/") + "/" + path.lstrip("/")

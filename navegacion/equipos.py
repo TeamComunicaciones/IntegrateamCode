@@ -116,8 +116,8 @@ class Equipos(ValidacionCodigosMixin):
         self.modo_captura_datos = tk.BooleanVar()
         self.checkbox_modo_captura_datos = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Envio de datos por API', self.on_checkbox_change_modo_captura, self.modo_captura_datos)
 
-        # Validación de códigos de distribuidor (lista independiente para PRE-EQUIPOS)
-        self._crear_checkbox_validacion(self.menu.submenu, 'pre-equipos')
+        # Validación de códigos de distribuidor (siempre activa; lista independiente para PRE-EQUIPOS)
+        self._init_validacion_codigos('pre-equipos')
 
     def _dbg(self, msg: str):
         try:

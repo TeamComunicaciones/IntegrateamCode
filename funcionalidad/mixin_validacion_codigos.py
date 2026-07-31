@@ -17,7 +17,6 @@ Cada proceso configura su clave en config/codigos_bloqueados.py, de modo que las
 listas de códigos son independientes por proceso.
 """
 
-from recursos import checkbox
 from config import codigos_bloqueados as cfg
 from funcionalidad.validador_codigos import (
     ValidadorCodigos,
@@ -31,30 +30,22 @@ class ValidacionCodigosMixin:
     Mixin de validación de códigos de distribuidor.
 
     El módulo anfitrión debe llamar:
-        - self._crear_checkbox_validacion(master, proceso)  en __init__
-        - self._codigo_distribuidor_permitido(codigo)       antes del bucle
+        - self._init_validacion_codigos(proceso)       en __init__
+        - self._codigo_distribuidor_permitido(navegador) antes del bucle
+
+    La validación SIEMPRE está activa. Para no bloquear a nadie, el archivo de
+    códigos simplemente se deja sin códigos en la columna del proceso.
     """
 
-    def _crear_checkbox_validacion(self, master, proceso, texto='Validar códigos distribuidor',
-                                   place=False, x=None, y=None, widht=None, height=None):
+    def _init_validacion_codigos(self, proceso):
         """
-        Crea el checkbox on/off y prepara el validador para `proceso`.
+        Prepara el validador para `proceso`. La validación es siempre activa
+        (no hay checkbox): se controla poniendo/quitando códigos del archivo.
 
         Args:
-            master: contenedor tkinter donde va el checkbox (self.menu.submenu).
             proceso (str): clave en config.codigos_bloqueados.COLUMNAS (p.ej. 'pre-sim').
-            place/x/y/widht/height: si place=True, posiciona el checkbox con
-                coordenadas relativas (evita que quede apilado con pack y tape
-                otros campos). Si place=False, usa el pack por defecto.
         """
-        import tkinter as tk
-
         self._proceso_validacion = proceso
-        self.validar_codigos = tk.BooleanVar(value=cfg.VALIDACION_ACTIVA_DEFAULT)
-        self.checkbox_validar_codigos = checkbox.Checkbox().create_checkbox(
-            master, texto, self._on_checkbox_change_validar_codigos, self.validar_codigos,
-            place=place, x=x, y=y, widht=widht, height=height,
-        )
 
         # Archivo único compartido; cada proceso lee su propia columna.
         # El modo de acceso (directo / graph) se define en la config.
@@ -74,16 +65,6 @@ class ValidacionCodigosMixin:
                 formato=cfg.FORMATO_FUENTE,
             )
 
-    def _on_checkbox_change_validar_codigos(self):
-        if self.validar_codigos.get():
-            self.ventana_informacion.write('✅ Validación de códigos de distribuidor ACTIVADA')
-            url = getattr(cfg, 'URL_ARCHIVO_HUMANO', '')
-            if url:
-                self.ventana_informacion.write('📄 Edite los códigos bloqueados aquí:')
-                self.ventana_informacion.write(url)
-        else:
-            self.ventana_informacion.write('⛔ Validación de códigos de distribuidor DESACTIVADA')
-
     def _leer_codigo_distribuidor_sesion(self, navegador):
         """Lee el código de distribuidor de la sesión de Poliedro (userDataCodDistribuidor)."""
         try:
@@ -95,18 +76,17 @@ class ValidacionCodigosMixin:
         """
         Verifica, al inicio del ciclo, si la sesión puede operar.
 
-        - Si la validación está desactivada -> True (permitido).
-        - Si está activada: descarga la lista y compara el código de la sesión.
+        La validación SIEMPRE se ejecuta (no hay checkbox). Descarga la lista y
+        compara el código de la sesión:
             * código bloqueado      -> False (el módulo debe abortar el ciclo)
             * fuente no disponible  -> False + aviso (política "avisar y detener")
             * código permitido      -> True
+        Si el archivo no tiene códigos en la columna del proceso, ningún código
+        estará bloqueado y el proceso continúa normalmente.
 
         Returns:
             bool: True si se puede continuar; False si hay que abortar.
         """
-        if not getattr(self, 'validar_codigos', None) or not self.validar_codigos.get():
-            return True
-
         codigo = self._leer_codigo_distribuidor_sesion(navegador)
         if not codigo or not str(codigo).strip():
             self.ventana_informacion.write(
