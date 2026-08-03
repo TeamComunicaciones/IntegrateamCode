@@ -1,7 +1,9 @@
 from navegacion import sub_menu as sm, ventana_informacion
 from recursos import  label, botones, colors
 from funcionalidad import  web_controller, poliedro, excel
-from subprocess import Popen
+from pathlib import Path
+import os
+import shutil
 import threading
 import tkinter as tk
 import customtkinter as ctk
@@ -17,6 +19,16 @@ class Consulta_seriales:
         self.on_of = on_of
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
+        self.base_dir = Path(__file__).resolve().parents[1]
+
+        _carpeta = os.path.join(os.path.expanduser("~"), "Documents", "TeamComunicaciones", "consulta_seriales")
+        os.makedirs(_carpeta, exist_ok=True)
+        self.ruta_seriales = os.path.join(_carpeta, "seriales.xlsx")
+        self.ruta_seriales2 = os.path.join(_carpeta, "seriales2.xlsx")
+
+        self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales.xlsx', self.ruta_seriales, ['seriales'])
+        self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales2.xlsx', self.ruta_seriales2, ['Iccid', 'Imei', 'Mensaje'])
+
         self.link= 'https://poliedrodist.comcel.com.co/'
         self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         self.titulo = label.Label().create_label(master, 'CONSULTA DE SERIALES', 0.2, 0.0, 0.5,0.2, letterSize= 25)
@@ -49,15 +61,31 @@ class Consulta_seriales:
         self.seriales.openEdge()
         self.seriales.selectPage(self.link)
 
+    def _crear_plantilla_si_no_existe(self, plantilla_relativa, destino, columnas):
+        ruta_destino = Path(destino)
+        ruta_destino.parent.mkdir(parents=True, exist_ok=True)
+
+        if not ruta_destino.exists():
+            ruta_plantilla = self.base_dir / Path(plantilla_relativa)
+            if ruta_plantilla.exists():
+                shutil.copy2(ruta_plantilla, ruta_destino)
+            else:
+                pd.DataFrame(columns=columnas).to_excel(ruta_destino, index=False)
+
+        try:
+            pd.read_excel(ruta_destino)
+        except Exception:
+            pd.DataFrame(columns=columnas).to_excel(ruta_destino, index=False)
+
     def abrir_excel(self):
+        self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales.xlsx', self.ruta_seriales, ['seriales'])
         self.ventana_informacion.write('excel consultar seriales abierto recuerde cerrar antes de iniciar')
-        p = Popen("src\consulta_seriales\openExcel.bat")
-        stdout, stderr = p.communicate()
+        os.startfile(self.ruta_seriales)
 
     def abrir_excel2(self):
+        self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales2.xlsx', self.ruta_seriales2, ['Iccid', 'Imei', 'Mensaje'])
         self.ventana_informacion.write('excel consultar seriales abierto recuerde cerrar antes de iniciar')
-        p = Popen("src\consulta_seriales\openExcel2.bat")
-        stdout, stderr = p.communicate()
+        os.startfile(self.ruta_seriales2)
 
     def ejecuccionHilo(self):
         hilo_equipos = threading.Thread(target=self.ejecuccion)
@@ -68,23 +96,24 @@ class Consulta_seriales:
         hilo_equipos2.start()
 
     def ejecuccion(self):  
+        self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales.xlsx', self.ruta_seriales, ['seriales'])
         df = pd.DataFrame(columns=['seriales'])
         for i in range(int(self.serial1.get()), int(self.serial2.get())+1):
             df.loc[len(df)] = [f'{i}']
             self.ventana_informacion.write(f'Generando serial {i}')
             
-        nombre_archivo = 'src\consulta_seriales\seriales.xlsx'
-        df.to_excel(nombre_archivo, index=False)
+        df.to_excel(self.ruta_seriales, index=False)
         self.abrir_excel()
         
     
     def ejecuccion2(self):
         self.on_of(False)
+        self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales2.xlsx', self.ruta_seriales2, ['Iccid', 'Imei', 'Mensaje'])
         self.ventana_informacion.write('Empezando ejecuccion')
         # self.poliedro.definirBrowser(self.seriales)
         # self.seriales.script("location.href='/activaciones/http/REINGENIERIA/DispatcherPoliedroRepcon/DispacherEntrada.ASP?Site=10';")
         column_types = {'Iccid': 'str', 'Imei': 'str'}
-        self.excel.excel = pd.read_excel('src\consulta_seriales\seriales2.xlsx', dtype=column_types)
+        self.excel.excel = pd.read_excel(self.ruta_seriales2, dtype=column_types)
         self.excel.cantidad = len(self.excel.excel['Iccid'])
         self.excel.quitarFormatoCientifico('Iccid')
         self.excel.quitarFormatoCientifico('Imei')
@@ -140,11 +169,11 @@ class Consulta_seriales:
                         self.ventana_informacion.write(f'IMEI {imei}: {self.mensaje}')
                     else:
                         self.mensaje = 'no detecta ni iccid ni imei'
-                    self.excel.guardar(self.contador, 'Mensaje', self.mensaje, 'src\consulta_seriales\seriales2.xlsx')
+                    self.excel.guardar(self.contador, 'Mensaje', self.mensaje, destino=self.ruta_seriales2)
                     self.contador += 1
                 except:
                     self.ventana_informacion.write(f'Siguiente por error en portabilidad de {self.min}')
-                    self.excel.guardar(self.contador, 'Mensaje', 'error', destino='src\consulta_seriales\seriales2.xlsx')
+                    self.excel.guardar(self.contador, 'Mensaje', 'error', destino=self.ruta_seriales2)
                     self.contador += 1
         self.abrir_excel2()
 
