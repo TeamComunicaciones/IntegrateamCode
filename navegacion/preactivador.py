@@ -685,7 +685,7 @@ class Preactivador(ValidacionCodigosMixin):
             try:
                 message = self.preactivador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                 if message == 'Porta ya registrada':
-                    self.excel.guardar(self.contador, 'Mensaje', message)
+                    self.excel.guardar(self.contador, 'Mensaje', message, destino=self.excel_path)
                     self.preactivador.selectPage(self.traffic_url("/CaptureData"))
                     self.poliedro.seleccionAcceso('195', start=False)
                     if not self.wait_for_loading():
@@ -719,7 +719,7 @@ class Preactivador(ValidacionCodigosMixin):
             ]
             self.poliedro.detectOption(optionsFinal, NoneFunc=self.errorGeneral)
         else:
-            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1")
+            self.excel.guardar(self.contador, 'Mensaje', "Error en la URL de Demographic/Index1", destino=self.excel_path)
             raise Exception("Error en la URL de Demographic/Index1")
         
     def selectDropDown(self, id, value):
@@ -836,7 +836,7 @@ class Preactivador(ValidacionCodigosMixin):
             try:
                 message = self.preactivador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                 if message == 'Porta ya registrada':
-                    self.excel.guardar(self.contador, 'Mensaje', message)
+                    self.excel.guardar(self.contador, 'Mensaje', message, destino=self.excel_path)
                     self.preactivador.selectPage(self.traffic_url("/"))
                     self.poliedro.seleccionAcceso('195', start=False)
                     if not self.wait_for_loading():

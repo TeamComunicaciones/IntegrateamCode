@@ -527,7 +527,7 @@ class Equipos(ValidacionCodigosMixin):
                 try:
                     message = self.equipos.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Equipo procesado':
-                        self.excel.guardar(self.contador, 'Mensaje', message)
+                        self.excel.guardar(self.contador, 'Mensaje', message, destino=self.excel_path)
                         self.goto_traffic("/CaptureData", context="reset a CaptureData")
                         self.poliedro.seleccionAcceso('194', start=False)
                         self.ventana_informacion.write(f"{self.iccid} Equipo procesado'")

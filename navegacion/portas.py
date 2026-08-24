@@ -433,7 +433,7 @@ class Portas:
                 try:
                     message = self.portas.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[4]/div[2]/div[1]/div/div/div')
                     if message == 'Porta ya registrada':
-                        self.excel.guardar(self.contador, 'Mensaje', message)
+                        self.excel.guardar(self.contador, 'Mensaje', message, destino=self.excel_path)
                         self.portas.selectPage(traffic_url("/"))
                         if not self.wait_for_loading():
                             raise Exception("Timeout esperando carga inicial en captura_datos")
