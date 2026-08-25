@@ -597,26 +597,38 @@ class LoginService:
             # Esperar a que llegue el SMS
             time.sleep(10)
             
+            # El listado de conversaciones ya muestra el texto del ultimo
+            # mensaje, asi que el OTP se puede leer sin abrir el chat. Se
+            # prueban varias rutas porque el DOM de Google Messages cambia
+            # entre versiones y antes solo se buscaba la conversacion abierta.
+            rutas = [
+                # Listado de conversaciones (no requiere abrir el chat)
+                '(//mws-conversation-snippet[contains(., "Su codigo OTP")])[1]',
+                # Conversacion abierta
+                '(//div[contains(@class, "text-msg")][contains(., "Su codigo OTP")])[last()]',
+                # DOM anterior
+                '(//mws-message-wrapper[.//div[contains(text(),"Su codigo OTP")]])[last()]//div[contains(text(),"Su codigo OTP")]',
+            ]
+
             # Intentar obtener el código OTP
             for intento in range(self.max_otp_attempts):
-                try:
-                    # Leer el contenido del SMS
-                    sms_content = self.web_controller.read(
-                        '(//mws-message-wrapper[.//div[contains(text(),"Su codigo OTP")]])[last()]//div[contains(text(),"Su codigo OTP")]', 
-                        'xpath'
-                    )
-                    
+                for ruta in rutas:
+                    try:
+                        # Leer el contenido del SMS
+                        sms_content = self.web_controller.read(ruta, 'xpath')
+                    except Exception:
+                        continue
+
                     # Extraer el código usando regex
-                    match = re.search(r"\b\d{6,10}\b", sms_content)
+                    match = re.search(r"\b\d{6,10}\b", sms_content or "")
                     if match:
                         codigo = match.group()
                         self._log_message(f"Código OTP obtenido: {codigo}")
                         return codigo
-                        
-                except Exception as e:
-                    self._log_message(f"Intento OTP {intento + 1}/{self.max_otp_attempts} fallido, reintentando...")
-                    if intento < self.max_otp_attempts - 1:
-                        time.sleep(10)  # Esperar antes de reintentar
+
+                self._log_message(f"Intento OTP {intento + 1}/{self.max_otp_attempts} fallido, reintentando...")
+                if intento < self.max_otp_attempts - 1:
+                    time.sleep(10)  # Esperar antes de reintentar
                     
             self._log_message("No se pudo obtener el código OTP después de varios intentos", is_error=True)
             return None
