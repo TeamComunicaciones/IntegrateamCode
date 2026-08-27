@@ -14,6 +14,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+# Tope de navegadores simultaneos. Cada uno es un Edge propio (~300-400 MB),
+# asi que no conviene subirlo sin medir el consumo en el equipo del asesor.
+MAX_PAGINAS = 15
+
+
 class Recargas:
 
     def __init__(self, master, on_of):
@@ -109,14 +114,33 @@ class Recargas:
 
         # Validar número de páginas
         if self.entry_paginas.get().isnumeric():
-            if int(self.entry_paginas.get()) > 10:
-                self.entry_paginas.set('10')
+            if int(self.entry_paginas.get()) > MAX_PAGINAS:
+                self.entry_paginas.set(str(MAX_PAGINAS))
         else:
             self.entry_paginas.set('1')
 
         threads = []
         self.datos_excel = []
         n = int(self.entry_paginas.get())
+
+        # Cada navegador usa la fila i de cuentas.xlsx (ver abrirPagina), asi que
+        # no se pueden abrir mas navegadores que cuentas disponibles.
+        cuentas_disponibles = self.contar_cuentas()
+        if n > cuentas_disponibles:
+            self.ventana_informacion.write(
+                f'⚠️ Se pidieron {n} paginas pero cuentas.xlsx tiene '
+                f'{cuentas_disponibles} cuentas. Se trabajara con {cuentas_disponibles}.'
+            )
+            n = cuentas_disponibles
+            self.entry_paginas.set(str(n))
+
+        if n < 1:
+            self.ventana_informacion.write(
+                '❌ No hay cuentas en cuentas.xlsx. Agregue al menos una cuenta '
+                'y presione START de nuevo.'
+            )
+            self.on_of(True)
+            return
 
         # Dividir el dataframe en n partes
         rows_per_df = self.excel.cantidad // n
@@ -530,3 +554,24 @@ class Recargas:
 
     def enlistar_cuentas(self):
         self.excel2.leer_excel('src\\recargas\\cuentas.xlsx', 'numero', dtype={'cuenta': str})
+
+    def contar_cuentas(self):
+        """
+        Cuenta las cuentas utilizables de cuentas.xlsx.
+
+        El navegador i usa la fila i (ver abrirPagina), asi que solo sirven las
+        filas llenas desde la primera: se corta en la primera vacia para no
+        contar las filas que estan solo de plantilla.
+        """
+        try:
+            columna = self.excel2.excel['cuenta']
+        except Exception:
+            return 0
+
+        total = 0
+        for valor in columna:
+            texto = str(valor).strip()
+            if not texto or texto.lower() == 'nan':
+                break
+            total += 1
+        return total
