@@ -40,7 +40,7 @@ class Revisar_equipos:
         self.revision.click('/html/body/table/tbody/tr[5]/td/table/tbody/tr/td[1]/div[1]/div[1]/div[9]')
         self.revision.click('/html/body/table/tbody/tr[5]/td/table/tbody/tr/td[1]/div[1]/div[1]/div[10]/div[2]')
         self.revision.click('/html/body/table/tbody/tr[5]/td/table/tbody/tr/td[1]/div[1]/div[1]/div[10]/div[3]/div/a')
-        self.excel.leer_excel('src\\revisar_equipos\\revisar_equipos.xlsx', 'Serial')
+        self.excel.leer_excel('src\\revisar_equipos\\revisar_equipos.xlsx', 'Serial', dtype={'Serial': str, 'Iccid': str})
         self.excel.quitarFormatoCientifico('Serial')
         self.excel.quitarFormatoCientifico('Iccid')
         self.ciclo = True
@@ -56,7 +56,7 @@ class Revisar_equipos:
 
     def revisionInd(self):
         self.ventana_informacion.write(f'Revisando {self.contador+1} de {self.excel.cantidad}')
-        self.imei = str(self.excel.excel['Serial'][self.contador])
+        self.imei = excel.limpiar_decimal(self.excel.excel['Serial'][self.contador])
         self.codigo = str(self.excel.excel['Codigo'][self.contador])
         if str(self.codigo) != 'nan' or str(self.imei) == '':
             pass

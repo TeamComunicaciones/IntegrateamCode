@@ -274,7 +274,7 @@ class Preactivador(ValidacionCodigosMixin):
             if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
 
-            self.excel.leer_excel(self.excel_path,'Iccid')
+            self.excel.leer_excel(self.excel_path,'Iccid', dtype={'Iccid': str})
             self.excel.quitarFormatoCientifico('Iccid')
             self.ciclo = True
             self.contador = 0
@@ -334,7 +334,7 @@ class Preactivador(ValidacionCodigosMixin):
 
     def EquiposInd(self):
         self.ventana_informacion.write(f'Activando Equipo {self.contador+1} de {self.excel.cantidad}')
-        self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:] 
+        self.iccid = excel.limpiar_decimal(self.excel.excel['Iccid'][self.contador])[-12:] 
         self.documento = str(self.excel.excel['Documento'][self.contador])
         self.cedula_excel = str(self.excel.excel['Cedula'][self.contador])
         self.codigo_distribuidor = self.preactivador.read('userDataCodDistribuidor', 'id')

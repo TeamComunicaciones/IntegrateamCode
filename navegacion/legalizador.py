@@ -267,7 +267,7 @@ class Legalizador:
                     self.configurar_modo_produccion()
                     
                     # Leer Excel una vez por ciclo
-                    self.excel.leer_excel(self.ruta_excel, 'iccid')
+                    self.excel.leer_excel(self.ruta_excel, 'iccid', dtype={'iccid': str, 'imei': str})
                     self.excel.quitarFormatoCientifico('iccid')
                     self.excel.quitarFormatoCientifico('imei')
 
@@ -466,7 +466,7 @@ class Legalizador:
         self.ventana_informacion.write(f'📝 Procesando registro {self.contador+1}/{self.excel.cantidad} - MIN: {self.min}')
         
         # Obtener datos del Excel
-        self.iccid = str(self.excel.excel['iccid'][self.contador])[-12:] 
+        self.iccid = excel.limpiar_decimal(self.excel.excel['iccid'][self.contador])[-12:] 
         self.cedulaVendedor = str(self.excel.excel['idvendedor'][self.contador]).replace('.0','')
         self.imei = str(self.excel.excel['imei'][self.contador])
         self.min = str(self.excel.excel['min'][self.contador])
@@ -501,8 +501,10 @@ class Legalizador:
         """
         errores = []
         
-        # Validar ICCID (debe tener al menos 10 dígitos)
-        if len(self.iccid.replace(' ', '')) < 10 or self.iccid in ['nan', 'None', '']:
+        # Validar ICCID (debe ser numerico y de 12 digitos). isdigit() rechaza
+        # tanto el .0 que deja pandas como el texto 'nan' de las celdas vacias.
+        iccid_limpio = self.iccid.replace(' ', '')
+        if not iccid_limpio.isdigit() or len(iccid_limpio) != 12:
             errores.append(f"ICCID inválido: {self.iccid}")
         
         # Validar cédula (debe ser numérica y tener al least 6 dígitos)
@@ -715,6 +717,11 @@ class Legalizador:
                     break
                 except Exception as e:
                     contador += 1
+                    # Sin esto no queda rastro de por que fallo el desplegable:
+                    # solo se veia el clic en btnPrev, nunca la causa real.
+                    self.log_error(
+                        f"selectDropDown PhoneClass en captura_demografica (intento {contador}/5)", e
+                    )
                     try:
                         self.legalizador.click('btnPrev', 'id')
                     except Exception as btn_e:

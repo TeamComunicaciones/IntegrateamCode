@@ -233,7 +233,7 @@ class Portas:
             self.poliedro.seleccionAcceso('290')
             if not self.wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
-            self.excel.leer_excel(self.excel_path, 'CC CLIENTE')
+            self.excel.leer_excel(self.excel_path, 'CC CLIENTE', dtype={'SERIAL': str, 'SERIAL2': str})
             self.excel.quitarFormatoCientifico('SERIAL')
 
             for i in range(int(self.repeticiones)):
@@ -299,8 +299,8 @@ class Portas:
         self.nombre = str(self.excel.excel['NOMBRE CLIENTE'][i])
         self.idVendedor = str(self.excel.excel['CEDULA VENDEDOR'][i])
         self.min = str(self.excel.excel['NUMERO MOVIL'][i])
-        self.iccid = str(self.excel.excel['SERIAL'][i])[-12:]
-        self.iccid2 = str(self.excel.excel['SERIAL2'][i])[-12:]
+        self.iccid = excel.limpiar_decimal(self.excel.excel['SERIAL'][i])[-12:]
+        self.iccid2 = excel.limpiar_decimal(self.excel.excel['SERIAL2'][i])[-12:]
         self.nip = str(self.excel.excel['NIP'][i])
         tamañoNip = len(self.nip)
         while (tamañoNip<5):

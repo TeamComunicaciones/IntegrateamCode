@@ -13,6 +13,20 @@ _AUTOFILTRO_SOLO = re.compile(rb'<autoFilter[^>]*/>')
 _AUTOFILTRO_PAR = re.compile(rb'<autoFilter[^>]*>.*?</autoFilter>', re.DOTALL)
 
 
+def limpiar_decimal(valor):
+    """
+    Devuelve el valor como texto sin el .0 que agrega pandas cuando la columna
+    quedo en decimal (basta una celda vacia en medio para que eso pase).
+
+    Hace falta para los archivos que ya traen el .0 grabado como texto de
+    corridas anteriores: leerlos con dtype=str ya no se lo quita.
+    """
+    texto = str(valor).strip()
+    if texto.endswith('.0'):
+        texto = texto[:-2]
+    return texto
+
+
 class Excel_controller:
 
     def _copia_sin_autofiltro(self, file):

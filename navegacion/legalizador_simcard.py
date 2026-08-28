@@ -204,7 +204,7 @@ class Legalizador_sims:
         try:
             for i in range(int(self.repeticiones)):
                 self.contador = 0
-                self.excel.leer_excel(self.excel_path, 'serial')
+                self.excel.leer_excel(self.excel_path, 'serial', dtype={'serial': str})
                 self.excel.quitarFormatoCientifico('serial')
                 
                 for self.contador in range(self.excel.cantidad):
@@ -263,7 +263,7 @@ class Legalizador_sims:
     def establecer_datos(self):
         # Obtener datos del Excel
         self.min = str(self.excel.excel['min'][self.contador])
-        self.iccid = str(self.excel.excel['serial'][self.contador])[-12:] 
+        self.iccid = excel.limpiar_decimal(self.excel.excel['serial'][self.contador])[-12:] 
         self.id_vendedor = str(self.excel.excel['CcVendedor'][self.contador]).replace('.0','')
         self.nombre = str(self.excel.excel['nombre'][self.contador])
         self.apellido = str(self.excel.excel['apellido'][self.contador])

@@ -66,7 +66,7 @@ class Portas:
         self.submenu= sm.Sub_menu(self.master, 1, boton1=['STOP', self.stop], agrandar=True)
         self.controlador.definirInformes(self.ventana_informacion)
         self.controlador.detener = False
-        self.excel.leer_excel('src\portas\portabilidad.xlsx','CC CLIENTE')
+        self.excel.leer_excel('src\portas\portabilidad.xlsx','CC CLIENTE', dtype={'SERIAL': str, 'SERIAL2': str})
         self.excel.quitarFormatoCientifico('SERIAL')
         self.seleccionOpcion()
         
@@ -161,8 +161,8 @@ class Portas:
         self.apellido = str(self.excel.excel['APELLIDO CLIENTE'][i])
         self.idVendedor = str(self.excel.excel['CEDULA VENDEDOR'][i])
         self.min = str(self.excel.excel['NUMERO MOVIL'][i])
-        self.iccid = str(self.excel.excel['SERIAL'][i])[-12:]
-        self.iccid2 = str(self.excel.excel['SERIAL2'][i])[-12:]
+        self.iccid = excel.limpiar_decimal(self.excel.excel['SERIAL'][i])[-12:]
+        self.iccid2 = excel.limpiar_decimal(self.excel.excel['SERIAL2'][i])[-12:]
         self.nip = str(self.excel.excel['NIP'][i])
         self.nombre = str(self.excel.excel['NOMBRE CLIENTE'][i])
         self.correo = str(self.excel.excel['CORREO'][i])

@@ -7,3 +7,5 @@ __pycache__/
 *.py[cod]
 *.pyo
 msedgedriver*.exe
+# Notas de trabajo locales
+NOTAS_PENDIENTES.md

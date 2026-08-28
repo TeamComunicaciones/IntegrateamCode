@@ -205,7 +205,7 @@ class LegalizadorKitContado:
         try:
             for i in range(int(self.repeticiones)):
                 self.contador = 0
-                self.excel.leer_excel(self.excel_path, 'Iccid')
+                self.excel.leer_excel(self.excel_path, 'Iccid', dtype={'Iccid': str, 'Imei': str})
                 self.excel.quitarFormatoCientifico('Iccid')
                 
                 for self.contador in range(self.excel.cantidad):
@@ -269,7 +269,7 @@ class LegalizadorKitContado:
             self.tipo_documento = 'Cedula'
         self.id_cliente = str(self.excel.excel['Identificacion cliente'][self.contador]).replace('.0','')
         self.imei = str(self.excel.excel['Imei'][self.contador])
-        self.iccid = str(self.excel.excel['Iccid'][self.contador])[-12:]
+        self.iccid = excel.limpiar_decimal(self.excel.excel['Iccid'][self.contador])[-12:]
         self.id_vendedor = str(self.excel.excel['Vendedor'][self.contador]).replace('.0','')
 
         # Manejo de valores vacíos o NaN
