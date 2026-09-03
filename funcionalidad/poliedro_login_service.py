@@ -601,13 +601,20 @@ class LoginService:
             # mensaje, asi que el OTP se puede leer sin abrir el chat. Se
             # prueban varias rutas porque el DOM de Google Messages cambia
             # entre versiones y antes solo se buscaba la conversacion abierta.
+            #
+            # Se filtra por "OTP" y no por la frase completa: el operador ya
+            # mando el mensaje como "Su codigo OTP", "Su cdigo OTP" y
+            # "Su codigo OTP", y cualquier variante rompia la lectura. El
+            # translate() ignora mayusculas. Lo que descarta un mensaje que
+            # solo mencione la palabra es el regex de 6-10 digitos de abajo.
+            clave = 'contains(translate(%s, "otp", "OTP"), "OTP")'
             rutas = [
                 # Listado de conversaciones (no requiere abrir el chat)
-                '(//mws-conversation-snippet[contains(., "Su codigo OTP")])[1]',
+                '(//mws-conversation-snippet[%s])[1]' % (clave % '.'),
                 # Conversacion abierta
-                '(//div[contains(@class, "text-msg")][contains(., "Su codigo OTP")])[last()]',
+                '(//div[contains(@class, "text-msg")][%s])[last()]' % (clave % '.'),
                 # DOM anterior
-                '(//mws-message-wrapper[.//div[contains(text(),"Su codigo OTP")]])[last()]//div[contains(text(),"Su codigo OTP")]',
+                '(//mws-message-wrapper[.//div[%s]])[last()]//div[%s]' % (clave % 'text()', clave % 'text()'),
             ]
 
             # Intentar obtener el código OTP
