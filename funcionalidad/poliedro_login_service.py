@@ -3,6 +3,20 @@ import re
 import traceback
 from funcionalidad.web_controller import Web_Controller
 
+
+def _filtro_otp(expr='.'):
+    """
+    Condicion XPath para reconocer el SMS del OTP.
+
+    Se filtra por "OTP" y no por la frase completa: el operador ha mandado el
+    mensaje como "Su codigo OTP", "Su cdigo OTP" y "Su codigo OTP", y cualquier
+    variante rompia la lectura. translate() ignora mayusculas. Lo que descarta
+    un mensaje que solo mencione la palabra (ej. "no comparta su OTP") es el
+    regex de 6-10 digitos que se aplica despues.
+    """
+    return 'contains(translate(%s, "otp", "OTP"), "OTP")' % expr
+
+
 class LoginService:
     """
     Servicio reutilizable para el login automatizado en Poliedro
@@ -197,7 +211,7 @@ class LoginService:
                 try:
                     # Leer el contenido del SMS
                     sms_content = self.web_controller.read(
-                        '//div[1]/span/span[2][contains(text(),"Su codigo OTP")]', 
+                        '//div[1]/span/span[2][%s]' % _filtro_otp('text()'),
                         'xpath'
                     )
                     
@@ -601,20 +615,15 @@ class LoginService:
             # mensaje, asi que el OTP se puede leer sin abrir el chat. Se
             # prueban varias rutas porque el DOM de Google Messages cambia
             # entre versiones y antes solo se buscaba la conversacion abierta.
-            #
-            # Se filtra por "OTP" y no por la frase completa: el operador ya
-            # mando el mensaje como "Su codigo OTP", "Su cdigo OTP" y
-            # "Su codigo OTP", y cualquier variante rompia la lectura. El
-            # translate() ignora mayusculas. Lo que descarta un mensaje que
-            # solo mencione la palabra es el regex de 6-10 digitos de abajo.
-            clave = 'contains(translate(%s, "otp", "OTP"), "OTP")'
             rutas = [
                 # Listado de conversaciones (no requiere abrir el chat)
-                '(//mws-conversation-snippet[%s])[1]' % (clave % '.'),
+                '(//mws-conversation-snippet[%s])[1]' % _filtro_otp(),
                 # Conversacion abierta
-                '(//div[contains(@class, "text-msg")][%s])[last()]' % (clave % '.'),
+                '(//div[contains(@class, "text-msg")][%s])[last()]' % _filtro_otp(),
                 # DOM anterior
-                '(//mws-message-wrapper[.//div[%s]])[last()]//div[%s]' % (clave % 'text()', clave % 'text()'),
+                '(//mws-message-wrapper[.//div[%s]])[last()]//div[%s]' % (
+                    _filtro_otp('text()'), _filtro_otp('text()')
+                ),
             ]
 
             # Intentar obtener el código OTP
