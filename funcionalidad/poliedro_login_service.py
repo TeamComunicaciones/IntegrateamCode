@@ -34,7 +34,6 @@ class LoginService:
         self.ventana_informacion = ventana_informacion
         self.usuario = ""
         self.password = ""
-        self.max_otp_attempts = 2  # Número máximo de intentos para obtener el OTP
         self.otp_timeout = 60  # segundos para esperar OTP
         
         # CONFIGURACIÓN DE REINTENTOS
@@ -84,25 +83,27 @@ class LoginService:
                 # LIMPIAR ESTADO DEL FORMULARIO
                 self._limpiar_estado_login()
                 
-                # Paso 1: Ingresar credenciales
+                # La comprobacion del portal sube aqui: no tiene sentido mandar
+                # las credenciales si no hay de donde leer el OTP.
+                if not self.mysms_portal and not self.google_messages_portal:
+                    self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
+                    return False
+
+                # Foto del OTP que ya se ve, ANTES de que Poliedro mande el
+                # nuevo. Sin esto se leeria el anterior y el login fallaria.
+                referencia_otp = self._capturar_otp_referencia()
+
+                # Paso 1: Ingresar credenciales (esto dispara el SMS)
                 if not self._ingresar_credenciales():
                     self._log_message(f"Error ingresando credenciales en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
                         self._esperar_antes_reintentar()
                         continue
                     return False
-                    
-                # Paso 2: Obtener código OTP
-                codigo_otp = None
 
-                if self.mysms_portal:
-                    codigo_otp = self._obtener_codigo_otp()
-                elif self.google_messages_portal:
-                    codigo_otp = self._obtener_codigo_otp_google()
-                else:
-                    self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
-                    return False
-                
+                # Paso 2: Obtener código OTP
+                codigo_otp = self._esperar_otp_nuevo(referencia_otp)
+
                 if not codigo_otp:
                     self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
                     if intento < self.max_login_attempts - 1:
@@ -190,50 +191,104 @@ class LoginService:
             self._log_error("_ingresar_credenciales", e)
             return False
     
-    def _obtener_codigo_otp(self):
+    def _rutas_otp(self):
         """
-        Obtiene el código OTP de la pestaña de MySMS
-        
+        Rutas del DOM donde buscar el SMS, segun el portal configurado.
+
+        El mensaje lo manda el operador, pero cada portal lo muestra en su
+        propia estructura. Google tiene varias porque su DOM cambia entre
+        versiones y hay que cubrir el listado y la conversacion abierta.
+        """
+        if self.mysms_portal:
+            return ["//div[1]/span/span[2][%s]" % _filtro_otp('text()')]
+
+        return [
+            # Listado de conversaciones (no requiere abrir el chat)
+            '(//mws-conversation-snippet[%s])[1]' % _filtro_otp(),
+            # Conversacion abierta
+            '(//div[contains(@class, "text-msg")][%s])[last()]' % _filtro_otp(),
+            # DOM anterior
+            '(//mws-message-wrapper[.//div[%s]])[last()]//div[%s]' % (
+                _filtro_otp('text()'), _filtro_otp('text()')
+            ),
+        ]
+
+    def _leer_otp_visible(self):
+        """
+        Devuelve el codigo que se ve en este momento, o None.
+
+        No espera ni cambia de pestaña: solo lee. Se usa tanto para tomar la
+        referencia previa como para buscar el codigo nuevo, y que sea la misma
+        lectura en ambos casos es lo que hace valida la comparacion.
+        """
+        for ruta in self._rutas_otp():
+            try:
+                contenido = self.web_controller.read(ruta, 'xpath')
+            except Exception:
+                continue
+
+            match = re.search(r"\b\d{6,10}\b", contenido or "")
+            if match:
+                return match.group()
+        return None
+
+    def _capturar_otp_referencia(self):
+        """
+        Foto del OTP que ya se ve ANTES de pedir uno nuevo.
+
+        Sin esto no hay forma de distinguir el SMS nuevo del anterior: se leeria
+        el viejo, Poliedro lo rechazaria, y el log diria "Código OTP obtenido".
+        """
+        try:
+            self.web_controller.cambiar_pestaña()
+            time.sleep(1)
+            referencia = self._leer_otp_visible()
+            if referencia:
+                self._log_message(f"OTP anterior en pantalla: {referencia}")
+            return referencia
+        except Exception as e:
+            self._log_error("_capturar_otp_referencia", e)
+            return None
+        finally:
+            # Volver siempre, aunque falle: el login sigue en la pestaña 1.
+            try:
+                self.web_controller.volver_pestaña()
+            except Exception:
+                pass
+
+    def _esperar_otp_nuevo(self, referencia):
+        """
+        Espera hasta que aparezca un codigo distinto al de la referencia.
+
+        Args:
+            referencia (str|None): codigo que ya se veia antes de pedir el OTP.
+                Si es None, sirve el primero que aparezca.
+
         Returns:
-            str: Código OTP o None si no se pudo obtener
+            str: Código OTP o None si no llego ninguno nuevo a tiempo.
         """
         try:
             self._log_message("📱 Obteniendo código OTP...")
             time.sleep(2)
-            # Cambiar a la pestaña de MySMS
             self.web_controller.cambiar_pestaña()
-            
-            # Esperar a que llegue el SMS
-            time.sleep(10)
-            
-            # Intentar obtener el código OTP
-            for intento in range(self.max_otp_attempts):
-                try:
-                    # Leer el contenido del SMS
-                    sms_content = self.web_controller.read(
-                        '//div[1]/span/span[2][%s]' % _filtro_otp('text()'),
-                        'xpath'
-                    )
-                    
-                    # Extraer el código usando regex
-                    match = re.search(r"\b\d{6,10}\b", sms_content)
-                    if match:
-                        codigo = match.group()
-                        self._log_message(f"Código OTP obtenido: {codigo}")
-                        return codigo
-                        
-                except Exception as e:
-                    self._log_message(f"Intento OTP {intento + 1}/{self.max_otp_attempts} fallido, reintentando...")
-                    if intento < self.max_otp_attempts - 1:
-                        time.sleep(10)  # Esperar antes de reintentar
-                    
-            self._log_message("No se pudo obtener el código OTP después de varios intentos", is_error=True)
+
+            limite = time.time() + self.otp_timeout
+            while time.time() < limite:
+                codigo = self._leer_otp_visible()
+                if codigo and codigo != referencia:
+                    self._log_message(f"Código OTP obtenido: {codigo}")
+                    return codigo
+                time.sleep(3)
+
+            self._log_message(
+                f"No llego un OTP nuevo en {self.otp_timeout} segundos", is_error=True
+            )
             return None
-            
+
         except Exception as e:
-            self._log_error("_obtener_codigo_otp", e)
+            self._log_error("_esperar_otp_nuevo", e)
             return None
-    
+
     def _ingresar_codigo_otp(self, codigo_otp):
         """
         Ingresa el código OTP en el formulario
@@ -594,64 +649,6 @@ class LoginService:
             
         except Exception as e:
             self._log_error("_limpiar_estado_login", e)
-
-    def _obtener_codigo_otp_google(self):
-        """
-        Obtiene el código OTP de la pestaña de messages de Google
-        
-        Returns:
-            str: Código OTP o None si no se pudo obtener
-        """
-        try:
-            self._log_message("📱 Obteniendo código OTP...")
-            time.sleep(2)
-            # Cambiar a la pestaña de MySMS
-            self.web_controller.cambiar_pestaña()
-            
-            # Esperar a que llegue el SMS
-            time.sleep(10)
-            
-            # El listado de conversaciones ya muestra el texto del ultimo
-            # mensaje, asi que el OTP se puede leer sin abrir el chat. Se
-            # prueban varias rutas porque el DOM de Google Messages cambia
-            # entre versiones y antes solo se buscaba la conversacion abierta.
-            rutas = [
-                # Listado de conversaciones (no requiere abrir el chat)
-                '(//mws-conversation-snippet[%s])[1]' % _filtro_otp(),
-                # Conversacion abierta
-                '(//div[contains(@class, "text-msg")][%s])[last()]' % _filtro_otp(),
-                # DOM anterior
-                '(//mws-message-wrapper[.//div[%s]])[last()]//div[%s]' % (
-                    _filtro_otp('text()'), _filtro_otp('text()')
-                ),
-            ]
-
-            # Intentar obtener el código OTP
-            for intento in range(self.max_otp_attempts):
-                for ruta in rutas:
-                    try:
-                        # Leer el contenido del SMS
-                        sms_content = self.web_controller.read(ruta, 'xpath')
-                    except Exception:
-                        continue
-
-                    # Extraer el código usando regex
-                    match = re.search(r"\b\d{6,10}\b", sms_content or "")
-                    if match:
-                        codigo = match.group()
-                        self._log_message(f"Código OTP obtenido: {codigo}")
-                        return codigo
-
-                self._log_message(f"Intento OTP {intento + 1}/{self.max_otp_attempts} fallido, reintentando...")
-                if intento < self.max_otp_attempts - 1:
-                    time.sleep(10)  # Esperar antes de reintentar
-                    
-            self._log_message("No se pudo obtener el código OTP después de varios intentos", is_error=True)
-            return None
-            
-        except Exception as e:
-            self._log_error("_obtener_codigo_otp", e)
-            return None
 
     def _page_contains_text(self, text: str) -> bool:
         try:
