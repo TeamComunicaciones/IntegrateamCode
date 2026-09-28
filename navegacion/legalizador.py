@@ -13,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from funcionalidad import poliedro_login_service
+from funcionalidad import perfiles_credenciales as perfiles
+from navegacion import modal_credenciales
 import random
 import os
 import shutil
@@ -58,19 +60,22 @@ class Legalizador:
 
         self.titulo = label.Label().create_label(master, 'LEGALIZADOR', 0.2, 0.0, 0.5, 0.2, letterSize=25)
         self.ventana_informacion = ventana_informacion.Ventana_informacion(master)
-        self.menu = sm.Sub_menu(master, 3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
+        self.menu = sm.Sub_menu(master, 4, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['CREDENCIALES', lambda: modal_credenciales.abrir_modal(master.winfo_toplevel())], boton4=['START', self.ejecuccionHilo])
         self.legalizador = ''
         self.time = tk.StringVar()
         self.time2 = 3
         self.time.set('0')
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.0, 0.60, 0.5, 0.2, letterSize=16)
-        self.titulo = label.Label().create_label(self.menu.submenu, 'Ciclos', 0.0, 0.73, 0.5, 0.05, letterSize=16)
-        self.titulo2 = label.Label().create_label(self.menu.submenu, 'Correo', 0.25, 0.77, 0.5, 0.05, letterSize=16)
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Intervalos', 0.10, 0.59, 0.33, 0.05, letterSize=16)
+        self.titulo.configure(anchor='w')
+        self.titulo = label.Label().create_label(self.menu.submenu, 'Ciclos', 0.10, 0.66, 0.33, 0.05, letterSize=16)
+        self.titulo.configure(anchor='w')
+        self.titulo2 = label.Label().create_label(self.menu.submenu, 'Correo', 0.10, 0.73, 0.33, 0.05, letterSize=16)
+        self.titulo2.configure(anchor='w')
         input_widget = ctk.CTkEntry(self.menu.submenu, textvariable=self.time)
-        input_widget.place(relx=0.5, rely=0.67, relheight=0.05, relwidth=0.2)
+        input_widget.place(relx=0.45, rely=0.59, relheight=0.05, relwidth=0.20)
         boton = botones.Buttons()
         color = colors.Colors()
-        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.67, 0.15, 0.05, self.cambioIntervalo)
+        self.okBotton = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.59, 0.15, 0.05, self.cambioIntervalo)
         self.okBotton.configure(fg_color=color.team, text_color='white')
         self.correo = 'acruz@teamcomunicaciones.com'
         self.correoEdit = tk.StringVar()
@@ -80,60 +85,30 @@ class Legalizador:
         self.repeticionesEdit = tk.StringVar()
         self.repeticionesEdit.set(self.repeticiones)
         input_widget2 = ctk.CTkEntry(self.menu.submenu, textvariable=self.correoEdit)
-        input_widget2.place(relx=0.15, rely=0.82, relheight=0.05, relwidth=0.7)
+        input_widget2.place(relx=0.10, rely=0.78, relheight=0.05, relwidth=0.55)
         input_widget3 = ctk.CTkEntry(self.menu.submenu, textvariable=self.repeticionesEdit)
-        input_widget3.place(relx=0.5, rely=0.73, relheight=0.05, relwidth=0.2)
-        self.okBotton2 = boton.create_button(self.menu.submenu, 'confirmar', 0.3, 0.87, 0.40, 0.04, self.cambioCorreo)
+        input_widget3.place(relx=0.45, rely=0.66, relheight=0.05, relwidth=0.20)
+        self.okBotton2 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.78, 0.15, 0.05, self.cambioCorreo)
         self.okBotton2.configure(fg_color=color.team, text_color='white')
-        self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.73, 0.15, 0.05, self.cambioCiclos)
+        self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.66, 0.15, 0.05, self.cambioCiclos)
         self.okBotton3.configure(fg_color=color.team, text_color='white')
 
         # Configuracion para tiempo de espera
-        self.tiempo_espera_label = label.Label().create_label(self.menu.submenu, 'Tiempo de espera', 0.10, 0.36, 0.6, 0.04, letterSize=16)
+        self.tiempo_espera_label = label.Label().create_label(self.menu.submenu, 'Tiempo de espera', 0.10, 0.46, 0.6, 0.04, letterSize=16)
+        self.tiempo_espera_label.configure(anchor='w')
 
         self.spinbox_tiempo_espera = spinbox.CTkSpinbox(self.menu.submenu, from_=5, to=60, default=5)
-        self.spinbox_tiempo_espera.place(relx=0.10, rely=0.40, relheight=0.06, relwidth=0.55)
+        self.spinbox_tiempo_espera.place(relx=0.10, rely=0.50, relheight=0.06, relwidth=0.55)
 
         # Si el usuario no presiona OK, toma el valor por defecto
         self.valor = self.spinbox_tiempo_espera.get_value()
 
-        self.tiempo_espera_okbutton = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.40, 0.15, 0.05, self.guardar_tiempo_espera)
+        self.tiempo_espera_okbutton = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.50, 0.15, 0.05, self.guardar_tiempo_espera)
         self.tiempo_espera_okbutton.configure(fg_color=color.team, text_color='white')
 
-        # Etiquetas
-        self.titulo3 = label.Label().create_label(self.menu.submenu, 'Poliedro User', 0.10, 0.47, 0.5, 0.04, letterSize=16)
-        self.titulo4 = label.Label().create_label(self.menu.submenu, 'Poliedro Pass', 0.10, 0.57, 0.5, 0.04, letterSize=16)
-
-        # Variables
-        self.poliedro_user = ''
-        self.poliedro_pass = ''
-        self.poliedro_user_edit = tk.StringVar()
-        self.poliedro_user_edit.set(self.poliedro_user)
-        self.poliedro_pass_edit = tk.StringVar()
-        self.poliedro_pass_edit.set(self.poliedro_pass)
-
-        # Entradas (más angostas, alineadas a la izquierda)
-        input_widget4 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_user_edit)
-        input_widget4.place(relx=0.10, rely=0.51, relheight=0.05, relwidth=0.55)
-
-        input_widget5 = ctk.CTkEntry(self.menu.submenu, textvariable=self.poliedro_pass_edit)
-        input_widget5.place(relx=0.10, rely=0.61, relheight=0.05, relwidth=0.55)
-
-        # Botones OK a la derecha de cada entrada
-        self.okBotton4 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.51, 0.15, 0.05, self.cambioPoliedroUser)
-        self.okBotton4.configure(fg_color=color.team, text_color='white')
-
-        self.okBotton5 = boton.create_button(self.menu.submenu, 'OK', 0.66, 0.59, 0.15, 0.05, self.cambioPoliedroPass)
-        self.okBotton5.configure(fg_color=color.team, text_color='white')
-
-        # Elegir si se usa MySMS o Google Messages para obtener el OTP
-        self.checkbox_mysms = checkbox.Checkbox()
-        self.mysms = tk.BooleanVar()
-        self.checkbox_mysms = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'MySMS', self.on_checkbox_change_mysms, self.mysms)
-
-        self.checkbox_google_messages = checkbox.Checkbox()
-        self.google_messages = tk.BooleanVar()
-        self.checkbox_google_messages = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Google Messages', self.on_checkbox_change_google_messages, self.google_messages)
+        # Las credenciales se editan con el botón CREDENCIALES del submenú
+        # (ventana compartida por los módulos de Poliedro: navegacion/modal_credenciales.py).
+        self.perfil = None  # copia del perfil activo, tomada al pulsar START
 
     def guardar_tiempo_espera(self):
         self.valor = self.spinbox_tiempo_espera.get_value()
@@ -155,29 +130,9 @@ class Legalizador:
         self.correo = self.correoEdit.get()
         self.ventana_informacion.write(f'Correo actualizado por {self.correo}')
 
-    def cambioPoliedroUser(self):
-        self.poliedro_user = self.poliedro_user_edit.get()
-        self.ventana_informacion.write(f'Poliedro User actualizado por {self.poliedro_user}')
-
-    def cambioPoliedroPass(self):
-        self.poliedro_pass = self.poliedro_pass_edit.get()
-        self.ventana_informacion.write(f'Poliedro Pass actualizado por {self.poliedro_pass}')
-
-    def on_checkbox_change_mysms(self):
-        if self.mysms.get():
-            self.ventana_informacion.write('Cambiando modalidad a MySMS')
-        else:
-            self.ventana_informacion.write('Cambiando modalidad a Estandar')
-    
-    def on_checkbox_change_google_messages(self):
-        if self.google_messages.get():
-            self.ventana_informacion.write('Cambiando modalidad a Google Messages')
-        else:
-            self.ventana_informacion.write('Cambiando modalidad a Estandar')
-    
     def abrir_pagina(self):
-        if not self.mysms.get() and not self.google_messages.get():
-            self.ventana_informacion.write('Seleccione un método para recibir el OTP')
+        perfil = modal_credenciales.credenciales_listas(self.menu.submenu, self.ventana_informacion)
+        if perfil is None:
             return
 
         self.ventana_informacion.write('Navegador abierto')
@@ -188,9 +143,9 @@ class Legalizador:
         self.legalizador.selectPage(self.link)
 
         time.sleep(2)
-        if self.mysms.get():
+        if perfil['metodo_otp'] == perfiles.METODO_MYSMS:
             self.legalizador.script(f"window.open('{self.link_mysms}', '_blank');")
-        elif self.google_messages.get():
+        elif perfil['metodo_otp'] == perfiles.METODO_GOOGLE:
             self.legalizador.script(f"window.open('{self.link_google_messages}', '_blank');")
     
     def ejecuccionHilo(self):
@@ -201,6 +156,10 @@ class Legalizador:
                 "Espera a que termine antes de iniciar otro."
             )
             return
+        perfil = modal_credenciales.credenciales_listas(self.menu.submenu, self.ventana_informacion)
+        if perfil is None:
+            return
+        self.perfil = perfil
 
         hilo_legalizador = threading.Thread(target=self.ejecuccion, daemon=True)
         hilo_legalizador.start()
@@ -299,49 +258,17 @@ class Legalizador:
                 pass
     
     def inicializar_login_service(self):
-        """
-        Inicializa el servicio de login cuando el navegador esté listo
-        """
-        if self.legalizador and not self.poliedro_login_service:
-            self.poliedro_login_service = poliedro_login_service.LoginService(
-                self.legalizador, 
-                self.ventana_informacion
-            )
-            # CONFIGURAR REINTENTOS
-            self.poliedro_login_service.configurar_reintentos(
-                max_intentos=2, 
-                intervalo_minutos=2
-            )
-            self.poliedro_login_service.configurar_credenciales(
-                self.poliedro_user, 
-                self.poliedro_pass
-            )
-            self.poliedro_login_service.configurar_portales_otp(
-                mysms=self.mysms.get(),
-                google_messages=self.google_messages.get(),
-            )
+        """Crea el servicio de login si no existe (lo usan las verificaciones de sesión)."""
+        if not getattr(self, 'poliedro_login_service', None):
+            self.poliedro_login_service = poliedro_login_service.preparar_login(
+                None, self.legalizador, self.ventana_informacion, self.perfil, 'LEGALIZADOR')
 
     def login(self):
-        """
-        Método simplificado que usa el servicio de login
-        """
-        try:
-            # Inicializar el servicio si no existe
-            if not self.poliedro_login_service:
-                self.inicializar_login_service()
-            
-            # Configurar credenciales actuales
-            self.poliedro_login_service.configurar_credenciales(
-                self.poliedro_user, 
-                self.poliedro_pass
-            )
-            
-            # Ejecutar login automático
-            return self.poliedro_login_service.login_automatico()
-
-        except Exception as e:
-            self.log_error("login", e)
-            return False
+        """Inicia sesión en Poliedro con el perfil tomado al pulsar START (ver modal_credenciales)."""
+        self.poliedro_login_service, ok = poliedro_login_service.iniciar_sesion(
+            getattr(self, 'poliedro_login_service', None), self.legalizador, self.ventana_informacion,
+            self.perfil, 'LEGALIZADOR')
+        return ok
 
     def _looks_like_login_page(self, html: str | None = None) -> bool:
         try:

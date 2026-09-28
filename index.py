@@ -2,6 +2,7 @@ from navegacion import applicacion
 from recursos import botones
 from tkinter import messagebox
 from funcionalidad.web_controller import  Web_Controller
+from config.version import VERSION
 
 
 def alertas(mensaje):
@@ -20,5 +21,5 @@ if __name__ == '__main__':
             driver.quit()
 
     app = applicacion.App
-    root = app('1080x720', 'Team Comunicaciones', 'version: 3.8.3', alertas)
+    root = app('1080x720', 'Team Comunicaciones', f'version: {VERSION}', alertas)
     root.start()

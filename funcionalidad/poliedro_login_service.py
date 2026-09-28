@@ -1,7 +1,36 @@
 import time
 import re
-import traceback
 from funcionalidad.web_controller import Web_Controller
+from funcionalidad import registro
+from funcionalidad import perfiles_credenciales as perfiles
+from funcionalidad.otp_correo import (
+    ProveedorOtpCorreo,
+    ErrorOtpCorreo,
+    CorreoConexionError,
+    CorreoCredencialesError,
+    OtpNoLlegoError,
+)
+
+ARCHIVO_LOG = "login.log"
+
+# Pausa entre intentos cuando el OTP llega por correo: no hace falta esperar
+# 2 minutos como con los SMS, basta con pedir un código nuevo.
+PAUSA_REINTENTO_CORREO = 10
+
+# Qué ve el operario cuando falla un paso interno del login. El detalle técnico
+# va al registro (Documents\TeamComunicaciones\logs\login.log).
+_MENSAJES_USUARIO = {
+    "_ingresar_credenciales": "No se pudieron escribir las credenciales en la página de Poliedro.",
+    "_ingresar_codigo_otp": "No se pudo escribir el código en la página de Poliedro.",
+    "_asegurar_pantalla_login": "No se pudo abrir la pantalla de inicio de sesión de Poliedro.",
+    "_detectar_pantalla_login": "No se pudo abrir la pantalla de inicio de sesión de Poliedro.",
+    "_capturar_otp_referencia": "No se pudo leer la pestaña de mensajes (MySMS/Google).",
+    "_esperar_otp_nuevo": "No se pudo leer el código en la pestaña de mensajes (MySMS/Google).",
+    "_forzar_expiracion_por_credenciales_incorrectas": "No se pudo cerrar la sesión anterior de Poliedro.",
+}
+# Pasos cuyo fallo es parte del flujo normal (sondeos): solo se registran.
+_SIN_MENSAJE_USUARIO = {"detectar_login_valido", "_detectar_login_invalido", "_limpiar_estado_login",
+                        "validar_sesion_activa"}
 
 
 def _filtro_otp(expr='.'):
@@ -17,130 +46,264 @@ def _filtro_otp(expr='.'):
     return 'contains(translate(%s, "otp", "OTP"), "OTP")' % expr
 
 
+class ProveedorOtpPestana:
+    """
+    OTP leído de una pestaña del navegador (MySMS o Google Messages).
+
+    Envuelve sin cambios la lectura que ya existía en LoginService, con la misma
+    interfaz que ProveedorOtpCorreo. Se retira cuando termine la migración al correo.
+    """
+
+    def __init__(self, servicio):
+        self.servicio = servicio
+        self.referencia = None
+
+    def probar(self):
+        return None
+
+    def tomar_linea_base(self):
+        self.referencia = self.servicio._capturar_otp_referencia()
+        return self.referencia
+
+    def esperar_codigo(self, timeout=None):
+        codigo = self.servicio._esperar_otp_nuevo(self.referencia)
+        if not codigo:
+            raise OtpNoLlegoError(
+                "No llegó un código nuevo a la pestaña de mensajes (MySMS/Google).",
+                detalle="ProveedorOtpPestana: sin código nuevo",
+            )
+        return codigo
+
+    def cerrar(self):
+        pass
+
+
+def preparar_login(servicio, navegador, ventana_informacion, perfil, modulo):
+    """
+    Devuelve el LoginService listo para iniciar sesión con `perfil`, o None si no
+    hay navegador. Lo usan los 6 módulos de Poliedro en lugar de sus copias de
+    login() / inicializar_login_service().
+    """
+    if not navegador:
+        if ventana_informacion:
+            ventana_informacion.write('⚠️ Primero pulse ABRIR PAGINA para abrir el navegador.')
+        return None
+    if servicio is None:
+        servicio = LoginService(navegador, ventana_informacion, modulo=modulo)
+        servicio.configurar_reintentos(max_intentos=2, intervalo_minutos=2)
+    servicio.configurar_perfil(perfil if perfil is not None else perfiles.perfil_activo())
+    return servicio
+
+
+def iniciar_sesion(servicio, navegador, ventana_informacion, perfil, modulo):
+    """
+    Inicia sesión en Poliedro con `perfil`. Nunca lanza excepciones.
+
+    Returns:
+        (LoginService|None, bool): el servicio (para los re-logins) y si se logró.
+    """
+    try:
+        servicio = preparar_login(servicio, navegador, ventana_informacion, perfil, modulo)
+        if servicio is None:
+            return None, False
+        return servicio, servicio.login_automatico()
+    except Exception as e:
+        ref = registro.registrar(ARCHIVO_LOG, modulo, "iniciar_sesion", exc=e)
+        if ventana_informacion:
+            ventana_informacion.write(f"⚠️ Ocurrió un problema durante el inicio de sesión en Poliedro (Ref. {ref}).")
+        return servicio, False
+
+
 class LoginService:
     """
     Servicio reutilizable para el login automatizado en Poliedro
     """
     
-    def __init__(self, web_controller: Web_Controller, ventana_informacion=None):
+    def __init__(self, web_controller: Web_Controller, ventana_informacion=None, modulo=None):
         """
         Inicializa el servicio de login
-        
+
         Args:
             web_controller: Instancia del controlador web (navegador)
             ventana_informacion: Ventana para mostrar mensajes (opcional)
+            modulo (str|None): nombre del módulo, para el registro técnico
         """
         self.web_controller: Web_Controller = web_controller
         self.ventana_informacion = ventana_informacion
+        self.modulo = modulo
         self.usuario = ""
         self.password = ""
-        self.otp_timeout = 60  # segundos para esperar OTP
-        
+        self.otp_timeout = 60  # segundos para esperar OTP (MySMS / Google)
+
         # CONFIGURACIÓN DE REINTENTOS
         self.max_login_attempts = 2  # Número máximo de intentos de login
         self.retry_interval = 120  # Intervalo entre reintentos (2 minutos)
 
         # Configuracion del portal para extraer la OPT
+        self.metodo_otp = None  # perfiles.METODO_CORREO | METODO_MYSMS | METODO_GOOGLE
         self.mysms_portal = False  # Si se usa MySMS para obtener el OTP
         self.google_messages_portal = False  # Si se usa Google Messages para obtener el OTP
+        self.usuario_correo = ""
+        self.clave_correo = ""
 
     def configurar_credenciales(self, usuario, password):
         """
         Configura las credenciales de login
-        
+
         Args:
             usuario (str): Usuario de Poliedro
             password (str): Contraseña de Poliedro
         """
         self.usuario = usuario
         self.password = password
-        
+
+    def configurar_perfil(self, perfil):
+        """Toma usuario, clave y método de OTP de un perfil (ver perfiles_credenciales)."""
+        p = perfiles.normalizar_perfil(perfil)
+        self.usuario = p["usuario_poliedro"]
+        self.password = p["clave_poliedro"]
+        self.metodo_otp = p["metodo_otp"]
+        self.usuario_correo = p["usuario_correo"]
+        self.clave_correo = p["clave_correo"]
+        self.mysms_portal = self.metodo_otp == perfiles.METODO_MYSMS
+        self.google_messages_portal = self.metodo_otp == perfiles.METODO_GOOGLE
+
+    def _metodo_actual(self):
+        if self.metodo_otp:
+            return self.metodo_otp
+        # Compatibilidad con configurar_portales_otp()
+        if self.mysms_portal:
+            return perfiles.METODO_MYSMS
+        if self.google_messages_portal:
+            return perfiles.METODO_GOOGLE
+        return None
+
+    def _crear_proveedor_otp(self):
+        if self._metodo_actual() == perfiles.METODO_CORREO:
+            return ProveedorOtpCorreo(
+                self.usuario_correo, self.clave_correo,
+                avisar=self._log_message,
+                registrar=lambda texto: registro.registrar(ARCHIVO_LOG, self.modulo, "otp_correo", texto),
+            )
+        return ProveedorOtpPestana(self)
+
     def login_automatico(self):
         """
         Ejecuta el proceso completo de login automatizado con reintentos
-        
+
+        Orden: (correo) comprobar el buzón -> pantalla de login -> línea base del
+        OTP -> credenciales -> esperar código -> ingresar código -> validar.
+
         Returns:
             bool: True si el login fue exitoso, False en caso contrario
         """
+        metodo = self._metodo_actual()
+        if not self.usuario or not self.password:
+            self._log_message("❌ Faltan el usuario o la clave de Poliedro. Complételos en CREDENCIALES.", is_error=True)
+            return False
+        if metodo is None:
+            self._log_message("❌ No se eligió por dónde llega el código OTP. Elíjalo en CREDENCIALES.", is_error=True)
+            return False
+        if metodo == perfiles.METODO_CORREO and (not self.usuario_correo or not self.clave_correo):
+            self._log_message("❌ Faltan el usuario o la clave del correo. Complételos en CREDENCIALES.", is_error=True)
+            return False
+
         # SISTEMA DE REINTENTOS
         for intento in range(self.max_login_attempts):
+            ultimo = intento >= self.max_login_attempts - 1
+            proveedor = self._crear_proveedor_otp()
             try:
                 self._log_message(f"🔄 Intento de login {intento + 1}/{self.max_login_attempts}")
-                
-                # Validar que se hayan configurado las credenciales
-                if not self.usuario or not self.password:
-                    self._log_message("Error: Credenciales no configuradas", is_error=True)
-                    return False
-                    
+
+                # Paso 0: con OTP por correo, comprobar el buzón ANTES de tocar
+                # Poliedro: si la clave del correo está mal no se gasta un OTP.
+                if metodo == perfiles.METODO_CORREO:
+                    self._log_message("📧 Comprobando acceso al correo...")
+                    proveedor.probar()
+
                 # Asegurarse de estar en la pantalla de login
                 if not self._asegurar_pantalla_login():
-                    self._log_message(f"Error asegurando pantalla de login en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
+                    self._log_message(f"❌ No se pudo abrir la pantalla de inicio de sesión de Poliedro (intento {intento + 1}).")
+                    if not ultimo:
                         self._esperar_antes_reintentar()
                         continue
                     return False
-                
+
                 # LIMPIAR ESTADO DEL FORMULARIO
                 self._limpiar_estado_login()
-                
-                # La comprobacion del portal sube aqui: no tiene sentido mandar
-                # las credenciales si no hay de donde leer el OTP.
-                if not self.mysms_portal and not self.google_messages_portal:
-                    self._log_message("Error: No se ha configurado el portal para obtener el OTP", is_error=True)
-                    return False
 
-                # Foto del OTP que ya se ve, ANTES de que Poliedro mande el
-                # nuevo. Sin esto se leeria el anterior y el login fallaria.
-                referencia_otp = self._capturar_otp_referencia()
+                # Línea base del OTP ANTES de que Poliedro mande el nuevo.
+                # Sin esto se leería el código anterior y el login fallaría.
+                proveedor.tomar_linea_base()
 
-                # Paso 1: Ingresar credenciales (esto dispara el SMS)
+                # Paso 1: Ingresar credenciales (esto dispara el envío del OTP)
                 if not self._ingresar_credenciales():
-                    self._log_message(f"Error ingresando credenciales en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
+                    self._log_message(f"❌ No se pudieron enviar las credenciales a Poliedro (intento {intento + 1}).")
+                    if not ultimo:
                         self._esperar_antes_reintentar()
                         continue
                     return False
 
                 # Paso 2: Obtener código OTP
-                codigo_otp = self._esperar_otp_nuevo(referencia_otp)
+                codigo_otp = proveedor.esperar_codigo()
 
-                if not codigo_otp:
-                    self._log_message(f"Error obteniendo código OTP en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
-                        self._esperar_antes_reintentar()
-                        continue
-                    return False
-                    
                 # Paso 3: Ingresar código OTP
                 if not self._ingresar_codigo_otp(codigo_otp):
-                    self._log_message(f"Error ingresando código OTP en intento {intento + 1}")
-                    if intento < self.max_login_attempts - 1:
+                    self._log_message(f"❌ No se pudo escribir el código en Poliedro (intento {intento + 1}).")
+                    if not ultimo:
                         self._esperar_antes_reintentar()
                         continue
                     return False
-                
+
                 # Paso 4: Validar login exitoso
-                if not self.detectar_login_valido():
-                    if self._detectar_login_invalido():
-                        self._log_message(f"Login inválido en intento {intento + 1}")
-                        if intento < self.max_login_attempts - 1:
-                            self._esperar_antes_reintentar()
-                            continue
-                        return False
-                    
-                # LOGIN EXITOSO
-                self._log_message(f"Login exitoso en intento {intento + 1}")
-                return True
-                
+                if self.detectar_login_valido():
+                    self._log_message(f"✅ Sesión iniciada en Poliedro (intento {intento + 1})")
+                    return True
+
+                if self._detectar_login_invalido():
+                    self._log_message(f"❌ Poliedro rechazó el inicio de sesión (intento {intento + 1}).")
+                    if not ultimo:
+                        self._esperar_antes_reintentar()
+                        continue
+                    return False
+
+                # Ni válido ni inválido: antes esto se daba por exitoso. Solo se
+                # acepta si ya no estamos en la pantalla de login.
+                if self.validar_sesion_activa():
+                    registro.registrar(ARCHIVO_LOG, self.modulo, "login_ambiguo",
+                                       "sin texto de bienvenida ni de error; se acepta porque ya no está en el login")
+                    self._log_message(f"✅ Sesión iniciada en Poliedro (intento {intento + 1})")
+                    return True
+                ref = registro.registrar(ARCHIVO_LOG, self.modulo, "login_ambiguo",
+                                         "sin texto de bienvenida ni de error y sigue en la pantalla de login")
+                self._log_message(f"❌ No se pudo confirmar el inicio de sesión en Poliedro (Ref. {ref}).")
+                if not ultimo:
+                    self._esperar_antes_reintentar()
+                    continue
+                return False
+
+            except (CorreoCredencialesError, CorreoConexionError) as e:
+                # Con el correo inaccesible no tiene sentido reintentar Poliedro.
+                ref = registro.registrar(ARCHIVO_LOG, self.modulo, "otp_correo", e.detalle, exc=e)
+                self._log_message(f"❌ {e.mensaje_usuario} (Ref. {ref})", is_error=True)
+                return False
+            except ErrorOtpCorreo as e:
+                ref = registro.registrar(ARCHIVO_LOG, self.modulo, "otp_correo", e.detalle, exc=e)
+                self._log_message(f"❌ {e.mensaje_usuario} (Ref. {ref})", is_error=True)
+                if not ultimo:
+                    self._esperar_antes_reintentar()
+                    continue
             except Exception as e:
                 self._log_error(f"login_automatico_intento_{intento + 1}", e)
-                if intento < self.max_login_attempts - 1:
+                if not ultimo:
                     self._log_message(f"⚠️ Error en intento {intento + 1}, reintentando...")
                     self._esperar_antes_reintentar()
                     continue
-                
+            finally:
+                proveedor.cerrar()
+
         # TODOS LOS INTENTOS FALLARON
-        self._log_message(f"Login falló después de {self.max_login_attempts} intentos", is_error=True)
+        self._log_message(f"❌ No se pudo iniciar sesión en Poliedro después de {self.max_login_attempts} intentos.", is_error=True)
         return False
     
     def _ingresar_credenciales(self):
@@ -155,8 +318,8 @@ class LoginService:
             self._log_message("Ingresando credenciales...")
 
             # Ingresar usuario/contraseña (IDs fijos)
-            self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
-            self.web_controller.write('ctl00_ContentPlaceHolder1_txtContraseña', self.password, 'id')
+            self._escribir_campo('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario)
+            self._escribir_campo('ctl00_ContentPlaceHolder1_txtContraseña', self.password)
             time.sleep(2)
 
             # Clic en ingresar
@@ -171,8 +334,8 @@ class LoginService:
                     self._log_message("🔁 Reintentando login normal después del workaround...")
 
                     # reingresar credenciales correctas
-                    self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario, 'id')
-                    self.web_controller.write('ctl00_ContentPlaceHolder1_txtContraseña', self.password, 'id')
+                    self._escribir_campo('ctl00_ContentPlaceHolder1_txtUsuario', self.usuario)
+                    self._escribir_campo('ctl00_ContentPlaceHolder1_txtContraseña', self.password)
                     time.sleep(2)
 
                     self.web_controller.click('btnIngresarUsuarioContraseña', 'id')
@@ -243,8 +406,6 @@ class LoginService:
             self.web_controller.cambiar_pestaña()
             time.sleep(1)
             referencia = self._leer_otp_visible()
-            if referencia:
-                self._log_message(f"OTP anterior en pantalla: {referencia}")
             return referencia
         except Exception as e:
             self._log_error("_capturar_otp_referencia", e)
@@ -276,7 +437,7 @@ class LoginService:
             while time.time() < limite:
                 codigo = self._leer_otp_visible()
                 if codigo and codigo != referencia:
-                    self._log_message(f"Código OTP obtenido: {codigo}")
+                    self._log_message("✅ Código OTP recibido.")
                     return codigo
                 time.sleep(3)
 
@@ -300,14 +461,14 @@ class LoginService:
             bool: True si fue exitoso, False en caso contrario
         """
         try:
-            self._log_message(f"Ingresando código OTP: {codigo_otp}")
+            self._log_message("Ingresando código OTP...")
             
             # Volver a la pestaña principal
             self.web_controller.volver_pestaña()
             time.sleep(2)
             
             # Ingresar el código OTP
-            self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp, 'id')
+            self._escribir_campo('ctl00_ContentPlaceHolder1_txtTokenEntrust', codigo_otp)
             time.sleep(1)
             
             # Hacer clic en el botón de login con OTP
@@ -418,13 +579,24 @@ class LoginService:
             contexto (str): Contexto donde ocurrió el error
             error (Exception): Excepción capturada
         """
-        error_msg = f"Error en {contexto}: {str(error)}"
-        self._log_message(error_msg, is_error=True)
-        
-        # Guardar en archivo de log
-        with open("login_service_errors.txt", "a", encoding="utf-8") as f:
-            f.write(f"\n[{contexto}] Error: {str(error)}\n")
-            f.write(traceback.format_exc())
+        # El detalle técnico va al registro (fuera del repo) y el operario ve un
+        # texto en sus términos con la referencia para buscarlo.
+        url = ""
+        try:
+            url = str(getattr(self.web_controller.browser, "current_url", "") or "")
+        except Exception:
+            pass
+        ref = registro.registrar(ARCHIVO_LOG, self.modulo, contexto, f"url={url}", exc=error)
+        if contexto in _SIN_MENSAJE_USUARIO:
+            return
+        mensaje = _MENSAJES_USUARIO.get(contexto, "Ocurrió un problema durante el inicio de sesión en Poliedro.")
+        self._log_message(f"⚠️ {mensaje} (Ref. {ref})", is_error=True)
+
+    def _escribir_campo(self, id_campo, valor):
+        """Vacía el campo y escribe el valor (write() solo agrega al texto que ya haya)."""
+        if self.web_controller.elementExists(id_campo, by='id'):
+            self.web_controller.erase(id_campo, 'id')
+        self.web_controller.write(id_campo, valor, 'id')
     
     def _looks_like_login_page(self, html: str | None = None) -> bool:
         try:
@@ -504,6 +676,12 @@ class LoginService:
         """
         Espera antes de reintentar el login
         """
+        if self._metodo_actual() == perfiles.METODO_CORREO:
+            # Con el correo basta con pedir un código nuevo; la línea base
+            # descarta el anterior.
+            self._log_message(f"⏳ Reintentando en {PAUSA_REINTENTO_CORREO} segundos...")
+            time.sleep(PAUSA_REINTENTO_CORREO)
+            return
         minutos = self.retry_interval / 60
         self._log_message(f"⏳ Esperando {minutos:.1f} minutos antes del siguiente intento...")
         
@@ -635,15 +813,13 @@ class LoginService:
         try:
             self._log_message("🧹 Limpiando estado del formulario...")
             
-            # Limpiar campos de texto
-            self.web_controller.write('ctl00_ContentPlaceHolder1_txtUsuario', '', 'id')
-            self.web_controller.write('ctl00_ContentPlaceHolder1_txtContraseña', '', 'id')
-            
-            # Si hay campo de OTP, también limpiarlo
-            try:
-                self.web_controller.write('ctl00_ContentPlaceHolder1_txtTokenEntrust', '', 'id')
-            except:
-                pass  # El campo OTP podría no estar visible
+            # Limpiar campos de texto. Antes se usaba write(''), que no borra nada.
+            # El campo OTP puede no estar visible: solo se limpia si existe.
+            for id_campo in ('ctl00_ContentPlaceHolder1_txtUsuario',
+                             'ctl00_ContentPlaceHolder1_txtContraseña',
+                             'ctl00_ContentPlaceHolder1_txtTokenEntrust'):
+                if self.web_controller.elementExists(id_campo, by='id'):
+                    self.web_controller.erase(id_campo, 'id')
                 
             time.sleep(1)
             
