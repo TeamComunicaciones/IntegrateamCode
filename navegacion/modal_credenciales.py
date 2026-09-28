@@ -11,10 +11,12 @@ import threading
 import customtkinter as ctk
 
 from funcionalidad import perfiles_credenciales as perfiles
+from funcionalidad import registro
 from funcionalidad.otp_correo import ProveedorOtpCorreo, ErrorOtpCorreo
 from recursos import colors
 
 _colores = colors.Colors()
+ARCHIVO_LOG = "login.log"  # el mismo registro que el login (Documents\TeamComunicaciones\logs)
 _modal_abierto = None  # una sola ventana para toda la app
 
 _ETIQUETAS_METODO = {
@@ -217,9 +219,13 @@ class ModalCredenciales(ctk.CTkToplevel):
                 cantidad = ProveedorOtpCorreo(usuario, clave).probar()
                 texto, error = f"✓ Conexión correcta ({cantidad} correos en la bandeja).", False
             except ErrorOtpCorreo as e:
-                texto, error = e.mensaje_usuario, True
+                ref = registro.registrar(ARCHIVO_LOG, "CREDENCIALES", "probar_correo",
+                                         f"usuario_correo={usuario}; {e.detalle}", exc=e)
+                texto, error = f"{e.mensaje_usuario} (Ref. {ref})", True
             except Exception as e:  # no debería pasar; se muestra algo entendible
-                texto, error = f"No se pudo probar el correo ({type(e).__name__}).", True
+                ref = registro.registrar(ARCHIVO_LOG, "CREDENCIALES", "probar_correo",
+                                         f"usuario_correo={usuario}", exc=e)
+                texto, error = f"No se pudo probar el correo (Ref. {ref}).", True
             try:
                 self.after(0, lambda: self._fin_prueba(texto, error))
             except Exception:

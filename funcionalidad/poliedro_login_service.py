@@ -145,6 +145,7 @@ class LoginService:
         self.google_messages_portal = False  # Si se usa Google Messages para obtener el OTP
         self.usuario_correo = ""
         self.clave_correo = ""
+        self.ultimo_mensaje_poliedro = ""  # texto de error que mostró Poliedro al rechazar el login
 
     def configurar_credenciales(self, usuario, password):
         """
@@ -260,8 +261,14 @@ class LoginService:
                     self._log_message(f"✅ Sesión iniciada en Poliedro (intento {intento + 1})")
                     return True
 
+                self.ultimo_mensaje_poliedro = ""
                 if self._detectar_login_invalido():
-                    self._log_message(f"❌ Poliedro rechazó el inicio de sesión (intento {intento + 1}).")
+                    ref = registro.registrar(
+                        ARCHIVO_LOG, self.modulo, "login_rechazado",
+                        f"intento {intento + 1}/{self.max_login_attempts}; usuario={self.usuario}; "
+                        f"metodo_otp={self._metodo_actual()}; mensaje de Poliedro: {self.ultimo_mensaje_poliedro!r}",
+                    )
+                    self._log_message(f"❌ Poliedro rechazó el inicio de sesión (intento {intento + 1}, Ref. {ref}).")
                     if not ultimo:
                         self._esperar_antes_reintentar()
                         continue
@@ -540,6 +547,7 @@ class LoginService:
             if error_element:
                 for indicator in error_indicators:
                     if indicator in error_element:
+                        self.ultimo_mensaje_poliedro = error_element
                         self._log_message(f"Error detectado: {error_element}", is_error=True)
                         
                         # Hacer clic en el botón de regresar si existe
