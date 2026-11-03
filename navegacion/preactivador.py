@@ -17,9 +17,50 @@ from navegacion import modal_credenciales
 from funcionalidad.mixin_validacion_codigos import ValidacionCodigosMixin
 import random
 import os
+import re
 import shutil
+import unicodedata
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoAlertPresentException, UnexpectedAlertPresentException
+
+
+# Modo eSIM: el checkbox de CaptureData (en PRE-EQUIPOS se envía por API como
+# 'DetailProduct.CheckEsim') y el plan que siempre se escoge en ProductService.
+ID_CHECK_ESIM = 'DetailProduct_CheckEsim'
+PLAN_ESIM = 'ESTRATEGICO Control'
+
+# Dropdowns (select2) de ProductService
+XPATH_DROPDOWN_EQUIPO = '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]'
+XPATH_DROPDOWN_PLAN = '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]'
+XPATH_PLAN_ESIM = '//*[@id="select2-EquipmentPlanDataViewModel_Plan-container"]'
+XPATH_OPCIONES_PLAN = '//ul[@id="select2-EquipmentPlanDataViewModel_Plan-results"]/li'
+
+# Banner de Activation que pregunta a qué correo enviar el QR de la eSIM
+ID_CORREO_QR = 'textmailvalidate'
+ID_ACEPTAR_QR = 'btnOkModal'
+ID_ERROR_CORREO_QR = 'msjerrormail'
+
+
+def _normalizar(texto):
+    """Minúsculas y sin tildes, para comparar textos de la página."""
+    texto = unicodedata.normalize('NFKD', str(texto or ''))
+    return ''.join(c for c in texto if not unicodedata.combining(c)).strip().lower()
+
+
+def _primero(*valores):
+    """Devuelve el primer valor no vacío (orden de prioridad), o ''."""
+    for valor in valores:
+        if valor is not None and str(valor).strip() and str(valor).strip().lower() != 'nan':
+            return str(valor).strip()
+    return ''
+
+
+class AvisoPoliedro(Exception):
+    """Poliedro respondió con un aviso (alert o error en el banner) al activar."""
+    def __init__(self, aviso):
+        super().__init__(aviso)
+        self.aviso = aviso
 
 
 class SessionExpiredError(Exception):
@@ -80,7 +121,9 @@ class Preactivador(ValidacionCodigosMixin):
         # self.okBotton3 = boton.create_button(self.menu.submenu, 'OK', 0.7, 0.74, 0.15, 0.05, self.cambioCedula)
         # self.okBotton3.configure(fg_color= color.team, text_color= 'white')
 
-        self.correo = 'correo'
+        # Correo de respaldo: se usa si Poliedro y la plantilla no traen correo
+        # (y para el QR de la eSIM si la fila no trae Correo_QR).
+        self.correo = 'acruz@teamcomunicaciones.com'
         self.correoEdit = tk.StringVar()
         self.correoEdit.set(self.correo) 
         input_widget2 = ctk.CTkEntry(self.menu.submenu, textvariable=self.correoEdit)
@@ -98,6 +141,11 @@ class Preactivador(ValidacionCodigosMixin):
         
         self.tropas = tk.BooleanVar()
         self.checkbox_tropas =  checkbox.Checkbox().create_checkbox(self.menu.submenu, 'Tropas.', self.on_checkbox_change_tropas, self.tropas)
+
+        # Modo eSIM: se toma al pulsar START (self.es_esim)
+        self.esim = tk.BooleanVar()
+        self.es_esim = False
+        self.checkbox_esim = checkbox.Checkbox().create_checkbox(self.menu.submenu, 'eSIM', self.on_checkbox_change_esim, self.esim)
 
         # Configuracion para tiempo de espera
         self.tiempo_espera_label = label.Label().create_label(self.menu.submenu, 'Tiempo de espera', 0.10, 0.46, 0.6, 0.04, letterSize=16)
@@ -150,7 +198,13 @@ class Preactivador(ValidacionCodigosMixin):
         else:
             self.ventana_informacion.write('Cambiando modalidad a Estandar')
         self.poliedro.manejoTropas(self.tropas.get())
-        
+
+    def on_checkbox_change_esim(self):
+        if self.esim.get():
+            self.ventana_informacion.write('Modo eSIM: Sin IMEI + eSIM, plan ESTRATEGICO Control (solo envío por Web)')
+        else:
+            self.ventana_informacion.write('Modo SIM física')
+
     
     def abrir_excel(self):
         self.ventana_informacion.write('excel preactivador abierto recuerde cerrar antes de iniciar')
@@ -194,7 +248,13 @@ class Preactivador(ValidacionCodigosMixin):
         perfil = modal_credenciales.credenciales_listas(self.menu.submenu, self.ventana_informacion)
         if perfil is None:
             return
+        if self._excel_abierto():
+            self.ventana_informacion.write('❌ El Excel está abierto. Ciérrelo y pulse START de nuevo.')
+            return
         self.perfil = perfil
+        self.es_esim = self.esim.get()
+        if self.es_esim and self.modo_captura_datos.get():
+            self.ventana_informacion.write('Modo eSIM: se ignora "Envio de datos por API", se usa la Web')
         hilo_equipos = threading.Thread(target=self.ejecuccion)
         hilo_equipos.start()
         
@@ -215,7 +275,9 @@ class Preactivador(ValidacionCodigosMixin):
             # Validación de códigos de distribuidor: se hace apenas termina el login
             # (el código de distribuidor está en el header, presente tras login) para
             # abortar antes de navegar al módulo si el código está bloqueado.
-            if not self._codigo_distribuidor_permitido(self.preactivador):
+            if self.es_esim:
+                self.ventana_informacion.write('Modo eSIM: no se validan códigos de distribuidor bloqueados')
+            elif not self._codigo_distribuidor_permitido(self.preactivador):
                 self.on_of(True)
                 return
 
@@ -230,8 +292,10 @@ class Preactivador(ValidacionCodigosMixin):
             if not self.safe_wait_for_loading():
                 raise Exception("Timeout esperando que la página cargue")
 
-            self.excel.leer_excel(self.excel_path,'Iccid', dtype={'Iccid': str, 'Documento': str, 'Cedula': str})
-            self.excel.quitarFormatoCientifico('Iccid')
+            self.excel.leer_excel(self.excel_path,'Documento', dtype={'Iccid': str, 'Documento': str, 'Cedula': str, 'Telefono': str})
+            if not self.es_esim:
+                # En eSIM el Iccid lo genera Poliedro y viene vacío en la plantilla
+                self.excel.quitarFormatoCientifico('Iccid')
             self.ciclo = True
             self.contador = 0
 
@@ -249,7 +313,15 @@ class Preactivador(ValidacionCodigosMixin):
                             self.mensaje = ''
                             self.min = ''
                             self._run_with_relogin(self.EquiposInd)
-                    except:
+                    except Exception as e:
+                        if isinstance(e, PermissionError):
+                            # Excel abierto: seguir solo quemaría ICCIDs sin poder guardarlos
+                            self.ventana_informacion.write('❌ No se pudo guardar en el Excel porque está abierto. Ciérrelo y pulse START de nuevo.')
+                            self.on_of(True)
+                            return
+                        # Los raise('...') de EquiposInd (TypeError) ya escribieron su mensaje
+                        if not isinstance(e, TypeError):
+                            self.ventana_informacion.write(f'⚠️ Registro {self.contador+1}: {e}')
                         try:
                             self.preactivador.selectPage(self.traffic_url("/CaptureData"))
                             if not self.wait_for_loading():
@@ -289,20 +361,27 @@ class Preactivador(ValidacionCodigosMixin):
     
 
     def EquiposInd(self):
-        self.ventana_informacion.write(f'Activando Equipo {self.contador+1} de {self.excel.cantidad}')
-        self.iccid = excel.limpiar_decimal(self.excel.excel['Iccid'][self.contador])[-12:] 
+        tipo = 'eSIM' if self.es_esim else 'Equipo'
+        self.ventana_informacion.write(f'Activando {tipo} {self.contador+1} de {self.excel.cantidad}')
+        # En eSIM el Iccid lo genera Poliedro en CaptureData
+        self.iccid = '' if self.es_esim else excel.limpiar_decimal(self.excel.excel['Iccid'][self.contador])[-12:]
         self.documento = excel.limpiar_decimal(self.excel.excel['Documento'][self.contador])
         self.cedula_excel = excel.limpiar_decimal(self.excel.excel['Cedula'][self.contador])
         self.codigo_distribuidor = self.preactivador.read('userDataCodDistribuidor', 'id')
-        self.nombre = ''
-        self.apellido = ' '
+        # Datos del cliente: se usan solo si Poliedro no los trae en Demographic
+        self.nombre = self._celda('Nombre')
+        self.apellido = self._celda('Apellido') or ' '
+        self.correo_cliente = self._celda('Correo_cliente')
+        self.correo_qr = self._celda('Correo_QR')
+        self.telefono = self._celda('Telefono')
+        self.direccion = self._celda('Direccion')
         self.tipoDoc = str(self.excel.excel['TipoDoc'][self.contador])
         self.documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
         self.tipoDoc_aux = "Cedula" if self.documentType == 1 else "NIT"
 
         self.position(self.preactivador.retornarHtml(), 'paso1', True)
-        
-        if self.modo_captura_datos.get():
+
+        if self._usar_api():
             self.captura_datos_api()
         else:
             self.captura_datos_web()
@@ -342,19 +421,25 @@ class Preactivador(ValidacionCodigosMixin):
             raise('error')
         self.preactivador.click('btnNext', 'id')
         self.position(self.preactivador.retornarHtml(), 'paso3', True)
-        self.nombre = self.preactivador.value('PersonalInfo_Name', 'id')
 
-        if self.modo_captura_datos.get():
+        if self._usar_api():
             self.datos_demograficos_api()
         else:
             self.datos_demograficos_web()
-        
+
         self.position(self.preactivador.retornarHtml(), 'paso4', True)
 
-        self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[2]/div/span/span[1]/span/span[1]')
+        # Equipo: primera opción de la lista
+        self.preactivador.click(XPATH_DROPDOWN_EQUIPO)
         self.preactivador.click('/html/body/span/span/span[2]/ul/li[2]')
-        self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[1]/div/div[2]/div/div[1]/div[3]/div/span/span[1]/span/span[1]')
-        self.preactivador.click('/html/body/span/span/span[2]/ul/li[2]')
+        if self.es_esim:
+            if not self.wait_for_loading():
+                raise Exception("Timeout esperando carga después de escoger equipo")
+            self.seleccionar_plan_esim()
+        else:
+            # Plan: primera opción de la lista
+            self.preactivador.click(XPATH_DROPDOWN_PLAN)
+            self.preactivador.click('/html/body/span/span/span[2]/ul/li[2]')
         self.preactivador.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[3]/input[2]')
 
         # url_product_service = 'https://traffic-md-webapp-prd01.traffic.claro.com.co/ProductService/Index1'
@@ -370,23 +455,34 @@ class Preactivador(ValidacionCodigosMixin):
         # request_product_service = session.post(url_product_service, headers=headers, data=payload_product_service)
         # if request_product_service.status_code == 200:
         self.preactivador.selectPage(self.traffic_url("/Activation"))
-        self.preactivador.click('btnNext', 'id')
-        try:
-            find = self.preactivador.browser.find_element_by_id('btnNext')
-            find.click()
-        except:
+        if self.es_esim:
+            # Activar + banner con el correo al que llega el QR de la eSIM
+            texto = self.activar_con_qr()
+        else:
+            self.preactivador.click('btnNext', 'id')
             try:
                 find = self.preactivador.browser.find_element_by_id('btnNext')
                 find.click()
-            except: 
-                pass
-        time.sleep(2)
-        message = self.preactivador.read('messageFormItem', 'class')
-        message = message.replace('* Su Solicitud fue enviada satisfactoriamente para el producto 195 y el MSISDN asignado es ', '')
-        message = message[:10]
+            except:
+                try:
+                    find = self.preactivador.browser.find_element_by_id('btnNext')
+                    find.click()
+                except:
+                    pass
+            time.sleep(2)
+            texto = self.preactivador.read('messageFormItem', 'class')
+        encontrado = re.search(r'MSISDN asignado es\s*(\d{10})', texto)
+        if encontrado:
+            message = encontrado.group(1)
+        else:
+            message = texto.replace('* Su Solicitud fue enviada satisfactoriamente para el producto 195 y el MSISDN asignado es ', '')
+            message = message[:10]
         self.excel.guardar(self.contador, 'Min', message, destino=self.excel_path)
         self.excel.guardar(self.contador, 'Codigo_distribuidor', self.codigo_distribuidor, destino=self.excel_path)
-        self.ventana_informacion.write(f'Preactivado con min {message}')
+        if self.es_esim:
+            self.ventana_informacion.write(f'Preactivada eSIM con min {message} (ICCID {self.iccid})')
+        else:
+            self.ventana_informacion.write(f'Preactivado con min {message}')
         raise('sin error')
 
         # try:
@@ -408,11 +504,16 @@ class Preactivador(ValidacionCodigosMixin):
         if self.documentType == 1:  # Solo si es cédula
             self.preactivador.write("DetailProduct_LastName",self.apellido,"id")
 
-        #Opción serial
-        self.poliedro.tipoDoc('sin','//*[@id="select2-DetailProduct_OptionImei-container"]')
+        if self.es_esim:
+            #Opción serial + eSIM (el Iccid lo genera Poliedro)
+            self.poliedro.tipoDoc('Sin IMEI','//*[@id="select2-DetailProduct_OptionImei-container"]')
+            self.activar_esim()
+        else:
+            #Opción serial
+            self.poliedro.tipoDoc('sin','//*[@id="select2-DetailProduct_OptionImei-container"]')
 
-        #Serial
-        self.preactivador.write("DetailProduct_Iccid",self.iccid,"id")
+            #Serial
+            self.preactivador.write("DetailProduct_Iccid",self.iccid,"id")
 
         #Documento vendedor
         self.preactivador.write("DetailProduct_SellerId",self.cedula_excel,"id")
@@ -427,6 +528,228 @@ class Preactivador(ValidacionCodigosMixin):
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente")
 
+    # ---------------------------------------------------------------------
+    # Modo eSIM
+    # ---------------------------------------------------------------------
+
+    def activar_esim(self, timeout=30):
+        """Marca el checkbox eSIM, espera el Iccid que genera Poliedro y lo guarda en la plantilla."""
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de escoger Sin IMEI")
+        check = self.preactivador.browser.find_element_by_id(ID_CHECK_ESIM)
+        if not check.is_selected():
+            try:
+                check.click()
+            except Exception:
+                # Checkbox oculto por estilos: click por JS
+                self.preactivador.browser.execute_script("arguments[0].click();", check)
+        if not self.wait_for_loading():
+            raise Exception("Timeout esperando carga después de marcar eSIM")
+
+        fin = time.time() + timeout
+        while time.time() < fin:
+            self.iccid = self._valor_pagina('DetailProduct_Iccid')
+            if self.iccid:
+                self.excel.guardar(self.contador, 'Iccid', self.iccid, destino=self.excel_path)
+                self.ventana_informacion.write(f'ICCID eSIM generado: {self.iccid}')
+                return
+            time.sleep(1)
+        # Sin Min='error': la fila se reintenta en la siguiente corrida
+        mensaje = 'Poliedro no generó el ICCID de la eSIM'
+        self.excel.guardar(self.contador, 'Mensaje', mensaje, destino=self.excel_path)
+        self.ventana_informacion.write(mensaje)
+        raise Exception(mensaje)
+
+    def seleccionar_plan_esim(self):
+        """Escoge el plan ESTRATEGICO Control en ProductService y verifica que quedó seleccionado."""
+        self.preactivador.click(XPATH_PLAN_ESIM)
+        buscado = _normalizar(PLAN_ESIM)
+        opciones = self.preactivador.browser.find_elements_by_xpath(XPATH_OPCIONES_PLAN)
+        for opcion in opciones:
+            if _normalizar(opcion.text) == buscado:
+                opcion.click()
+                break
+        else:
+            self.preactivador.write('/html/body/span/span/span[1]/input', Keys.ESCAPE)
+
+        if buscado not in _normalizar(self.preactivador.read(XPATH_PLAN_ESIM)):
+            mensaje = f'Plan {PLAN_ESIM} no disponible'
+            self.excel.guardar(self.contador, 'Mensaje', mensaje, destino=self.excel_path)
+            self.excel.guardar(self.contador, 'Min', 'error', destino=self.excel_path)
+            self.ventana_informacion.write(mensaje)
+            raise Exception(mensaje)
+
+    def activar_con_qr(self):
+        """Pulsa Activar, confirma el correo del QR y devuelve el texto con el MSISDN.
+
+        Si Poliedro responde "Buzón no válido" se reintenta: primero con el mismo
+        correo (el rechazo a veces es pasajero) y luego con los siguientes en
+        prioridad: Correo_QR, el de la pantalla, Correo_cliente.
+        """
+        correos = []
+        for correo in (self.correo_qr, self.correo, self.correo_cliente):
+            correo = _primero(correo)
+            if correo and _normalizar(correo) not in [_normalizar(c) for c in correos]:
+                correos.append(correo)
+        if not correos:
+            raise Exception('No hay correo para enviar el QR')
+
+        rechazados = []
+        for correo in [correos[0]] + correos:
+            if not self._banner_qr_visible():
+                self.preactivador.click('btnNext', 'id')
+            try:
+                self.confirmar_correo_qr(correo)
+                texto = self.esperar_resultado_activacion()
+            except AvisoPoliedro as e:
+                if 'buzon' not in _normalizar(e.aviso):
+                    mensaje = f'Aviso de Poliedro al activar: {e.aviso}'
+                    self.excel.guardar(self.contador, 'Mensaje', mensaje, destino=self.excel_path)
+                    self.ventana_informacion.write(mensaje)
+                    raise
+                rechazados.append(correo)
+                self.ventana_informacion.write(f'⚠️ Poliedro respondió "{e.aviso}" para {correo}. Reintentando...')
+                time.sleep(2)
+                continue
+            if rechazados:
+                mensaje = f'QR enviado a {correo} (Poliedro rechazó antes: {", ".join(dict.fromkeys(rechazados))})'
+                self.excel.guardar(self.contador, 'Mensaje', mensaje, destino=self.excel_path)
+                self.ventana_informacion.write(mensaje)
+            return texto
+
+        # Sin Min='error': el rechazo puede ser pasajero y la fila se reintenta en otra corrida
+        mensaje = f'Poliedro rechazó el buzón de todos los correos del QR: {", ".join(correos)}'
+        self.excel.guardar(self.contador, 'Mensaje', mensaje, destino=self.excel_path)
+        self.ventana_informacion.write(mensaje)
+        raise Exception(mensaje)
+
+    def _banner_qr_visible(self):
+        try:
+            return self.preactivador.browser.find_element_by_id(ID_CORREO_QR).is_displayed()
+        except Exception:
+            return False
+
+    def confirmar_correo_qr(self, destino, timeout=30):
+        """En el banner del QR deja `destino` como correo y pulsa Aceptar."""
+        fin = time.time() + timeout
+        while time.time() < fin and not self._banner_qr_visible():
+            aviso = self._leer_alerta()
+            if aviso:
+                raise AvisoPoliedro(aviso)
+            time.sleep(1)
+        if not self._banner_qr_visible():
+            self._guardar_html('banner_qr')
+            raise Exception('No apareció el banner del correo del QR')
+
+        campo = self.preactivador.browser.find_element_by_id(ID_CORREO_QR)
+        if _normalizar(campo.get_attribute('value')) != _normalizar(destino):
+            campo.clear()
+            campo.send_keys(destino)
+        # Salir del campo y dar tiempo a que Poliedro tome el correo completo antes de Aceptar
+        campo.send_keys(Keys.TAB)
+        time.sleep(1.5)
+        aviso = self._leer_alerta()
+        if aviso:
+            raise AvisoPoliedro(aviso)
+
+        self.ventana_informacion.write(f'QR de la eSIM se envía a {destino}')
+        self.preactivador.browser.find_element_by_id(ID_ACEPTAR_QR).click()
+        time.sleep(1)
+
+        # Poliedro también puede mostrar el error dentro del mismo banner
+        aviso = self._leer_alerta()
+        if aviso:
+            raise AvisoPoliedro(aviso)
+        try:
+            error = self.preactivador.browser.find_element_by_id(ID_ERROR_CORREO_QR)
+            texto_error = error.text.strip() if error.is_displayed() else ''
+        except Exception:
+            texto_error = ''
+        if texto_error:
+            raise AvisoPoliedro(texto_error)
+
+    def _leer_alerta(self):
+        """Texto del alert del navegador (y lo cierra), o None si no hay."""
+        try:
+            alerta = self.preactivador.browser.switch_to.alert
+            texto = alerta.text
+            alerta.accept()
+            return (texto or '').strip() or 'Aviso sin texto'
+        except NoAlertPresentException:
+            return None
+        except UnexpectedAlertPresentException as e:
+            return (getattr(e, 'alert_text', None) or str(e)).strip()
+        except Exception:
+            return None
+
+    def esperar_resultado_activacion(self, timeout=180):
+        """Espera el mensaje con el MSISDN sin salir de la página (salir a mitad de la activación la interrumpe).
+
+        Si Poliedro muestra un aviso (alert) lanza AvisoPoliedro con su texto.
+        """
+        browser = self.preactivador.browser
+        fin = time.time() + timeout
+        while time.time() < fin:
+            aviso = self._leer_alerta()
+            if aviso:
+                raise AvisoPoliedro(aviso)
+            try:
+                for elemento in browser.find_elements_by_class_name('messageFormItem'):
+                    if 'MSISDN' in (elemento.text or ''):
+                        return elemento.text
+            except UnexpectedAlertPresentException:
+                continue
+            except Exception:
+                pass
+            time.sleep(2)
+
+        self._guardar_html('activacion_sin_min')
+        mensaje = f'No salió el MIN después de {timeout} s'
+        self.excel.guardar(self.contador, 'Mensaje', mensaje, destino=self.excel_path)
+        self.ventana_informacion.write(f'⚠️ {mensaje}')
+        raise Exception(mensaje)
+
+    def _guardar_html(self, nombre):
+        """Guarda el HTML actual junto a la plantilla, para ajustar selectores si algo falla."""
+        try:
+            ruta = os.path.join(os.path.dirname(self.excel_path),
+                                f'html_{nombre}_{datetime.datetime.now():%Y%m%d_%H%M%S}.html')
+            with open(ruta, 'w', encoding='utf-8') as archivo:
+                archivo.write(self.preactivador.retornarHtml() or '')
+            self.ventana_informacion.write(f'HTML guardado en {ruta}')
+        except Exception:
+            pass
+
+    # ---------------------------------------------------------------------
+    # Datos de la plantilla
+    # ---------------------------------------------------------------------
+
+    def _celda(self, columna):
+        """Valor de la fila actual, o '' si la columna no existe (plantilla vieja) o está vacía."""
+        if columna not in self.excel.excel.columns:
+            return ''
+        return _primero(excel.limpiar_decimal(self.excel.excel[columna][self.contador]))
+
+    def _excel_abierto(self):
+        """True si Excel tiene el archivo abierto (Windows lo bloquea para escritura)."""
+        try:
+            with open(self.excel_path, 'r+b'):
+                return False
+        except PermissionError:
+            return True
+        except Exception:
+            return False
+
+    def _usar_api(self):
+        # eSIM solo funciona por Web: el Iccid se genera en la página
+        return self.modo_captura_datos.get() and not self.es_esim
+
+    def _valor_pagina(self, id):
+        """Valor de un input por id, sin los reintentos de .value() ('' si no existe)."""
+        try:
+            return (self.preactivador.browser.find_element_by_id(id).get_attribute('value') or '').strip()
+        except Exception:
+            return ''
 
     def captura_datos_api(self):
         url = self.traffic_url("/CaptureData/Index2")
@@ -505,27 +828,32 @@ class Preactivador(ValidacionCodigosMixin):
             if not apellido_actual.strip():
                 self.preactivador.write("PersonalInfo_LastName", self.apellido, 'id')
 
-        #Correo
+        #Correo: el de Poliedro, si no el de la plantilla, si no el de la pantalla
         correo_actual = self.preactivador.value("PersonalInfo_Email","id")
         if not correo_actual or not correo_actual.strip():
-            self.preactivador.write("PersonalInfo_Email", self.correo, 'id')
+            self.preactivador.write("PersonalInfo_Email", _primero(self.correo_cliente, self.correo), 'id')
 
         #Telefono
         telefono_actual = self.preactivador.value("PhoneId","id")
         if not telefono_actual or not telefono_actual.strip():
-            
-            #Tipo
-            self.selectDropDownNormal("PhoneClass","fijo")
+
+            #Tipo: celular de la plantilla, si no el fijo de siempre
+            celular = bool(self.telefono) and self._seleccionar_opcion("PhoneClass", ("celular", "movil"))
+            if not celular:
+                self.selectDropDownNormal("PhoneClass","fijo")
 
             time.sleep(2)
             if not self.wait_for_loading():
                     raise Exception("Timeout esperando carga después de validación")
 
-            #Indicativo
-            self.selectDropDownNormal("Prefix","604")
+            if celular:
+                self.preactivador.write("PhoneNumber", self.telefono, "id")
+            else:
+                #Indicativo
+                self.selectDropDownNormal("Prefix","604")
 
-            #Numero
-            self.preactivador.write("PhoneNumber","0313123","id")
+                #Numero
+                self.preactivador.write("PhoneNumber","0313123","id")
 
         #Tipo documento
         self.poliedro.tipoDoc(self.tipoDoc_aux,'//*[@id="select2-PersonalInfo_DocumentTypeId-container"]')
@@ -545,7 +873,7 @@ class Preactivador(ValidacionCodigosMixin):
             if not self.wait_for_loading():
                     raise Exception("Timeout esperando carga después de validación")
             
-            self.preactivador.write("Address", "central", "id")
+            self.preactivador.write("Address", _primero(self.direccion, "central"), "id")
             self.selectDropDownNormal("Department","ANTIOQUIA")
             time.sleep(2)
             if not self.wait_for_loading():
@@ -566,11 +894,12 @@ class Preactivador(ValidacionCodigosMixin):
     
     def datos_demograficos_api(self):
         demographic_url = self.traffic_url("/Demographic/Index1")
+        # Misma prioridad que en Web: lo que trae Poliedro, luego la plantilla
         demographic_data = {
             "PersonalInfo.GreetingId": "O",
-            "PersonalInfo.Name": self.nombre,
-            "PersonalInfo.LastName": self.apellido,
-            "PersonalInfo.Email": self.correo,
+            "PersonalInfo.Name": _primero(self._valor_pagina("PersonalInfo_Name"), self.nombre),
+            "PersonalInfo.LastName": _primero(self._valor_pagina("PersonalInfo_LastName"), self.apellido) or ' ',
+            "PersonalInfo.Email": _primero(self._valor_pagina("PersonalInfo_Email"), self.correo_cliente, self.correo),
             "PersonalInfo.Phone.PhoneId": "",
             "PersonalInfo.Phone.PhoneClass": "2",
             "PersonalInfo.Phone.Prefix": "604",
@@ -580,7 +909,7 @@ class Preactivador(ValidacionCodigosMixin):
             "PersonalInfo.Document": self.documento,
             "PersonalInfo.Address.AddressId": "",
             "PersonalInfo.Address.AddressClassId": "Otras",
-            "PersonalInfo.Address.Address": "central",
+            "PersonalInfo.Address.Address": _primero(self.direccion, "central"),
             "PersonalInfo.Address.Department": "ANTIOQUIA",
             "PersonalInfo.Address.City": "MEDELLIN",
             "PersonalInfo.Address.Town": "Central"
@@ -711,7 +1040,19 @@ class Preactivador(ValidacionCodigosMixin):
 
         except Exception as e:
             print(f"❌ Error en selectDropDownNormal({id}): {e}")
-    
+
+    def _seleccionar_opcion(self, id, textos):
+        """En un <select> clásico escoge la primera opción que contenga alguno de los textos. True si la encontró."""
+        try:
+            select = Select(self.preactivador.browser.find_element_by_id(id))
+            for option in select.options:
+                if any(t in _normalizar(option.text) for t in textos):
+                    option.click()
+                    return True
+        except Exception as e:
+            print(f"❌ Error en _seleccionar_opcion({id}): {e}")
+        return False
+
     # def selectDropDown(self, id, value):
     #     """
     #     Selecciona un valor de un dropdown. Funciona tanto para Select2 como para <select> normales.
