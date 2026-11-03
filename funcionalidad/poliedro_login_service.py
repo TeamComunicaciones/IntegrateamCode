@@ -1,3 +1,4 @@
+import os
 import time
 import re
 from funcionalidad.web_controller import Web_Controller
@@ -16,6 +17,11 @@ ARCHIVO_LOG = "login.log"
 # Pausa entre intentos cuando el OTP llega por correo: no hace falta esperar
 # 2 minutos como con los SMS, basta con pedir un código nuevo.
 PAUSA_REINTENTO_CORREO = 10
+
+# Solo para depurar (lo activa .vscode/launch.json): después de usuario y clave
+# el depurador se detiene para escribir el token a mano en Poliedro, en lugar
+# de leerlo del correo / MySMS / Google Messages.
+OTP_MANUAL = os.getenv("INTEGRATEAM_OTP_MANUAL") == "1"
 
 # Qué ve el operario cuando falla un paso interno del login. El detalle técnico
 # va al registro (Documents\TeamComunicaciones\logs\login.log).
@@ -235,7 +241,8 @@ class LoginService:
 
                 # Línea base del OTP ANTES de que Poliedro mande el nuevo.
                 # Sin esto se leería el código anterior y el login fallaría.
-                proveedor.tomar_linea_base()
+                if not OTP_MANUAL:
+                    proveedor.tomar_linea_base()
 
                 # Paso 1: Ingresar credenciales (esto dispara el envío del OTP)
                 if not self._ingresar_credenciales():
@@ -245,16 +252,21 @@ class LoginService:
                         continue
                     return False
 
-                # Paso 2: Obtener código OTP
-                codigo_otp = proveedor.esperar_codigo()
+                if OTP_MANUAL:
+                    self._log_message("⏸️ OTP manual: escriba el token en Poliedro, pulse Ingresar y continúe el depurador (F5).")
+                    self.web_controller.volver_pestaña()
+                    breakpoint()
+                else:
+                    # Paso 2: Obtener código OTP
+                    codigo_otp = proveedor.esperar_codigo()
 
-                # Paso 3: Ingresar código OTP
-                if not self._ingresar_codigo_otp(codigo_otp):
-                    self._log_message(f"❌ No se pudo escribir el código en Poliedro (intento {intento + 1}).")
-                    if not ultimo:
-                        self._esperar_antes_reintentar()
-                        continue
-                    return False
+                    # Paso 3: Ingresar código OTP
+                    if not self._ingresar_codigo_otp(codigo_otp):
+                        self._log_message(f"❌ No se pudo escribir el código en Poliedro (intento {intento + 1}).")
+                        if not ultimo:
+                            self._esperar_antes_reintentar()
+                            continue
+                        return False
 
                 # Paso 4: Validar login exitoso
                 if self.detectar_login_valido():
