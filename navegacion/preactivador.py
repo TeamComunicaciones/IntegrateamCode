@@ -36,6 +36,11 @@ XPATH_DROPDOWN_PLAN = '/html/body/div/div[2]/section/div/div[2]/div[2]/main/form
 XPATH_PLAN_ESIM = '//*[@id="select2-EquipmentPlanDataViewModel_Plan-container"]'
 XPATH_OPCIONES_PLAN = '//ul[@id="select2-EquipmentPlanDataViewModel_Plan-results"]/li'
 
+# Columnas de la plantilla, en el orden en que quedan para todos los operarios
+COLUMNAS_PLANTILLA = ['Iccid', 'Documento', 'TipoDoc', 'Cedula', 'Nombre', 'Apellido',
+                      'Correo_cliente', 'Correo_QR', 'Telefono', 'Direccion',
+                      'Min', 'Mensaje', 'Codigo_distribuidor']
+
 # Banner de Activation que pregunta a qué correo enviar el QR de la eSIM
 ID_CORREO_QR = 'textmailvalidate'
 ID_ACEPTAR_QR = 'btnOkModal'
@@ -171,6 +176,29 @@ class Preactivador(ValidacionCodigosMixin):
         # Validación de códigos de distribuidor (siempre activa; lista independiente para PRE-SIM)
         self._init_validacion_codigos('pre-sim')
 
+        self._actualizar_columnas_plantilla()
+
+    def _actualizar_columnas_plantilla(self):
+        """Agrega al Excel del operario las columnas que le falten y las deja en el orden de COLUMNAS_PLANTILLA.
+
+        Las filas no se tocan; las columnas propias del operario pasan al final.
+        """
+        if self._excel_abierto():
+            self.ventana_informacion.write('⚠️ Cierre el Excel de PRE-SIM para actualizar sus columnas.')
+            return
+        try:
+            self.excel.leer_excel(self.excel_path, dtype=str)
+            datos = self.excel.excel
+            orden = COLUMNAS_PLANTILLA + [c for c in datos.columns if c not in COLUMNAS_PLANTILLA]
+            if list(datos.columns) == orden:
+                return
+            faltantes = [c for c in COLUMNAS_PLANTILLA if c not in datos.columns]
+            datos.reindex(columns=orden).to_excel(self.excel_path, index=False)
+            if faltantes:
+                self.ventana_informacion.write(f'Plantilla actualizada, columnas nuevas: {", ".join(faltantes)}')
+        except Exception as e:
+            self.ventana_informacion.write(f'⚠️ No se pudieron actualizar las columnas del Excel: {e}')
+
     def traffic_url(self, path: str) -> str:
         return self.traffic_base.rstrip("/") + "/" + path.lstrip("/")
     
@@ -207,6 +235,7 @@ class Preactivador(ValidacionCodigosMixin):
 
     
     def abrir_excel(self):
+        self._actualizar_columnas_plantilla()
         self.ventana_informacion.write('excel preactivador abierto recuerde cerrar antes de iniciar')
         os.startfile(self.excel_path)
     
