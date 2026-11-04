@@ -9,6 +9,7 @@ import time
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
+from config.urls import poliedro_url
 
 class Volantes:
 
@@ -17,8 +18,8 @@ class Volantes:
         self.on_of = on_of
         self.volantes = ''
         self.excel = excel.Excel_controller()
-        self.link= 'https://poliedrodist.comcel.com.co/'
-        self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link= poliedro_url()
+        self.link2=poliedro_url('activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1')
         self.titulo = label.Label().create_label(master, 'VOLANTES', 0.2, 0.0, 0.5,0.2, letterSize= 25)
         self.ventana_informacion =  ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master,3, boton1=['ABRIR PAGINA', self.abrir_pagina], boton2=['COOKIE', self.ejecuccionHilo], boton3=['START', self.consulta_hilo])
@@ -33,7 +34,7 @@ class Volantes:
         boton = botones.Buttons()
         color = colors.Colors()
         self.resultados = []
-        self.__url = url = "https://poliedrodist.comcel.com.co/Recaudo.PS/VolantesNIT/ResumenVolantes"
+        self.__url = url = poliedro_url("Recaudo.PS/VolantesNIT/ResumenVolantes")
         self.__headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "Accept-Encoding": "gzip, deflate, br, zstd",
@@ -41,7 +42,7 @@ class Volantes:
             "Cache-Control": "max-age=0",
             "Connection": "keep-alive",
             "Content-Type": "application/x-www-form-urlencoded",
-            "Referer": "https://poliedrodist.comcel.com.co/Recaudo.PS/VolantesNIT/Index",
+            "Referer": poliedro_url("Recaudo.PS/VolantesNIT/Index"),
             "Sec-Fetch-Dest": "document",
             "Sec-Fetch-Mode": "navigate",
             "Sec-Fetch-Site": "same-origin",

@@ -23,6 +23,7 @@ import unicodedata
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoAlertPresentException, UnexpectedAlertPresentException
+from config.urls import poliedro_url
 
 
 # Modo eSIM: el checkbox de CaptureData (en PRE-EQUIPOS se envía por API como
@@ -91,8 +92,8 @@ class Preactivador(ValidacionCodigosMixin):
         self.excel_path = os.path.join(_carpeta, "preactivador.xlsx")
         if not os.path.exists(self.excel_path):
             shutil.copy2(r'src\preactivador\preactivador.xlsx', self.excel_path)
-        self.link= 'https://poliedrodist.comcel.com.co/'
-        self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link= poliedro_url()
+        self.link2=poliedro_url('activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1')
         self.link_google_messages = 'https://messages.google.com/web/conversations'
         self.link_mysms = 'https://app.mysms.com/#87472'
 

@@ -5,6 +5,7 @@ from funcionalidad import  web_controller, poliedro, excel
 from subprocess import Popen
 import threading
 import time
+from config.urls import poliedro_url
 
 class Revisar_equipos:
 
@@ -15,7 +16,7 @@ class Revisar_equipos:
         self.titulo = label.Label().create_label(master, 'CONSULTA TRIPLETAS KIT PREPAGO', 0.2, 0.0, 0.5,0.2, letterSize=25)
         self.ventana_informacion =  ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master,3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
-        self.link= 'https://poliedrodist.comcel.com.co/'
+        self.link= poliedro_url()
 
     def abrir_excel(self):
         self.ventana_informacion.write('excel revisión abierto recuerde cerrar antes de iniciar')

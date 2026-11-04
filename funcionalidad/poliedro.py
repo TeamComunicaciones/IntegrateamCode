@@ -14,7 +14,7 @@ class Poliedro:
         self.browser = browser
 
     def seleccionAcceso(self, opcion, start = True):
-        # self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        # self.link2='https://poliedrodist.claro.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
         # self.browser.selectPage(self.link2)
         if self.tropas:
             self.browser.click('//*[@id="containerNavBar"]/ul/li[*]/a/span[contains(text(),"Activación Pospago")]', 'xpath') #/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]

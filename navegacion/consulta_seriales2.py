@@ -8,6 +8,7 @@ import customtkinter as ctk
 import time
 import pandas as pd
 from selenium import webdriver
+from config.urls import poliedro_url
 
 class Consulta_seriales:
 
@@ -17,8 +18,8 @@ class Consulta_seriales:
         self.on_of = on_of
         self.poliedro = poliedro.Poliedro()
         self.excel = excel.Excel_controller()
-        self.link = 'https://poliedrodist.comcel.com.co/'
-        self.link2 = 'https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link = poliedro_url()
+        self.link2 = poliedro_url('activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1')
         self.titulo = label.Label().create_label(master, 'CONSULTA DE SERIALES', 0.2, 0.0, 0.5, 0.2, letterSize=25)
         self.ventana_informacion = ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master, 3, boton1=['ABRIR LISTA', self.abrir_excel], boton2=['ABRIR PAGINA', self.abrir_pagina], boton3=['START', self.ejecuccionHilo])
@@ -47,7 +48,7 @@ class Consulta_seriales:
         # Procesar lista IMEI
         for index, row in self.df_imei.iterrows():
             imei = row['IMEI']
-            url_imei = f"https://poliedrodist.comcel.com.co/POL_REPCON/MSISDNYICCID/getConsultarIMEI?IMEI={imei}"
+            url_imei = poliedro_url(f"POL_REPCON/MSISDNYICCID/getConsultarIMEI?IMEI={imei}")
             driver.get(url_imei)
             response_message = driver.find_element_by_tag_name('body').text
             self.df_imei.at[index, 'Mensaje'] = response_message
@@ -57,7 +58,7 @@ class Consulta_seriales:
         for index, row in self.df_iccid.iterrows():
             iccid = row['ICCID']
             code = self.CalculaDigitoChequeo(iccid)
-            url_iccid = f"https://poliedrodist.comcel.com.co/POL_REPCON/MSISDNYICCID/getConsultarICCID?ICCID=8957101{iccid}{code}"
+            url_iccid = poliedro_url(f"POL_REPCON/MSISDNYICCID/getConsultarICCID?ICCID=8957101{iccid}{code}")
             driver.get(url_iccid)
             response_message = driver.find_element_by_tag_name('body').text
             self.df_iccid.at[index, 'Mensaje'] = response_message

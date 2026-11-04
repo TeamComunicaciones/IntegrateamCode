@@ -10,6 +10,7 @@ import customtkinter as ctk
 import time
 import pandas as pd
 import requests
+from config.urls import poliedro_url
 
 class Consulta_seriales:
 
@@ -29,8 +30,8 @@ class Consulta_seriales:
         self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales.xlsx', self.ruta_seriales, ['seriales'])
         self._crear_plantilla_si_no_existe('src\\consulta_seriales\\seriales2.xlsx', self.ruta_seriales2, ['Iccid', 'Imei', 'Mensaje'])
 
-        self.link= 'https://poliedrodist.comcel.com.co/'
-        self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link= poliedro_url()
+        self.link2=poliedro_url('activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1')
         self.titulo = label.Label().create_label(master, 'CONSULTA DE SERIALES', 0.2, 0.0, 0.5,0.2, letterSize= 25)
         self.ventana_informacion =  ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master,3, boton1=['ABRIR LISTA', self.abrir_excel2], boton2=['START', self.ejecuccionHilo2], boton3=['GENERAR', self.ejecuccionHilo])
@@ -155,7 +156,7 @@ class Consulta_seriales:
                         if len(str(self.iccid)) ==12:
                             iccid = self.iccid
                             code = self.CalculaDigitoChequeo(iccid)
-                            url_iccid = f"https://poliedrodist.comcel.com.co/POL_REPCON/MSISDNYICCID/getConsultarICCID?ICCID=8957101{iccid}{code}"
+                            url_iccid = poliedro_url(f"POL_REPCON/MSISDNYICCID/getConsultarICCID?ICCID=8957101{iccid}{code}")
                             response_iccid = requests.get(url_iccid)
                             self.mensaje = response_iccid.text.replace('"','')
                             self.ventana_informacion.write(f'ICCID {iccid}: {self.mensaje}')
@@ -163,7 +164,7 @@ class Consulta_seriales:
                             self.mensaje = 'el iccid debe tener 12 digitos'
                     elif str(self.imei) != 'nan':
                         imei = self.imei
-                        url_imei = f"https://poliedrodist.comcel.com.co/POL_REPCON/MSISDNYICCID/getConsultarIMEI?IMEI={imei.replace(' ','')}"
+                        url_imei = poliedro_url(f"POL_REPCON/MSISDNYICCID/getConsultarIMEI?IMEI={imei.replace(' ','')}")
                         response_iccid = requests.get(url_imei)
                         self.mensaje = response_iccid.text.replace('"','')
                         self.ventana_informacion.write(f'IMEI {imei}: {self.mensaje}')

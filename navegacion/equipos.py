@@ -19,7 +19,7 @@ import random
 import os
 import shutil
 from urllib.parse import urlparse
-from config.urls import traffic_url
+from config.urls import traffic_url, poliedro_url
 from selenium.common.exceptions import WebDriverException
 
 class SessionExpiredError(Exception):
@@ -39,8 +39,8 @@ class Equipos(ValidacionCodigosMixin):
         self.excel_path = os.path.join(_carpeta, "equipos.xlsx")
         if not os.path.exists(self.excel_path):
             shutil.copy2(r'src\equipos\equipos.xlsx', self.excel_path)
-        self.link= 'https://poliedrodist.comcel.com.co/'
-        self.link2='https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link= poliedro_url()
+        self.link2=poliedro_url('activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1')
         self.link_google_messages = 'https://messages.google.com/web/conversations'
         self.link_mysms = 'https://app.mysms.com/#87472'
 
@@ -706,7 +706,7 @@ class Equipos(ValidacionCodigosMixin):
 
             if in_trap:
                 self.ventana_informacion.write("🧯 Detectado POL_LOGIN / wpolps03. Saliendo a PoliedroDist...")
-                self.equipos.selectPage(self.link)  # https://poliedrodist.comcel.com.co/
+                self.equipos.selectPage(self.link)  # https://poliedrodist.claro.com.co/
                 time.sleep(3)
         except Exception:
             pass

@@ -18,6 +18,7 @@ from navegacion import modal_credenciales
 import random
 import os
 import shutil
+from config.urls import poliedro_url
 
 class SessionExpiredError(Exception):
     """Se usa para cortar el flujo cuando Poliedro devuelve al login (sesión expirada)."""
@@ -32,8 +33,8 @@ class Legalizador:
         self.logs = []
         self.poliedro = poliedro.Poliedro(legalizador=True)
         self.excel = excel.Excel_controller()
-        self.link = 'https://poliedrodist.comcel.com.co/'
-        self.link2 = 'https://poliedrodist.comcel.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
+        self.link = poliedro_url()
+        self.link2 = poliedro_url('activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1')
         self.link_google_messages = 'https://messages.google.com/web/conversations'
         self.link_mysms = 'https://app.mysms.com/#87472'
         

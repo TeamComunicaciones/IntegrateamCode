@@ -18,6 +18,7 @@ import os
 import shutil
 import pandas as pd
 from selenium.webdriver.support.ui import Select
+from config.urls import poliedro_url
 
 class LegalizadorKitContado:
 
@@ -33,7 +34,7 @@ class LegalizadorKitContado:
             shutil.copy2(r'src\legalizador_kit_contado\legalizador_kit_contado.xlsx', self.excel_path)
 
         #Enlaces: poliedro, mysms y google messages
-        self.link= 'https://poliedrodist.comcel.com.co/'
+        self.link= poliedro_url()
         self.link_google_messages = 'https://messages.google.com/web/conversations'
         self.link_mysms = 'https://app.mysms.com/#87472'
 

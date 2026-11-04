@@ -5,6 +5,12 @@ DEFAULT_TRAFFIC_BASE = "https://prod-md.azpol.claro.com.co/"
 
 TRAFFIC_BASE_URL = os.getenv("TRAFFIC_BASE_URL", DEFAULT_TRAFFIC_BASE).rstrip("/") + "/"
 
+# Poliedro (login, menú y consultas). Desde el 2-nov-2026 Claro solo autoriza
+# su propio dominio; el anterior deja de funcionar.
+DEFAULT_POLIEDRO_BASE = "https://poliedrodist.claro.com.co/"
+
+POLIEDRO_BASE_URL = os.getenv("POLIEDRO_BASE_URL", DEFAULT_POLIEDRO_BASE).rstrip("/") + "/"
+
 # (Opcional) lista de dominios permitidos para “autodetectar” base desde el navegador
 _ALLOWED_SUFFIXES = (
     "azpol.claro.com.co",
@@ -14,6 +20,10 @@ _ALLOWED_SUFFIXES = (
 def traffic_url(path: str) -> str:
     """Construye una URL completa a partir del base (sin duplicar slashes)."""
     return urljoin(TRAFFIC_BASE_URL, path.lstrip("/"))
+
+def poliedro_url(path: str = "") -> str:
+    """Construye una URL de Poliedro a partir del base (sin duplicar slashes)."""
+    return urljoin(POLIEDRO_BASE_URL, path.lstrip("/"))
 
 def try_sync_traffic_base_from_current_url(current_url: str) -> str | None:
     """

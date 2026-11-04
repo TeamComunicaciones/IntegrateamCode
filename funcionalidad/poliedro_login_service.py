@@ -11,6 +11,7 @@ from funcionalidad.otp_correo import (
     CorreoCredencialesError,
     OtpNoLlegoError,
 )
+from config.urls import poliedro_url
 
 ARCHIVO_LOG = "login.log"
 
@@ -769,7 +770,7 @@ class LoginService:
                 time.sleep(2)
             
             # Navegar a la URL de login
-            login_url = 'https://poliedrodist.comcel.com.co/'
+            login_url = poliedro_url()
             self.web_controller.selectPage(login_url)
             time.sleep(5)
             
