@@ -19,7 +19,6 @@ class Volantes:
         self.volantes = ''
         self.excel = excel.Excel_controller()
         self.link= poliedro_url()
-        self.link2=poliedro_url('activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1')
         self.titulo = label.Label().create_label(master, 'VOLANTES', 0.2, 0.0, 0.5,0.2, letterSize= 25)
         self.ventana_informacion =  ventana_informacion.Ventana_informacion(master)
         self.menu = sm.Sub_menu(master,3, boton1=['ABRIR PAGINA', self.abrir_pagina], boton2=['COOKIE', self.ejecuccionHilo], boton3=['START', self.consulta_hilo])
@@ -96,35 +95,84 @@ class Volantes:
         self.volantes.selectPage(self.link)
     
     def ejecuccionHilo(self):
-        self.ejecuccion()
-        
-    def ejecuccion(self):
-        self.on_of(False)
-        self.ventana_informacion.write(f"Generando cookie...")
-        self.ventana_informacion.write('Empezando ejecuccion')
-        self.volantes.script("location.href='/activaciones/http/REDUCCION%20CUENTAS/Inicio.asp';")
-        self.volantes.script("location.href='/ACTIVACIONES/Http/REINGENIERIA/DispatcherPoliedroRecaudo/DispacherEntrada.ASP?Site=1'")
-        self.volantes.script("location.href='/Recaudo.PS/Dispatcher/EntranceVolantes'")
-        self.volantes.select("/html/body/div/div[2]/section/div/div[2]/div/div[3]/main/form/div/div[1]/div[2]/div/select", "D")
-        self.volantes.write("idinitialDate", "24/12/2024", "id")
-        self.volantes.write("idfinalDate", "24/12/2024", "id")
-        self.volantes.click("btnConsultar", "id")
-        time.sleep(3)
+        threading.Thread(target=self.ejecuccion, daemon=True).start()
+
+    def _navegar_y_esperar(self, ruta, fragmento_esperado, timeout=30):
+        """Navega a una ruta de Poliedro y espera a que la URL contenga el fragmento."""
+        self.volantes.script(f"location.href='{ruta}';")
+        limite = time.time() + timeout
+        while time.time() < limite:
+            time.sleep(1)
+            if fragmento_esperado in self.volantes.browser.current_url.lower():
+                return True
+        return False
+
+    def _sesion_volantes_valida(self):
+        """Prueba la cookie contra Volantes: si responde con la lista de distribuidores, sirve."""
         self.__headers['Cookie'] = self.volantes.getCookies()
-        
-        response_distr = requests.get(self.__url, headers=self.__headers)
-        soup_distr = BeautifulSoup(response_distr.text, 'html.parser')
-        select_distr = soup_distr.find('select', {'id': 'Distr'})
-        options_distr = select_distr.find_all('option')
-        self.codigos_distr = {option['value'].replace('-',''):option.text  for option in options_distr}
-        self.ventana_informacion.write(f"cookie generada...")
+        respuesta = requests.get(poliedro_url("Recaudo.PS/VolantesNIT/Index"), headers=self.__headers, timeout=30)
+        soup = BeautifulSoup(respuesta.text, 'html.parser')
+        return soup.find('select', {'id': 'Distr'}) is not None
+
+    def ejecuccion(self):
+        if not isinstance(self.volantes, web_controller.Web_Controller):
+            self.ventana_informacion.write('Primero presiona ABRIR PAGINA e inicia sesión')
+            return
+        self.on_of(False)
+        try:
+            self.ventana_informacion.write("Generando cookie...")
+            self.__headers['Cookie'] = ''
+            # Entrada a Recaudo como lo hace el menú de Poliedro (opción 471) y luego a Volantes.
+            if not self._navegar_y_esperar('/POL_MENU/Menu/GoToApp?IdItem=471', '/recaudo.ps/home'):
+                self.ventana_informacion.write(
+                    "No se pudo entrar a Recaudo. Revisa que la sesión de Poliedro esté iniciada "
+                    "y vuelve a presionar COOKIE")
+                return
+            if not self._navegar_y_esperar('/Recaudo.PS/Dispatcher/EntranceVolantes', '/recaudo.ps/volantes'):
+                self.ventana_informacion.write(
+                    "No se pudo abrir Volantes dentro de Recaudo. Vuelve a presionar COOKIE")
+                return
+
+            valida = self._sesion_volantes_valida()
+            if not valida:
+                # Igual que antes: una consulta de prueba en la página para activar la sesión.
+                try:
+                    self.volantes.select("/html/body/div/div[2]/section/div/div[2]/div/div[3]/main/form/div/div[1]/div[2]/div/select", "D")
+                    self.volantes.write("idinitialDate", "24/12/2024", "id")
+                    self.volantes.write("idfinalDate", "24/12/2024", "id")
+                    self.volantes.click("btnConsultar", "id")
+                    time.sleep(3)
+                    valida = self._sesion_volantes_valida()
+                except Exception:
+                    pass
+
+            if valida:
+                self.ventana_informacion.write("Cookie generada, ya puedes presionar START")
+            else:
+                self.__headers['Cookie'] = ''
+                self.ventana_informacion.write(
+                    "Volantes abrió pero Poliedro no devolvió la lista de distribuidores. "
+                    "Vuelve a presionar COOKIE")
+        except requests.exceptions.SSLError:
+            self.__headers['Cookie'] = ''
+            self.ventana_informacion.write(
+                "El equipo no confía en el certificado de Poliedro (posible antivirus "
+                "revisando HTTPS). No se pudo generar la cookie")
+        except Exception as e:
+            self.__headers['Cookie'] = ''
+            self.ventana_informacion.write(f"Error generando la cookie: {e}")
+        finally:
+            self.on_of(True)
 
     def consulta_hilo(self):
         hilo_legalizador = threading.Thread(target=self.consulta)
         hilo_legalizador.start()
         
     def consulta(self):
-        
+        if not self.__headers['Cookie']:
+            self.ventana_informacion.write('Primero inicia sesión y presiona COOKIE')
+            return
+
         # <-- INICIO DE LA MODIFICACIÓN
         # Diccionario para mapear los tipos de volante de forma más limpia
         volante_map = {
