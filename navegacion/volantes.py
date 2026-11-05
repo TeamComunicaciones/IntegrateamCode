@@ -110,7 +110,7 @@ class Volantes:
     def _sesion_volantes_valida(self):
         """Prueba la cookie contra Volantes: si responde con la lista de distribuidores, sirve."""
         self.__headers['Cookie'] = self.volantes.getCookies()
-        respuesta = requests.get(poliedro_url("Recaudo.PS/VolantesNIT/Index"), headers=self.__headers, timeout=30)
+        respuesta = requests.get(poliedro_url("Recaudo.PS/VolantesNIT/ResumenVolantes"), headers=self.__headers, timeout=30)
         soup = BeautifulSoup(respuesta.text, 'html.parser')
         return soup.find('select', {'id': 'Distr'}) is not None
 
