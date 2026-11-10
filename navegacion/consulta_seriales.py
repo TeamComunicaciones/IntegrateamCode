@@ -11,6 +11,7 @@ import time
 import pandas as pd
 import requests
 from config.urls import poliedro_url
+from config.certificados import VERIFICAR_CERTIFICADO_POLIEDRO
 
 class Consulta_seriales:
 
@@ -157,7 +158,7 @@ class Consulta_seriales:
                             iccid = self.iccid
                             code = self.CalculaDigitoChequeo(iccid)
                             url_iccid = poliedro_url(f"POL_REPCON/MSISDNYICCID/getConsultarICCID?ICCID=8957101{iccid}{code}")
-                            response_iccid = requests.get(url_iccid)
+                            response_iccid = requests.get(url_iccid, verify=VERIFICAR_CERTIFICADO_POLIEDRO)
                             self.mensaje = response_iccid.text.replace('"','')
                             self.ventana_informacion.write(f'ICCID {iccid}: {self.mensaje}')
                         else:
@@ -165,7 +166,7 @@ class Consulta_seriales:
                     elif str(self.imei) != 'nan':
                         imei = self.imei
                         url_imei = poliedro_url(f"POL_REPCON/MSISDNYICCID/getConsultarIMEI?IMEI={imei.replace(' ','')}")
-                        response_iccid = requests.get(url_imei)
+                        response_iccid = requests.get(url_imei, verify=VERIFICAR_CERTIFICADO_POLIEDRO)
                         self.mensaje = response_iccid.text.replace('"','')
                         self.ventana_informacion.write(f'IMEI {imei}: {self.mensaje}')
                     else:

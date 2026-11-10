@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 from config.urls import poliedro_url
+from config.certificados import VERIFICAR_CERTIFICADO_POLIEDRO
 
 class Volantes:
 
@@ -110,7 +111,7 @@ class Volantes:
     def _sesion_volantes_valida(self):
         """Prueba la cookie contra Volantes: si responde con la lista de distribuidores, sirve."""
         self.__headers['Cookie'] = self.volantes.getCookies()
-        respuesta = requests.get(poliedro_url("Recaudo.PS/VolantesNIT/ResumenVolantes"), headers=self.__headers, timeout=30)
+        respuesta = requests.get(poliedro_url("Recaudo.PS/VolantesNIT/ResumenVolantes"), headers=self.__headers, timeout=30, verify=VERIFICAR_CERTIFICADO_POLIEDRO)
         soup = BeautifulSoup(respuesta.text, 'html.parser')
         return soup.find('select', {'id': 'Distr'}) is not None
 
@@ -200,7 +201,7 @@ class Volantes:
                         "Initialdate": self.entry_first_date.get(),
                         "FinalDate": self.entry_first_date.get(),
                     }
-                    response = requests.post(self.__url, headers=self.__headers, data=data)
+                    response = requests.post(self.__url, headers=self.__headers, data=data, verify=VERIFICAR_CERTIFICADO_POLIEDRO)
                     if response.status_code == 200:
                         soup = BeautifulSoup(response.text, 'html.parser')
                         if soup.find('form', {'id': 'frmConsultaVolantes'}):
