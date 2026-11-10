@@ -26,6 +26,7 @@ import platform
 from pathlib import Path
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from config.certificados import IGNORAR_ERRORES_CERTIFICADO
 
 # --- 2. Añadir un Lock global ---
 # Este "candado" se asegurará de que solo un hilo a la vez
@@ -389,6 +390,10 @@ class Web_Controller:
         # Evitar logs innecesarios en la consola
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
+        # Ver config/certificados.py (certificado revocado de Claro + Bitdefender).
+        if IGNORAR_ERRORES_CERTIFICADO:
+            options.add_argument("--ignore-certificate-errors")
+
         if headless:
             options.add_argument("--headless=new")
             options.add_argument('--no-sandbox')
@@ -412,7 +417,9 @@ class Web_Controller:
         options = EdgeOptions()
         options.use_chromium = True
         options.add_argument("start-maximized")
-        
+        if IGNORAR_ERRORES_CERTIFICADO:
+            options.add_argument("--ignore-certificate-errors")
+
         # Usar 'executable_path'
         driver_path = self.ensure_msedgedriver()
         return Edge(executable_path=driver_path, options=options)
