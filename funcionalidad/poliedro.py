@@ -1,5 +1,21 @@
 from selenium.webdriver.common.keys import Keys
+from urllib.parse import urlparse
 import time
+
+from config.urls import POLIEDRO_BASE_URL, TRAFFIC_BASE_URL, poliedro_url
+
+HOST_POLIEDRO = urlparse(POLIEDRO_BASE_URL).netloc.lower()
+HOST_TRAFFIC = urlparse(TRAFFIC_BASE_URL).netloc.lower()
+# Puerta por la que el menú de Poliedro pasa la sesión a Traffic.
+RUTA_ENTRADA_TRAFFIC = '/dispatcher/entrancepre'
+XPATH_REGRESAR_POLIEDRO = '/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[last()]/a'
+INTENTOS_ENTRADA_TRAFFIC = 3
+ESPERA_ENTRADA_TRAFFIC = 45  # segundos por intento
+
+
+class EntradaTrafficError(Exception):
+    """Traffic no respondió al entrar desde el menú de Poliedro."""
+
 
 class Poliedro:
 
@@ -14,20 +30,111 @@ class Poliedro:
         self.browser = browser
 
     def seleccionAcceso(self, opcion, start = True):
-        # self.link2='https://poliedrodist.claro.com.co/activaciones/http/REINGENIERIA/pagDispatcherEntradaModernizacion.asp?Site=1'
-        # self.browser.selectPage(self.link2)
-        if self.tropas:
-            self.browser.click('//*[@id="containerNavBar"]/ul/li[*]/a/span[contains(text(),"Activación Pospago")]', 'xpath') #/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]
-            self.browser.click('//*[@id="containerNavBar"]/ul/li[*]/ul/li[*]/a[contains(text(),"Activación Única Modernización")]', 'xpath')
-
-        else:
-            if start and not self.tropas:
-                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
-                self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
+        if self.tropas or start:
+            self._entrar_a_traffic()
         self.browser.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[1]/div[1]/div[2]/div/span/span[1]/span/span[1]')
         self.browser.write('/html/body/span/span/span[1]/input', opcion)
         self.browser.write('/html/body/span/span/span[1]/input', Keys.ENTER)
         self.opcion = opcion
+
+    # ------------------------------------------------------------------ #
+    # Entrada a Traffic desde el menú de Poliedro
+    # ------------------------------------------------------------------ #
+    def _clic_menu_activacion(self):
+        """Clic del menú que pasa de Poliedro a Traffic (por /dispatcher/entrancePre)."""
+        if self.tropas:
+            self.browser.click('//*[@id="containerNavBar"]/ul/li[*]/a/span[contains(text(),"Activación Pospago")]', 'xpath')
+            self.browser.click('//*[@id="containerNavBar"]/ul/li[*]/ul/li[*]/a[contains(text(),"Activación Única Modernización")]', 'xpath')
+        else:
+            self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/a')
+            self.browser.click('/html/body/div/div[2]/section/div/div[1]/aside/nav/div[2]/ul/li[5]/ul/li[2]')
+
+    def _url_actual(self):
+        try:
+            return str(self.browser.browser.current_url or '').lower()
+        except Exception:
+            return ''
+
+    def _cookies_traffic(self):
+        """Cookies del navegador que pertenecen al dominio de Traffic."""
+        todas = self.browser.browser.execute_cdp_cmd('Network.getAllCookies', {}).get('cookies', [])
+        return [c for c in todas if c.get('domain', '').lstrip('.').lower() == HOST_TRAFFIC]
+
+    def _borrar_cookies_traffic(self):
+        """Borra las cookies viejas de Traffic, solo si el navegador está en Poliedro.
+
+        Se llama antes del clic del menú: las cookies nuevas de Traffic se crean
+        después, cuando Traffic responde en entrancePre. Si el navegador ya está
+        en Traffic no se borra nada (la sesión está viva). Nunca detiene el proceso.
+        """
+        try:
+            if urlparse(self._url_actual()).netloc != HOST_POLIEDRO:
+                return
+            for c in self._cookies_traffic():
+                self.browser.browser.execute_cdp_cmd('Network.deleteCookies', {
+                    'name': c['name'], 'domain': c['domain'], 'path': c.get('path', '/'),
+                })
+            quedan = self._cookies_traffic()
+            if quedan:
+                print(f"[Traffic] No se pudieron borrar las cookies: {[c['name'] for c in quedan]}")
+        except Exception as e:
+            print(f'[Traffic] Error borrando cookies de Traffic: {e}')
+
+    def _entrada_traffic_fallida(self, url, html):
+        """True si el navegador quedó en entrancePre (o en una página de error de Edge) con error."""
+        en_entrada = RUTA_ENTRADA_TRAFFIC in url or url.startswith('chrome-error://')
+        error_red = ('err_' in html and ('main-frame-error' in html or 'neterror' in html)) \
+            or 'err_empty_response' in html
+        return en_entrada and error_red
+
+    def _esperar_entrada_traffic(self):
+        """Espera a que el clic termine en Traffic. True = entró; False = falló."""
+        limite = time.time() + ESPERA_ENTRADA_TRAFFIC
+        while time.time() < limite:
+            time.sleep(1)
+            url = self._url_actual()
+            try:
+                html = str(self.browser.retornarHtml() or '').lower()
+            except Exception:
+                html = ''
+            if self._entrada_traffic_fallida(url, html):
+                return False
+            if HOST_TRAFFIC in urlparse(url).netloc and RUTA_ENTRADA_TRAFFIC not in url:
+                return True
+        return False
+
+    def _volver_a_poliedro(self):
+        """Antes de reintentar: volver al menú de Poliedro como lo hacen los módulos."""
+        try:
+            # El menú, no la raíz: la raíz de Poliedro muestra el login aunque haya sesión.
+            self.browser.selectPage(poliedro_url('POL_MENU/'))
+        except Exception:
+            pass
+        if not self.tropas:
+            try:
+                self.browser.click(XPATH_REGRESAR_POLIEDRO)
+            except Exception:
+                pass
+        time.sleep(2)
+
+    def _entrar_a_traffic(self):
+        """Borra cookies viejas de Traffic, hace el clic del menú y reintenta si Traffic no responde."""
+        for intento in range(1, INTENTOS_ENTRADA_TRAFFIC + 1):
+            if intento > 1:
+                print(f'[Traffic] Reintentando la entrada a activaciones ({intento}/{INTENTOS_ENTRADA_TRAFFIC})')
+                self._volver_a_poliedro()
+            self._borrar_cookies_traffic()
+            # En tropas con start=False el clic se hace ya dentro de Traffic: se mantiene igual que antes.
+            venia_de_traffic = HOST_TRAFFIC in urlparse(self._url_actual()).netloc
+            try:
+                self._clic_menu_activacion()
+            except Exception as e:
+                print(f'[Traffic] Falló el clic del menú (intento {intento}): {e}')
+                continue
+            if venia_de_traffic or self._esperar_entrada_traffic():
+                return
+        raise EntradaTrafficError(
+            'Traffic no respondió al entrar a activaciones (entrancePre). Intente de nuevo.')
 
     def seleccionNit(self):
         self.browser.click('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div[2]/div[1]/div[1]/div[1]/div/span/span[1]/span/span[1]')
