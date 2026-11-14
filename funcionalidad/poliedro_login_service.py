@@ -321,6 +321,11 @@ class LoginService:
                     continue
             finally:
                 proveedor.cerrar()
+                # Cualquier intento (exitoso o no) termina en la pestaña de Poliedro.
+                try:
+                    self.web_controller.volver_pestaña()
+                except Exception:
+                    pass
 
         # TODOS LOS INTENTOS FALLARON
         self._log_message(f"❌ No se pudo iniciar sesión en Poliedro después de {self.max_login_attempts} intentos.", is_error=True)
@@ -469,6 +474,14 @@ class LoginService:
         except Exception as e:
             self._log_error("_esperar_otp_nuevo", e)
             return None
+        finally:
+            # Volver siempre a Poliedro, haya llegado o no el código: si el bot se
+            # queda en la pestaña de Mensajes, el proceso sigue trabajando ahí y la
+            # reemplaza (pasaba en los relogins).
+            try:
+                self.web_controller.volver_pestaña()
+            except Exception:
+                pass
 
     def _ingresar_codigo_otp(self, codigo_otp):
         """
