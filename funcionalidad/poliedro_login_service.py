@@ -855,9 +855,22 @@ class LoginService:
             return False
 
 
+    # Poliedro usa dos textos para el mismo bloqueo; basta con que aparezca uno.
+    TEXTOS_USUARIO_EN_SISTEMA = (
+        "Actualmente existe un usuario en el sistema",
+        "El usuario se encuentra actualmente en el sistema",
+    )
+
     def _usuario_en_sistema_detectado(self) -> bool:
-        # Texto EXACTO / estable que me diste
-        return self._page_contains_text("Actualmente existe un usuario en el sistema")
+        return any(self._page_contains_text(t) for t in self.TEXTOS_USUARIO_EN_SISTEMA)
+
+    def _regresar_al_login(self):
+        """Botón 'Regresar' del mensaje de Poliedro; si esa pantalla no lo tiene, abre el login."""
+        if self.web_controller.elementExists("ctl00_ContentPlaceHolder1_BtnRegresarMensaje", by="id"):
+            self.web_controller.click("ctl00_ContentPlaceHolder1_BtnRegresarMensaje", "id")
+        else:
+            self.web_controller.selectPage(poliedro_url())
+        time.sleep(2)
 
     def _credenciales_no_corresponden_detectado(self) -> bool:
         return self._page_contains_text("Las credenciales no corresponden")
@@ -876,8 +889,7 @@ class LoginService:
 
             # 0) Pantalla 1: "Actualmente existe un usuario..." -> Regresar
             if self._usuario_en_sistema_detectado():
-                self.web_controller.click("ctl00_ContentPlaceHolder1_BtnRegresarMensaje", "id")
-                time.sleep(2)
+                self._regresar_al_login()
 
             # 1) En login: credenciales incorrectas
             wrong_user = f"{self.usuario}a"
@@ -892,8 +904,7 @@ class LoginService:
 
             # 2) Pantalla 2: "Las credenciales no corresponden" -> Regresar
             if self._credenciales_no_corresponden_detectado():
-                self.web_controller.click("ctl00_ContentPlaceHolder1_BtnRegresarMensaje", "id")
-                time.sleep(2)
+                self._regresar_al_login()
 
             self._log_message("✅ Workaround aplicado: listo para reintentar login normal.")
             return True
