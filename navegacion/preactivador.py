@@ -38,7 +38,7 @@ XPATH_PLAN_ESIM = '//*[@id="select2-EquipmentPlanDataViewModel_Plan-container"]'
 XPATH_OPCIONES_PLAN = '//ul[@id="select2-EquipmentPlanDataViewModel_Plan-results"]/li'
 
 # Columnas de la plantilla, en el orden en que quedan para todos los operarios
-COLUMNAS_PLANTILLA = ['Iccid', 'Documento', 'TipoDoc', 'Cedula', 'Nombre', 'Apellido',
+COLUMNAS_PLANTILLA = ['Iccid', 'Documento', 'TipoDoc', 'Fecha_expedicion', 'Cedula', 'Nombre', 'Apellido',
                       'Correo_cliente', 'Correo_QR', 'Telefono', 'Direccion',
                       'Min', 'Mensaje', 'Codigo_distribuidor']
 
@@ -60,6 +60,32 @@ def _primero(*valores):
         if valor is not None and str(valor).strip() and str(valor).strip().lower() != 'nan':
             return str(valor).strip()
     return ''
+
+
+# Campo de CaptureData (solo con cédula) que reemplazó al apellido
+ID_FECHA_EXPEDICION = 'DetailProduct_ExpeditionDate'
+MENSAJE_SIN_FECHA_EXPEDICION = 'Falta la fecha de expedición o no es válida (dd/mm/aaaa)'
+
+
+def normalizar_fecha_expedicion(valor):
+    """Fecha de expedición de la plantilla en dd/mm/aaaa, o None si falta, no es fecha o es futura.
+
+    Acepta celdas de fecha de Excel (llegan como '2015-03-20 00:00:00') y texto
+    dd/mm/aaaa, d/m/aaaa, dd-mm-aaaa o aaaa-mm-dd.
+    """
+    texto = _primero(valor)
+    if not texto:
+        return None
+    texto = texto.split(' ')[0].replace('-', '/')
+    for formato in ('%d/%m/%Y', '%Y/%m/%d'):
+        try:
+            fecha = datetime.datetime.strptime(texto, formato).date()
+        except ValueError:
+            continue
+        if fecha > datetime.date.today():
+            return None
+        return fecha.strftime('%d/%m/%Y')
+    return None
 
 
 class AvisoPoliedro(Exception):
@@ -408,6 +434,15 @@ class Preactivador(ValidacionCodigosMixin):
         self.tipoDoc = str(self.excel.excel['TipoDoc'][self.contador])
         self.documentType = 2 if self.tipoDoc.lower() == 'nit' else 1
         self.tipoDoc_aux = "Cedula" if self.documentType == 1 else "NIT"
+        self.fecha_expedicion = normalizar_fecha_expedicion(self._celda('Fecha_expedicion'))
+
+        # Con cédula CaptureData exige la fecha de expedición: sin ella se pasa a la
+        # siguiente fila antes de tocar Poliedro (no se gasta ICCID ni se genera eSIM).
+        if self.documentType == 1 and not self.fecha_expedicion:
+            self.excel.guardar(self.contador, 'Mensaje', MENSAJE_SIN_FECHA_EXPEDICION, destino=self.excel_path)
+            self.ventana_informacion.write(f'⚠️ Registro {self.contador+1}: {MENSAJE_SIN_FECHA_EXPEDICION}')
+            self.contador += 1
+            return
 
         self.position(self.preactivador.retornarHtml(), 'paso1', True)
 
@@ -530,9 +565,9 @@ class Preactivador(ValidacionCodigosMixin):
         #Documento
         self.preactivador.write("DetailProduct_DocumentNumber",self.documento,"id")
 
-        #Apellido
-        if self.documentType == 1:  # Solo si es cédula
-            self.preactivador.write("DetailProduct_LastName",self.apellido,"id")
+        #Fecha de expedición (reemplazó al apellido en CaptureData; solo con cédula)
+        if self.documentType == 1:
+            self.escribir_fecha_expedicion()
 
         if self.es_esim:
             #Opción serial + eSIM (el Iccid lo genera Poliedro)
@@ -557,6 +592,18 @@ class Preactivador(ValidacionCodigosMixin):
 
         if not self.wait_for_loading():
             raise Exception("Timeout esperando carga después de hacer clic en Siguiente")
+
+    def escribir_fecha_expedicion(self):
+        """Escribe la fecha en el datepicker de CaptureData (trae 01/01/0001 por defecto)."""
+        self.preactivador.erase(ID_FECHA_EXPEDICION, 'id')
+        self.preactivador.write(ID_FECHA_EXPEDICION, self.fecha_expedicion, 'id')
+        self.preactivador.write(ID_FECHA_EXPEDICION, Keys.TAB, 'id')  # cierra el calendario
+        if self.preactivador.value(ID_FECHA_EXPEDICION, 'id') != self.fecha_expedicion:
+            campo = self.preactivador.browser.find_element_by_id(ID_FECHA_EXPEDICION)
+            self.preactivador.browser.execute_script(
+                "arguments[0].value = arguments[1];"
+                "arguments[0].dispatchEvent(new Event('change', {bubbles: true}));",
+                campo, self.fecha_expedicion)
 
     # ---------------------------------------------------------------------
     # Modo eSIM
@@ -809,7 +856,9 @@ class Preactivador(ValidacionCodigosMixin):
             'DetailProduct.DocumentNumber': self.documento,
             'DetailProduct.LastName': '',
             'DetailProduct.RutNumber': '',
-            'DetailProduct.ExpeditionDate': datetime.datetime.now().strftime("%d/%m/%Y"),
+            # Con cédula, la de la plantilla; con NIT el campo no aplica (se deja como antes)
+            'DetailProduct.ExpeditionDate': (self.fecha_expedicion if self.documentType == 1
+                                             else datetime.datetime.now().strftime("%d/%m/%Y")),
             'DetailProduct.OptionImei': 2,
             'DetailProduct.Imei': '',
             'DetailProduct.AuxiliaryImei': '',
