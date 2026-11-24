@@ -15,6 +15,14 @@ from config.urls import poliedro_url
 
 ARCHIVO_LOG = "login.log"
 
+# Login.aspx tiene todos los pasos (usuario y clave, código, mensajes) en la
+# misma página y solo muestra uno: hay que mirar qué se VE, no qué existe.
+ID_BOTON_INGRESAR = 'btnIngresarUsuarioContraseña'
+ID_CAMPO_CODIGO = 'ctl00_ContentPlaceHolder1_txtTokenEntrust'
+IDS_PASO_USUARIO = ('ctl00_ContentPlaceHolder1_txtUsuario', 'ctl00_ContentPlaceHolder1_txtContraseña',
+                    ID_BOTON_INGRESAR)
+INTENTOS_CLIC_INGRESAR = 8  # los mismos que hacía web_controller.click (@validate)
+
 # Pausa entre intentos cuando el OTP llega por correo: no hace falta esperar
 # 2 minutos como con los SMS, basta con pedir un código nuevo.
 PAUSA_REINTENTO_CORREO = 10
@@ -348,7 +356,7 @@ class LoginService:
             time.sleep(2)
 
             # Clic en ingresar
-            self.web_controller.click('btnIngresarUsuarioContraseña', 'id')
+            clic_ok = self._clic_ingresar()
             time.sleep(2)
 
             # ✅ Si el sistema responde "usuario en el sistema", aplicar workaround
@@ -363,10 +371,22 @@ class LoginService:
                     self._escribir_campo('ctl00_ContentPlaceHolder1_txtContraseña', self.password)
                     time.sleep(2)
 
-                    self.web_controller.click('btnIngresarUsuarioContraseña', 'id')
+                    clic_ok = self._clic_ingresar()
                     time.sleep(2)
                 else:
                     self._log_message("❌ Workaround falló. No pude forzar expiración.")
+                    return False
+
+            if not clic_ok:
+                # El clic falló, pero si la página ya muestra el campo del código
+                # las credenciales sí llegaron (p. ej. alguien dio Ingresar o Enter
+                # antes que el bot): se sigue con el código en vez de rendirse.
+                if self._paso_codigo_visible():
+                    self._log_message("ℹ️ Las credenciales ya habían sido enviadas; se continúa con el código.")
+                else:
+                    self._log_message(
+                        f"⚠️ No se pudieron escribir las credenciales en la página de Poliedro. "
+                        f"(Ref. {self._ref_clic_ingresar})", is_error=True)
                     return False
 
             # Esperar a que aparezca el formulario OTP
@@ -378,7 +398,55 @@ class LoginService:
         except Exception as e:
             self._log_error("_ingresar_credenciales", e)
             return False
-    
+
+    def _paso_codigo_visible(self):
+        return self.web_controller.is_displayed(ID_CAMPO_CODIGO, 'id')
+
+    def _paso_visible(self):
+        """Qué paso de Login.aspx se ve (para el registro)."""
+        if all(self.web_controller.is_displayed(i, 'id') for i in IDS_PASO_USUARIO):
+            return "paso usuario"
+        if self._paso_codigo_visible():
+            return "paso código"
+        return "otro"
+
+    def _clic_ingresar(self):
+        """
+        Clic en Ingresar con hasta INTENTOS_CLIC_INGRESAR intentos, como
+        web_controller.click, pero registrando cada intento fallido: antes solo
+        quedaba el error del último, y el del primero es el que dice qué pasó.
+
+        Returns:
+            bool: True si algún intento hizo el clic. Nunca lanza excepciones.
+        """
+        self._ref_clic_ingresar = None
+        fallos = []
+        primera_excepcion = None
+        ok = False
+        for intento in range(1, INTENTOS_CLIC_INGRESAR + 1):
+            try:
+                self.web_controller.browser.find_element_by_id(ID_BOTON_INGRESAR).click()
+                ok = True
+                break
+            except Exception as e:
+                if primera_excepcion is None:
+                    primera_excepcion = e
+                mensaje = (str(e).strip().splitlines() or [""])[0]
+                fallos.append(f"{time.strftime('%H:%M:%S')} intento {intento}: {type(e).__name__}: {mensaje}")
+                if intento < INTENTOS_CLIC_INGRESAR:
+                    time.sleep(1)
+        if fallos:
+            try:
+                paso = self._paso_visible()
+            except Exception:
+                paso = "desconocido"
+            resultado = f"funcionó en el intento {len(fallos) + 1}" if ok else f"falló {len(fallos)} veces"
+            lineas = [f"clic en Ingresar {resultado}; página en: {paso}"] + [f"    {f}" for f in fallos]
+            lineas.append("  detalle del intento 1:")
+            self._ref_clic_ingresar = registro.registrar(ARCHIVO_LOG, self.modulo, "clic_ingresar",
+                                                         "\n".join(lineas), exc=primera_excepcion)
+        return ok
+
     def _rutas_otp(self):
         """
         Rutas del DOM donde buscar el SMS, segun el portal configurado.
@@ -830,6 +898,10 @@ class LoginService:
                         
                 # Si encontramos al menos 2 elementos, consideramos que es la pantalla de login
                 if elementos_encontrados >= 2:
+                    # Existir no basta: en Login.aspx están en todos los pasos.
+                    if not all(self.web_controller.is_displayed(i, 'id') for i in IDS_PASO_USUARIO):
+                        self._log_message("La página de Poliedro quedó en otro paso; se recarga el inicio de sesión.")
+                        return False
                     self._log_message("✅ Detectada pantalla de login")
                     return True
                 
