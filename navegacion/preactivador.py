@@ -88,6 +88,32 @@ def normalizar_fecha_expedicion(valor):
     return None
 
 
+# Errores de Validation (li.errorFormItem) que se guardan con un texto propio,
+# en este orden de prioridad. Cualquier otro se guarda tal como lo muestra Poliedro.
+ERRORES_VALIDACION_CONOCIDOS = [
+    ("ICC_ID - Identificación Tarjeta de Circuito Integrada. = v",
+     "ICC_ID - Identificación Tarjeta de Circuito Integrada."),
+    ("Validacion Causal Desactivacion IccId = Falso",
+     "Validacion Causal Desactivacion IccId = Falso"),
+    ("Documentos invalidos = Falso",
+     "Documentos invalidos"),
+]
+# Primera línea del cuadro de errores; no es una razón, solo el título.
+ENCABEZADO_ERRORES_VALIDACION = 'La activación no puede continuar'
+
+
+def mensaje_errores_validacion(textos):
+    """Texto para la columna Mensaje a partir de los errores de Validation, o None si no hay."""
+    textos = [t.strip() for t in (textos or []) if isinstance(t, str) and t.strip()]
+    for buscado, mensaje in ERRORES_VALIDACION_CONOCIDOS:
+        if buscado in textos:
+            return mensaje
+    razones = [t for t in textos if not t.startswith(ENCABEZADO_ERRORES_VALIDACION)]
+    if razones:
+        return '; '.join(razones)
+    return textos[0] if textos else None
+
+
 class AvisoPoliedro(Exception):
     """Poliedro respondió con un aviso (alert o error en el banner) al activar."""
     def __init__(self, aviso):
@@ -453,33 +479,8 @@ class Preactivador(ValidacionCodigosMixin):
         
         self.position(self.preactivador.retornarHtml(), 'paso2', True)
         
-        try:
-            errors = self.preactivador.readMulty('errorFormItem', 'class')
-        except Exception:
-            errors = ''
-
-        # 2) Catálogo de errores a detecta  r (en el orden que quieres priorizar)
-        ERROR_MAP = [
-            (
-                "ICC_ID - Identificación Tarjeta de Circuito Integrada. = v",
-                "ICC_ID - Identificación Tarjeta de Circuito Integrada.",
-            ),
-            (
-                "Validacion Causal Desactivacion IccId = Falso",
-                "Validacion Causal Desactivacion IccId = Falso",
-            ),
-            (
-                "Documentos invalidos = Falso",
-                "Documentos invalidos",
-            ),
-        ]
-
-        for needle, msg in ERROR_MAP:
-            if needle in errors:
-                self.excel.guardar(self.contador, 'Mensaje', msg, destino=self.excel_path)
-                self.excel.guardar(self.contador, 'Min', 'error', destino=self.excel_path)
-                self.ventana_informacion.write(msg)
-                raise('error validacion 2')
+        if self._guardar_errores_validacion():
+            raise('error validacion 2')
 
         validate = self.preactivador.read('/html/body/div/div[2]/section/div/div[2]/div[2]/main/form/div/div[6]/div/span')
         if validate != 'Validación Correcta':
@@ -557,6 +558,20 @@ class Preactivador(ValidacionCodigosMixin):
         #     self.poliedro.reinicio()
         #     self.contador += 1
     
+    def _guardar_errores_validacion(self):
+        """Si Validation muestra errores, los guarda (Mensaje y Min='error') y devuelve True."""
+        try:
+            textos = self.preactivador.readMulty('errorFormItem', 'class')
+        except Exception:
+            textos = []
+        mensaje = mensaje_errores_validacion(textos if isinstance(textos, list) else [])
+        if not mensaje:
+            return False
+        self.excel.guardar(self.contador, 'Mensaje', mensaje, destino=self.excel_path)
+        self.excel.guardar(self.contador, 'Min', 'error', destino=self.excel_path)
+        self.ventana_informacion.write(f'⚠️ Registro {self.contador+1}: {mensaje}')
+        return True
+
     def captura_datos_web(self):
         #Tipo documento
         self.poliedro.tipoDoc(self.tipoDoc_aux,'//*[@id="select2-DetailProduct_DocumentTypeId-container"]')
